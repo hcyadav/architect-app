@@ -9,6 +9,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
     const subCategory = searchParams.get("subCategory");
+    const isBestProduct = searchParams.get("isBestProduct");
     const searchTerm = searchParams.get("search");
     const page = parseInt(searchParams.get("page") || "1");
     const pageSizeParam = searchParams.get("pageSize") || process.env.NEXT_PUBLIC_PAGE_SIZE || "10";
@@ -19,6 +20,9 @@ export async function GET(req: Request) {
     let query: any = {};
     if (category) {
       query.category = category;
+    }
+    if (isBestProduct === "true") {
+      query.isBestProduct = true;
     }
     if (subCategory && subCategory !== "All") {
       query.subCategory = subCategory;

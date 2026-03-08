@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Briefcase, Building2, Gem, FileText, User as UserIcon, LogOut, LogIn, LayoutDashboard, X } from "lucide-react";
+import { Home, Briefcase, Building2, Gem, FileText, User as UserIcon, LogOut, LogIn, LayoutDashboard, X, Star } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useSidebar } from "@/context/SidebarContext";
 
@@ -36,6 +36,7 @@ export default function Sidebar() {
   const adminItems = [
     { name: "Quotation", href: "/quotation", icon: FileText },
     { name: "Manage Products", href: "/admin/products", icon: LayoutDashboard },
+    { name: "Best Products", href: "/admin/best-products", icon: Star },
     { name: "Manage Portfolio", href: "/admin/portfolio", icon: Briefcase },
   ];
 

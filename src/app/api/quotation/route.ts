@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import Quotation from "@/models/Quotation";
+import { sendAdminNotification } from "@/lib/nodemailer";
 
 export async function GET(req: Request) {
   try {
@@ -57,8 +58,14 @@ export async function POST(req: Request) {
       message,
     });
 
+    // Send email notification to admin
+    if (session.user?.name && session.user?.email) {
+      await sendAdminNotification(session.user.name, session.user.email, message);
+    }
+
     return NextResponse.json(quotation, { status: 201 });
   } catch (error) {
+    console.error("Error creating quotation:", error);
     return NextResponse.json({ error: "Error creating quotation" }, { status: 500 });
   }
 }

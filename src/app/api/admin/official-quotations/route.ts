@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import OfficialQuotation from "@/models/OfficialQuotation";
+import { sendCustomerQuotation } from "@/lib/nodemailer";
 
 export async function GET(req: Request) {
   try {
@@ -38,7 +39,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ 
       error: "Error fetching quotations", 
       details: error.message,
-      stack: error.stack 
     }, { status: 500 });
   }
 }
@@ -46,7 +46,6 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions) as any;
-    console.log("session",session);
     
     // Check if session exists and is admin
     if (!session || session.user?.role !== "admin") {
@@ -54,20 +53,23 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { clientName, items, totalAmount, notes } = body;
-console.log({body});
+    const { clientName, clientEmail, items, totalAmount, notes } = body;
 
-    if (!clientName || !items || items.length === 0) {
+    if (!clientName || !clientEmail || !items || items.length === 0) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     await connectToDatabase();
     const quotation = await OfficialQuotation.create({
       clientName,
+      clientEmail,
       items,
       totalAmount,
       notes,
     });
+
+    // Send email to customer
+    await sendCustomerQuotation(clientEmail, clientName, items, totalAmount, notes);
 
     return NextResponse.json(quotation, { status: 201 });
   } catch (error: any) {
@@ -75,7 +77,6 @@ console.log({body});
     return NextResponse.json({ 
       error: "Error creating quotation",
       details: error.message,
-      stack: error.stack
     }, { status: 500 });
   }
 }

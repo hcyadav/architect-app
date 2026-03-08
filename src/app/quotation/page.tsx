@@ -21,6 +21,7 @@ export default function QuotationDashboard() {
   const [offPage, setOffPage] = useState(1);
   const [offTotalPages, setOffTotalPages] = useState(1);
   const [offTotal, setOffTotal] = useState(0);
+  const [prefillData, setPrefillData] = useState<any>(null);
 
   const fetchRequests = async () => {
     try {
@@ -131,7 +132,16 @@ export default function QuotationDashboard() {
                       </div>
                     </div>
                     <div className="flex md:flex-col gap-2 shrink-0">
-                      <button className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-all">
+                      <button
+                        onClick={() => {
+                          setPrefillData({
+                            name: q.userId?.name || "",
+                            email: q.userId?.email || ""
+                          });
+                          setActiveTab("official");
+                        }}
+                        className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-all"
+                      >
                         Manage
                       </button>
                     </div>
@@ -166,7 +176,11 @@ export default function QuotationDashboard() {
         </div>
       ) : (
         <div className="space-y-8">
-          <OfficialQuotationForm onCreated={fetchOfficialQuotes} />
+          <OfficialQuotationForm
+            onCreated={fetchOfficialQuotes}
+            prefillData={prefillData}
+            onPrefillClear={() => setPrefillData(null)}
+          />
 
           <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100 overflow-hidden">
             {officialQuotes.length === 0 ? (
@@ -194,7 +208,10 @@ export default function QuotationDashboard() {
                             <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-400">
                               {q.clientName?.charAt(0)}
                             </div>
-                            <span className="font-medium text-gray-900">{q.clientName}</span>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-gray-900">{q.clientName}</span>
+                              <span className="text-[10px] text-gray-400">{q.clientEmail}</span>
+                            </div>
                           </div>
                         </td>
                         <td className="px-8 py-6">

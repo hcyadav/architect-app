@@ -59,6 +59,8 @@ export default function AdminProductsPage() {
 
 
   const [formData, setFormData] = useState<ProductData>({ ...emptyForm });
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+  const [markingBest, setMarkingBest] = useState(false);
 
   const fetchProducts = useCallback(async () => {
     setProductsLoading(true);
@@ -205,6 +207,35 @@ export default function AdminProductsPage() {
     }
   };
 
+  const toggleSelectProduct = (id: string) => {
+    setSelectedProductIds((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
+  const handleMarkAsBest = async () => {
+    if (selectedProductIds.length === 0) {
+      toast.error("Please select at least one product");
+      return;
+    }
+
+    setMarkingBest(true);
+    try {
+      await Promise.all(
+        selectedProductIds.map((id) =>
+          axios.put(`/api/products/${id}/admin`, { isBestProduct: true })
+        )
+      );
+      toast.success("Products marked as best!");
+      setSelectedProductIds([]);
+      fetchProducts();
+    } catch (error) {
+      toast.error("Failed to update products");
+    } finally {
+      setMarkingBest(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-10 mb-10">
       <Toaster position="top-right" />
@@ -266,11 +297,22 @@ export default function AdminProductsPage() {
       {/* Product List for Edit/Delete */}
       {showProductList && (
         <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
-          <div className="p-6 border-b border-gray-50">
-            <h3 className="text-lg font-medium text-gray-900">
-              {activeTab === "product" ? "Residential / Product" : activeTab === "premium" ? "Premium" : "Corporate"} Items
-            </h3>
-            <p className="text-sm text-gray-400 font-light mt-1">Click edit to modify a product</p>
+          <div className="p-6 flex items-center justify-between"> {/* Added p-6 for padding */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">
+                {activeTab === "product" ? "Residential / Product" : activeTab === "premium" ? "Premium" : "Corporate"} Items
+              </h3>
+              <p className="text-sm text-gray-400 font-light mt-1">Click edit to modify a product</p>
+            </div>
+            {selectedProductIds.length > 0 && (
+              <button
+                onClick={handleMarkAsBest}
+                disabled={markingBest}
+                className="px-4 py-2 bg-[#D4AF37] text-white text-sm font-medium rounded-xl hover:bg-[#C4A030] transition-all shadow-sm flex items-center gap-2"
+              >
+                {markingBest ? "Updating..." : `Mark ${selectedProductIds.length} as Best`}
+              </button>
+            )}
           </div>
 
           {productsLoading ? (
@@ -289,8 +331,16 @@ export default function AdminProductsPage() {
                   className={`flex items-center gap-4 p-4 md:p-5 hover:bg-gray-50/50 transition-colors ${editingProductId === p._id ? "bg-[#D4AF37]/5 border-l-4 border-[#D4AF37]" : ""
                     }`}
                 >
-                  <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                    <img src={p.imageUrl} alt={p.title} className="object-cover w-full h-full" />
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedProductIds.includes(p._id)}
+                      onChange={() => toggleSelectProduct(p._id)}
+                      className="w-4 h-4 rounded border-gray-300 text-[#D4AF37] focus:ring-[#D4AF37]"
+                    />
+                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                      <img src={p.imageUrl} alt={p.title} className="object-cover w-full h-full" />
+                    </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium text-gray-900 truncate">{p.title}</h4>

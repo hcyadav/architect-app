@@ -16,6 +16,7 @@ export interface IQuotationItem {
 export interface IOfficialQuotation {
   _id?: string;
   clientName: string;
+  clientEmail: string;
   items: IQuotationItem[];
   totalAmount: number;
   notes?: string;
@@ -61,6 +62,12 @@ const OfficialQuotationSchema = new Schema<IOfficialQuotation>(
       type: String,
       required: true,
       trim: true,
+    },
+    clientEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
     },
 
     items: {

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Plus, Calculator, Trash2, Send } from "lucide-react";
+import { Plus, Calculator, Trash2, Send, X } from "lucide-react";
 
 interface Item {
   description: string;
@@ -12,13 +12,29 @@ interface Item {
   amount: number;
 }
 
-export default function OfficialQuotationForm({ onCreated }: { onCreated: () => void }) {
+export default function OfficialQuotationForm({
+  onCreated,
+  prefillData,
+  onPrefillClear
+}: {
+  onCreated: () => void;
+  prefillData?: { name: string; email: string } | null;
+  onPrefillClear?: () => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<Item[]>([
     { description: "", rate: "", quantity: "", amount: 0 }
   ]);
+
+  useEffect(() => {
+    if (prefillData) {
+      setClientName(prefillData.name);
+      setClientEmail(prefillData.email);
+    }
+  }, [prefillData]);
 
   const handleItemChange = (index: number, field: keyof Item, value: string) => {
     const newItems = [...items];
@@ -57,6 +73,7 @@ export default function OfficialQuotationForm({ onCreated }: { onCreated: () => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!clientName.trim()) return toast.error("Client name is required");
+    if (!clientEmail.trim()) return toast.error("Client email is required");
 
     const validItems = items.filter(i => i.description.trim() && i.rate && i.quantity);
     if (validItems.length === 0) return toast.error("Add at least one complete item with description, rate, and quantity");
@@ -66,6 +83,7 @@ export default function OfficialQuotationForm({ onCreated }: { onCreated: () => 
     try {
       const payload = {
         clientName: clientName.trim(),
+        clientEmail: clientEmail.trim(),
         items: validItems.map(i => ({
           description: i.description.trim(),
           rate: parseFloat(i.rate),
@@ -87,6 +105,7 @@ export default function OfficialQuotationForm({ onCreated }: { onCreated: () => 
       if (response.status === 201) {
         toast.success("Quotation generated successfully!");
         setClientName("");
+        setClientEmail("");
         setNotes("");
         setItems([{ description: "", rate: "", quantity: "", amount: 0 }]);
         onCreated();
@@ -111,10 +130,19 @@ export default function OfficialQuotationForm({ onCreated }: { onCreated: () => 
           <h2 className="text-2xl font-serif text-gray-900">New Itemized Quotation</h2>
           <p className="text-sm text-gray-400 font-light">Generate detailed professional quotes in ₹</p>
         </div>
+        {prefillData && (
+          <button
+            onClick={onPrefillClear}
+            className="ml-auto p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-all"
+            title="Clear prefilled data"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-gray-50">
           <div className="space-y-3">
             <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Client Name / Reference</label>
             <input
@@ -124,6 +152,17 @@ export default function OfficialQuotationForm({ onCreated }: { onCreated: () => 
               onChange={(e) => setClientName(e.target.value)}
               className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-lg font-light"
               placeholder="Ex. Mr. Rajesh Kumar"
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Client Email</label>
+            <input
+              type="email"
+              required
+              value={clientEmail}
+              onChange={(e) => setClientEmail(e.target.value)}
+              className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-lg font-light"
+              placeholder="Ex. rajesh@example.com"
             />
           </div>
           <div className="space-y-3">

@@ -16,6 +16,7 @@ export interface IProduct {
   price?: number;
   companyName?: string;
   customFields?: ICustomField[];
+  isBestProduct?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -30,6 +31,7 @@ const ProductSchema = new Schema<IProduct>(
     additionalImages: [{ type: String }],
     price: { type: Number },
     companyName: { type: String },
+    isBestProduct: { type: Boolean, default: false },
     customFields: [
       {
         label: { type: String, required: true },
