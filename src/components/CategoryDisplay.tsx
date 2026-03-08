@@ -79,7 +79,7 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
-      <BackButton />
+      {/* <BackButton /> */}
       <div className="space-y-6 pb-6 border-b border-gray-100 mt-4 md:mt-0">
         <div className="space-y-2">
           <h1 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-serif">
