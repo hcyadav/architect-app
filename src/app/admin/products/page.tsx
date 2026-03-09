@@ -237,18 +237,20 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 mb-10">
+    <div className="max-w-4xl mx-auto space-y-12 mb-10">
       <Toaster position="top-right" />
 
       <BackButton />
 
-      <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-0">
-        <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3 tracking-tight">
-          Manage Architecture
-        </h1>
-        <p className="text-gray-500 font-light text-lg">
-          Add new residential products, premium collections, or corporate projects.
-        </p>
+      <div className="space-y-6 pb-6 border-b border-gray-100">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-serif text-gray-900 tracking-tight">
+            Manage Architecture
+          </h1>
+          <p className="text-gray-500 font-light text-lg">
+            Add new residential products, premium collections, or corporate projects.
+          </p>
+        </div>
       </div>
 
       {/* Category Tabs */}
@@ -297,7 +299,7 @@ export default function AdminProductsPage() {
       {/* Product List for Edit/Delete */}
       {showProductList && (
         <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
-          <div className="p-6 flex items-center justify-between"> {/* Added p-6 for padding */}
+          <div className="p-6 flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium text-gray-900">
                 {activeTab === "product" ? "Residential / Product" : activeTab === "premium" ? "Premium" : "Corporate"} Items

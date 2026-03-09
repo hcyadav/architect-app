@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import ProductCard from "@/components/ProductCard";
-import BackButton from "@/components/BackButton";
-import { Search, X } from "lucide-react";
+import { Search, X, Loader2 } from "lucide-react";
 
 interface CategorizedProducts {
   category: "product" | "corporate" | "premium";
@@ -18,6 +17,8 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const isFetching = useRef(false);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   // Debounce search input
   useEffect(() => {
@@ -28,26 +29,51 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   }, [search]);
 
   useEffect(() => {
-    setPage(1); // Reset page when category, subcategory or search search changes
+    setProducts([]);
+    setPage(1);
   }, [category, activeSub, debouncedSearch]);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [category, activeSub, page, debouncedSearch]);
+  const fetchProducts = useCallback(async (pageNum: number, isInitial: boolean = false) => {
+    if (isFetching.current) return;
+    isFetching.current = true;
 
-  const fetchProducts = async () => {
-    setLoading(true);
+    if (isInitial) setLoading(true);
     try {
-      const url = `/api/products?category=${category}${activeSub !== "All" ? `&subCategory=${activeSub}` : ""}${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}&page=${page}`;
+      const url = `/api/products?category=${category}${activeSub !== "All" ? `&subCategory=${activeSub}` : ""}${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}&page=${pageNum}`;
       const res = await axios.get(url);
-      setProducts(res.data.items);
+      const newItems = res.data.items || [];
+
+      setProducts(prev => isInitial ? newItems : [...prev, ...newItems]);
       setTotalPages(res.data.totalPages);
     } catch (error) {
       console.error("Error fetching products", error);
     } finally {
       setLoading(false);
+      isFetching.current = false;
     }
-  };
+  }, [category, activeSub, debouncedSearch]);
+
+  useEffect(() => {
+    fetchProducts(page, page === 1);
+  }, [page, fetchProducts]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading && page < totalPages && !isFetching.current) {
+          setPage(prev => prev + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loading, page, totalPages]);
 
   // Extract unique subCategories for tabs
   const [subCategories, setSubCategories] = useState<string[]>(["All"]);
@@ -55,7 +81,6 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   useEffect(() => {
     const fetchAllSubCategories = async () => {
       try {
-        // Fetch a large number to get all possible subcategories in this category
         const res = await axios.get(`/api/products?category=${category}&pageSize=1000`);
         const items = res.data.items || [];
         const subs = Array.from(new Set(items.map((p: any) => p.subCategory).filter(Boolean))) as string[];
@@ -79,8 +104,7 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
-      {/* <BackButton /> */}
-      <div className="space-y-6 pb-6 border-b border-gray-100 mt-4 md:mt-0">
+      <div className="space-y-6 pb-6 border-b border-gray-100">
         <div className="space-y-2">
           <h1 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-serif">
             {getTitle()}
@@ -132,15 +156,11 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {loading ? (
-          <div className="col-span-full py-24 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37] mx-auto"></div>
-          </div>
-        ) : products.length > 0 ? (
+        {products.length > 0 ? (
           products.map((p) => (
             <ProductCard key={p._id} product={p} />
           ))
-        ) : (
+        ) : !loading && (
           <div className="col-span-full py-24 text-center border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50">
             <h3 className="text-lg font-medium text-gray-900 mb-1">No items found</h3>
             <p className="text-gray-500 font-light">
@@ -150,26 +170,10 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
         )}
       </div>
 
-      {/* Pagination UI */}
-      {!loading && totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 pt-8">
-          <button
-            onClick={() => setPage(prev => Math.max(1, prev - 1))}
-            disabled={page === 1}
-            className="px-6 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          >
-            Previous
-          </button>
-          <span className="text-sm font-medium text-gray-500">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
-            disabled={page === totalPages}
-            className="px-6 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          >
-            Next
-          </button>
+      {/* Infinite Scroll Loader */}
+      {(loading || page < totalPages) && (
+        <div ref={loaderRef} className="py-12 flex justify-center">
+          <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
         </div>
       )}
     </div>
