@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import ProductCard from "@/components/ProductCard";
 import { Search, X, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface CategorizedProducts {
   category: "product" | "corporate" | "premium";
@@ -81,9 +83,8 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   useEffect(() => {
     const fetchAllSubCategories = async () => {
       try {
-        const res = await axios.get(`/api/products?category=${category}&pageSize=1000`);
-        const items = res.data.items || [];
-        const subs = Array.from(new Set(items.map((p: any) => p.subCategory).filter(Boolean))) as string[];
+        const res = await axios.get(`/api/products/subcategories?category=${category}`);
+        const subs = res.data || [];
         setSubCategories(["All", ...subs]);
       } catch (e) { }
     };
@@ -103,7 +104,7 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12">
+    <div className="max-w-[1400px] mx-auto space-y-12 px-4 md:px-8">
       <div className="space-y-6 pb-6 border-b border-gray-100">
         <div className="space-y-2">
           <h1 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-serif">
@@ -117,39 +118,42 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
         {/* Search & Sub Category Tabs */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
           {subCategories.length > 1 && (
-            <div className="flex flex-wrap gap-2 order-2 md:order-1">
+            <div className="flex flex-wrap gap-3 order-2 md:order-1">
               {subCategories.map((sub) => (
-                <button
+                <Button
                   key={sub}
+                  variant={activeSub === sub ? "default" : "outline"}
                   onClick={() => setActiveSub(sub)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${activeSub === sub
-                    ? "bg-[#D4AF37] text-white shadow-md scale-105"
-                    : "bg-white text-gray-600 border border-gray-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
+                  className={`h-11 px-6 rounded-2xl text-sm font-medium transition-all duration-300 ${activeSub === sub
+                    ? "bg-[#D4AF37] hover:bg-[#B8962E] text-white shadow-lg border-none active:scale-95"
+                    : "bg-white text-gray-500 border-gray-100 hover:border-[#D4AF37] hover:text-[#D4AF37] hover:bg-[#D4AF37]/5"
                     }`}
                 >
                   {sub}
-                </button>
+                </Button>
               ))}
             </div>
           )}
 
           {/* Dynamic Search Input */}
-          <div className="relative w-full md:w-80 order-1 md:order-2">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
+          <div className="relative w-full md:w-80 order-1 md:order-2 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+            <Input
               type="text"
               placeholder="Search products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-11 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#D4AF37]/20 focus:border-[#D4AF37] outline-none transition-all text-sm shadow-sm"
+              className="h-12 pl-11 pr-11 bg-white border-gray-100 rounded-2xl focus-visible:ring-2 focus-visible:ring-[#D4AF37]/20 focus-visible:border-[#D4AF37] outline-none transition-all text-sm shadow-sm"
             />
             {search && (
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setSearch("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 text-gray-400 hover:text-gray-600 hover:bg-transparent"
               >
-                <X className="w-3.5 h-3.5" />
-              </button>
+                <X className="w-4 h-4" />
+              </Button>
             )}
           </div>
         </div>

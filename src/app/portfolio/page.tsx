@@ -62,7 +62,7 @@ export default async function PortfolioPage() {
             </div>
 
             {/* Testimonials Section */}
-            <div className="bg-[#FDFBF7] rounded-[3rem] p-12 md:p-24 border border-[#EEEEEE]">
+            {/* <div className="bg-[#FDFBF7] rounded-[3rem] p-12 md:p-24 border border-[#EEEEEE]">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">Client Feedback</h2>
                     <div className="w-16 h-1 bg-[#D4AF37] mx-auto rounded-full"></div>
@@ -92,7 +92,7 @@ export default async function PortfolioPage() {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             {/* CTA Section */}
             <div className="mt-32 text-center">

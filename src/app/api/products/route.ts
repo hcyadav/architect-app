@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import Product from "@/models/Product";
+import { unstable_cache } from "next/cache";
 
 export async function GET(req: Request) {
   try {
@@ -18,15 +19,9 @@ export async function GET(req: Request) {
     await connectToDatabase();
     
     let query: any = {};
-    if (category) {
-      query.category = category;
-    }
-    if (isBestProduct === "true") {
-      query.isBestProduct = true;
-    }
-    if (subCategory && subCategory !== "All") {
-      query.subCategory = subCategory;
-    }
+    if (category) query.category = category;
+    if (isBestProduct === "true") query.isBestProduct = true;
+    if (subCategory && subCategory !== "All") query.subCategory = subCategory;
     if (searchTerm) {
       query.$or = [
         { title: { $regex: searchTerm, $options: "i" } },
@@ -34,18 +29,36 @@ export async function GET(req: Request) {
       ];
     }
 
-    const total = await Product.countDocuments(query);
-    const products = await Product.find(query)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
+    const revalidateTime = parseInt(process.env.CACHE_TTL_PRODUCTS || "3600");
+    const cacheKey = `products-${category}-${subCategory}-${isBestProduct}-${searchTerm}-${page}-${pageSize}`;
+
+    // Server-side cached function
+    const getCachedData = unstable_cache(
+      async () => {
+        const total = await Product.countDocuments(query);
+        const products = await Product.find(query)
+          .sort({ createdAt: -1 })
+          .skip((page - 1) * pageSize)
+          .limit(pageSize)
+          .lean();
+        return { items: products, total };
+      },
+      [cacheKey],
+      { revalidate: revalidateTime, tags: ["products"] }
+    );
+
+    const { items, total } = await getCachedData();
 
     return NextResponse.json({
-      items: products,
+      items,
       total,
       page,
       pageSize,
       totalPages: Math.ceil(total / pageSize)
+    }, {
+      headers: {
+        'Cache-Control': `public, max-age=${revalidateTime}, stale-while-revalidate=59`
+      }
     });
   } catch (error) {
     return NextResponse.json(

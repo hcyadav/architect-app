@@ -340,7 +340,7 @@ export default function AdminProductsPage() {
                       onChange={() => toggleSelectProduct(p._id)}
                       className="w-4 h-4 rounded border-gray-300 text-[#D4AF37] focus:ring-[#D4AF37]"
                     />
-                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
                       <img src={p.imageUrl} alt={p.title} className="object-cover w-full h-full" />
                     </div>
                   </div>

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster } from "react-hot-toast";
-import { Inbox, FileCheck, CircleDollarSign, Calendar, User, Briefcase, Download } from "lucide-react";
+import { Toaster, toast } from "react-hot-toast";
+import { Inbox, FileCheck, CircleDollarSign, Calendar, User, Briefcase, Download, Sparkles, X, Send } from "lucide-react";
 import OfficialQuotationForm from "@/components/OfficialQuotationForm";
 import { downloadQuotationPDF } from "@/lib/pdfGenerator";
 import BackButton from "@/components/BackButton";
@@ -22,6 +22,12 @@ export default function QuotationDashboard() {
   const [offTotalPages, setOffTotalPages] = useState(1);
   const [offTotal, setOffTotal] = useState(0);
   const [prefillData, setPrefillData] = useState<any>(null);
+  
+  // Reframe State
+  const [isReframeModalOpen, setIsReframeModalOpen] = useState(false);
+  const [selectedQuote, setSelectedQuote] = useState<any>(null);
+  const [reframedMessage, setReframedMessage] = useState("");
+  const [sendingResponse, setSendingResponse] = useState(false);
 
   const fetchRequests = async () => {
     try {
@@ -53,6 +59,32 @@ export default function QuotationDashboard() {
     };
     init();
   }, [activeTab, reqPage, offPage]);
+
+  const openReframeModal = (quote: any) => {
+    setSelectedQuote(quote);
+    const clientName = quote.name || quote.userId?.name || 'Client';
+    const polished = `Dear ${clientName}, we have reviewed your inquiry: "${quote.message}". We would be delighted to assist you with our architectural expertise. Our team is currently preparing a detailed proposal tailored to your vision. We will reach out to you shortly to discuss this further.`;
+    setReframedMessage(polished);
+    setIsReframeModalOpen(true);
+  };
+
+  const handleSendResponse = async () => {
+    if (!reframedMessage.trim()) return;
+    setSendingResponse(true);
+    try {
+      await axios.post("/api/admin/quotation/reframe", {
+        quotationId: selectedQuote._id,
+        reframedMessage: reframedMessage.trim()
+      });
+      toast.success("Response sent to client email!");
+      setIsReframeModalOpen(false);
+      fetchRequests();
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Failed to send response");
+    } finally {
+      setSendingResponse(false);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-10 mb-20">
@@ -111,11 +143,11 @@ export default function QuotationDashboard() {
                     <div className="flex-1 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 uppercase font-bold text-xs">
-                          {q.userId?.name?.charAt(0) || "U"}
+                          {(q.name || q.userId?.name || "U").charAt(0)}
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900">{q.userId?.name}</h3>
-                          <p className="text-sm text-gray-500 font-light">{q.userId?.email}</p>
+                          <h3 className="font-semibold text-gray-900">{q.name || q.userId?.name}</h3>
+                          <p className="text-sm text-gray-500 font-light">{q.email || q.userId?.email}</p>
                         </div>
                       </div>
                       <div className="p-5 bg-[#FDFBF7] rounded-2xl border border-[#EEEEEE] italic text-gray-700 font-light">
@@ -142,7 +174,14 @@ export default function QuotationDashboard() {
                         }}
                         className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-all"
                       >
-                        Manage
+                        Itemize
+                      </button>
+                      <button
+                        onClick={() => openReframeModal(q)}
+                        className="px-6 py-2.5 border border-[#D4AF37] text-[#D4AF37] rounded-xl text-sm font-medium hover:bg-[#D4AF37]/5 transition-all flex items-center justify-center gap-2"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        Reframe
                       </button>
                     </div>
                   </div>
@@ -310,6 +349,67 @@ export default function QuotationDashboard() {
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Reframe Modal */}
+      {isReframeModalOpen && selectedQuote && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="p-8 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-[#D4AF37]/10 rounded-xl">
+                  <Sparkles className="w-6 h-6 text-[#D4AF37]" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-serif text-gray-900">Reframe & Respond</h2>
+                  <p className="text-xs text-gray-400 font-light mt-1">Refine customer inquiry into a professional response</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsReframeModalOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-full text-gray-400"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-8 space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Original Inquiry</label>
+                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 italic text-gray-600 font-light text-sm">
+                  "{selectedQuote.message}"
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Professional Response (Email to Client)</label>
+                <textarea 
+                  value={reframedMessage}
+                  onChange={(e) => setReframedMessage(e.target.value)}
+                  className="w-full h-48 px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-sm font-light leading-relaxed resize-none"
+                  placeholder="Draft your professional response..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  onClick={() => setIsReframeModalOpen(false)}
+                  className="px-6 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSendResponse}
+                  disabled={sendingResponse || !reframedMessage.trim()}
+                  className="px-8 py-3 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-all shadow-lg shadow-gray-200 disabled:opacity-50 flex items-center gap-2"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  {sendingResponse ? "Sending Email..." : "Send Response"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

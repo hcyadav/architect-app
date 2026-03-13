@@ -77,9 +77,9 @@ export default function BestProductsCarousel() {
                 {products.map((p) => (
                     <div
                         key={p._id}
-                        className="min-w-[85vw] sm:min-w-[450px] md:min-w-[500px] snap-start"
+                        className="min-w-[70vw] snap-center mx-auto"
                     >
-                        <div className="group relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-gray-100 shadow-xl border border-gray-100">
+                        <div className="group relative w-full h-[80vh] overflow-hidden rounded-[2rem] bg-gray-100 shadow-xl border border-gray-100 mx-auto">
                             <img
                                 src={p.imageUrl}
                                 alt={p.title}

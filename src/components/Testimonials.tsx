@@ -43,7 +43,7 @@ export default function Testimonials() {
     if (testimonials.length === 0) return null;
 
     return (
-        <section className="bg-gray-50/50 py-24">
+        <section className="bg-gray-50/50 ">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="text-center space-y-4 mb-16">
                     <h2 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-serif">

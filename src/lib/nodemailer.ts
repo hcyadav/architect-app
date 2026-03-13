@@ -112,3 +112,62 @@ export const sendCustomerQuotation = async (
     console.error("Error sending customer quotation email:", error);
   }
 };
+
+/**
+ * Sends a professional reframed response to the customer.
+ */
+export const sendReframedResponse = async (
+  customerEmail: string,
+  customerName: string,
+  originalMessage: string,
+  reframedMessage: string
+) => {
+  try {
+    await transporter.sendMail({
+      ...mailOptions,
+      to: customerEmail,
+      subject: `Response to your Inquiry - Aesthetica Architectural Studio`,
+      html: `
+        <div style="font-family: 'Playfair Display', serif; padding: 40px; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 24px; background-color: #fff;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #999; font-weight: 200; letter-spacing: 0.2em; margin-bottom: 5px; font-size: 24px;">AESTHETICA</h1>
+            <p style="color: #D4AF37; font-size: 10px; font-weight: bold; letter-spacing: 0.3em; margin: 0; text-transform: uppercase;">Architectural Studio</p>
+          </div>
+          
+          <div style="margin-bottom: 30px; border-bottom: 1px solid #f5f5f5; pb-30px;">
+            <p style="font-size: 16px; line-height: 1.6; color: #444;">Dear <strong>${customerName}</strong>,</p>
+            <p style="font-size: 16px; line-height: 1.6; color: #444; font-weight: 300;">
+              Thank you for reaching out to us. We have reviewed your inquiry and prepared a professional response for your consideration.
+            </p>
+          </div>
+
+          <div style="background-color: #FDFBF7; padding: 25px; border-radius: 16px; border-left: 4px solid #D4AF37; margin-bottom: 30px;">
+            <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #555; font-style: italic;">
+              "${reframedMessage}"
+            </p>
+          </div>
+
+          <div style="margin-top: 40px; border-top: 1px solid #f5f5f5; pt-20px;">
+            <p style="font-size: 14px; line-height: 1.6; color: #666; font-weight: 300;">
+              Our team is currently evaluating the specific details of your request. One of our lead architects will contact you shortly to discuss the next steps.
+            </p>
+            <p style="margin-top: 30px; font-size: 15px; color: #333;">
+              Best Regards,<br>
+              <strong style="color: #D4AF37;">Aesthetica Design Team</strong>
+            </p>
+          </div>
+
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+            <p style="font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.1em;">
+              This is a response to your original message: "${originalMessage.substring(0, 50)}${originalMessage.length > 50 ? '...' : ''}"
+            </p>
+          </div>
+        </div>
+      `,
+    });
+    console.log("Reframed response email sent to customer");
+  } catch (error) {
+    console.error("Error sending reframed response email:", error);
+    throw error;
+  }
+};

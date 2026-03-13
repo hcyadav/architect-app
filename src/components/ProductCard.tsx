@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
-// No icons used currently
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 
 export default function ProductCard({ product }: { product: any }) {
   const router = useRouter();
@@ -17,34 +19,41 @@ export default function ProductCard({ product }: { product: any }) {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-all duration-500 flex flex-col h-full border border-gray-50">
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+    <Card className="group overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_12px_48px_rgb(0,0,0,0.08)] transition-all duration-700 flex flex-col h-full rounded-[2rem] bg-white">
+      <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
         <img
           src={product.imageUrl || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"}
           alt={product.title}
-          className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-in-out"
+          className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-1000 ease-out"
         />
-        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       </div>
 
-      <div className="p-5 flex flex-col flex-grow justify-between">
+      <CardContent className="p-6 flex flex-col grow justify-between">
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-1.5 font-serif tracking-wide line-clamp-1">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-2.5 py-1 bg-gray-50 text-[10px] uppercase tracking-normal font-bold text-gray-400 rounded-lg group-hover:bg-[#D4AF37]/10 group-hover:text-[#D4AF37] transition-colors duration-500">
+              {product.subCategory || "Masterpiece"}
+            </span>
+          </div>
+          <h3 className="text-xl font-medium text-gray-900 mb-2 font-serif tracking-tighter line-clamp-1 group-hover:text-[#D4AF37] transition-colors duration-500">
             {product.title}
           </h3>
 
-          <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed font-light mb-4">
+          <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed font-light mb-6 opacity-80">
             {product.description}
           </p>
         </div>
 
-        <button
+        <Button
           onClick={handleViewDetails}
-          className="w-full py-3 px-4 bg-[#FDFBF7] text-[#D4AF37] border border-[#EEEEEE] font-medium text-sm rounded-xl hover:bg-[#D4AF37] hover:text-white hover:border-[#D4AF37] transition-all duration-300 shadow-sm"
+          variant="outline"
+          className="w-full h-12 bg-gray-50/50 hover:bg-gray-900 border-gray-100 hover:border-gray-900 text-gray-900 hover:text-white font-bold text-xs uppercase tracking-normal rounded-xl transition-all duration-500 flex gap-2 group/btn"
         >
           View Details
-        </button>
-      </div>
-    </div>
+          <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

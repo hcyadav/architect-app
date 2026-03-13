@@ -79,7 +79,7 @@ export default function BestProductsPage() {
                                 key={p._id}
                                 className="flex items-center gap-6 p-6 hover:bg-gray-50/50 transition-colors"
                             >
-                                <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
+                                <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
                                     <img src={p.imageUrl} alt={p.title} className="object-cover w-full h-full" />
                                 </div>
                                 <div className="flex-1 min-w-0">

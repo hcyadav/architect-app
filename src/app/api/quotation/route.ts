@@ -43,24 +43,29 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const { name, email, message, productId } = await req.json();
 
-    const { message, productId } = await req.json();
+    if (!session && (!name || !email)) {
+      return NextResponse.json({ error: "Unauthorized or missing guest info" }, { status: 401 });
+    }
 
     await connectToDatabase();
 
     const quotation = await Quotation.create({
       // @ts-ignore
-      userId: session.user.id,
+      userId: session?.user?.id,
+      name: name || session?.user?.name,
+      email: email || session?.user?.email,
       productId,
       message,
     });
 
     // Send email notification to admin
-    if (session.user?.name && session.user?.email) {
-      await sendAdminNotification(session.user.name, session.user.email, message);
+    const senderName = name || session?.user?.name;
+    const senderEmail = email || session?.user?.email;
+    
+    if (senderName && senderEmail) {
+      await sendAdminNotification(senderName, senderEmail, message);
     }
 
     return NextResponse.json(quotation, { status: 201 });

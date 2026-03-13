@@ -1,0 +1,69 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import connectToDatabase from "@/lib/mongodb";
+import Employee from "@/models/Employee";
+import Attendance from "@/models/Attendance";
+import Settings from "@/models/Settings";
+
+export async function GET(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    // @ts-ignore
+    if (!session || session.user?.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const month = parseInt(searchParams.get("month") || ""); // 0-11
+    const year = parseInt(searchParams.get("year") || "");
+
+    if (isNaN(month) || isNaN(year)) {
+      return NextResponse.json({ error: "Month and Year are required" }, { status: 400 });
+    }
+
+    await connectToDatabase();
+    
+    // Get full day hours setting
+    const settings = await Settings.findOne({ key: "FULL_DAY_HOURS" });
+    const fullDayHours = settings?.value || 9;
+
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+
+    const employees = await Employee.find({ status: "active" });
+    const attendanceRecords = await Attendance.find({
+      date: { $gte: startDate, $lte: endDate }
+    });
+
+    const summary = employees.map(emp => {
+      const empRecords = attendanceRecords.filter(r => r.employeeId.toString() === emp._id.toString());
+      
+      const details = {
+          fullDays: empRecords.filter(r => r.status === 'full').length,
+          halfDays: empRecords.filter(r => r.status === 'half').length,
+          holidays: empRecords.filter(r => r.status === 'holiday').length,
+          absents: empRecords.filter(r => r.status === 'absent').length,
+          hourlyHours: empRecords
+              .filter(r => r.status === 'hourly')
+              .reduce((sum, r) => sum + (r.hours || 0), 0)
+      };
+
+      const payableFromHourly = details.hourlyHours / fullDayHours;
+      const totalPayableDays = details.fullDays + (details.halfDays * 0.5) + payableFromHourly;
+
+      return {
+          employeeId: emp._id,
+          name: `${emp.firstName} ${emp.lastName}`,
+          designation: emp.designation,
+          details,
+          totalPayableDays: parseFloat(totalPayableDays.toFixed(2))
+      };
+    });
+
+    return NextResponse.json({ summary, month, year, fullDayHours });
+  } catch (error) {
+    console.error("Summary error:", error);
+    return NextResponse.json({ error: "Failed to calculate summary" }, { status: 500 });
+  }
+}
