@@ -3,9 +3,11 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import Product from "@/models/Product";
-import { unstable_cache } from "next/cache";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
+  console.log("GET request to /api/products------------->");
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
@@ -29,35 +31,22 @@ export async function GET(req: Request) {
       ];
     }
 
-    const revalidateTime = parseInt(process.env.CACHE_TTL_PRODUCTS || "3600");
-    const cacheKey = `products-${category}-${subCategory}-${isBestProduct}-${searchTerm}-${page}-${pageSize}`;
-
-    // Server-side cached function
-    const getCachedData = unstable_cache(
-      async () => {
-        const total = await Product.countDocuments(query);
-        const products = await Product.find(query)
-          .sort({ createdAt: -1 })
-          .skip((page - 1) * pageSize)
-          .limit(pageSize)
-          .lean();
-        return { items: products, total };
-      },
-      [cacheKey],
-      { revalidate: revalidateTime, tags: ["products"] }
-    );
-
-    const { items, total } = await getCachedData();
+    const total = await Product.countDocuments(query);
+    const products = await Product.find(query)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
 
     return NextResponse.json({
-      items,
+      items: products,
       total,
       page,
       pageSize,
       totalPages: Math.ceil(total / pageSize)
     }, {
       headers: {
-        'Cache-Control': `public, max-age=${revalidateTime}, stale-while-revalidate=59`
+        'Cache-Control': 'no-store, max-age=0'
       }
     });
   } catch (error) {

@@ -13,7 +13,12 @@ const nextConfig: NextConfig = {
         hostname: "uploadthing.com",
       }
     ]
-  }
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };
 
 export default nextConfig;

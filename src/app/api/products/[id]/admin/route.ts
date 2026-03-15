@@ -25,7 +25,7 @@ export async function PUT(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
     
-    return NextResponse.json(product);
+    return NextResponse.json(product, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Error updating product" },
@@ -54,7 +54,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
     
-    return NextResponse.json({ message: "Product deleted successfully" });
+    return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Error deleting product" },
