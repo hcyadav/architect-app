@@ -16,7 +16,7 @@ export interface IQuotationItem {
 export interface IOfficialQuotation {
   _id?: string;
   clientName: string;
-  clientEmail: string;
+  clientEmail?: string;
   items: IQuotationItem[];
   totalAmount: number;
   notes?: string;
@@ -65,7 +65,7 @@ const OfficialQuotationSchema = new Schema<IOfficialQuotation>(
     },
     clientEmail: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       lowercase: true,
     },
@@ -91,9 +91,11 @@ const OfficialQuotationSchema = new Schema<IOfficialQuotation>(
   }
 );
 
-/* -----------------------------
-   Model Export (important for Next.js)
---------------------------------*/
+// Force re-compilation in development to ensure schema changes take effect
+if (process.env.NODE_ENV === "development") {
+  delete models.OfficialQuotation;
+}
+
 const OfficialQuotation =
   models.OfficialQuotation ||
   model<IOfficialQuotation>("OfficialQuotation", OfficialQuotationSchema);

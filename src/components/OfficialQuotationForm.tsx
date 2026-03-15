@@ -73,7 +73,6 @@ export default function OfficialQuotationForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!clientName.trim()) return toast.error("Client name is required");
-    if (!clientEmail.trim()) return toast.error("Client email is required");
 
     const validItems = items.filter(i => i.description.trim() && i.rate && i.quantity);
     if (validItems.length === 0) return toast.error("Add at least one complete item with description, rate, and quantity");
@@ -155,10 +154,9 @@ export default function OfficialQuotationForm({
             />
           </div>
           <div className="space-y-3">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Client Email</label>
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Client Email (Optional)</label>
             <input
               type="email"
-              required
               value={clientEmail}
               onChange={(e) => setClientEmail(e.target.value)}
               className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-lg font-light"

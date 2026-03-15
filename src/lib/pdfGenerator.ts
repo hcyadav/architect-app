@@ -14,7 +14,7 @@ export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(26);
     doc.setTextColor(112, 70, 46);
-    doc.text("ABC DECORS", 105, 20, { align: "center" });
+    doc.text("MUNNA DECORS", 105, 20, { align: "center" });
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
@@ -127,7 +127,7 @@ export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
 
     doc.text("Thank you for your business!", 20, lastY + 20);
 
-    doc.text("For ABC DECORS", 150, lastY + 20);
+    doc.text("For MUNNA DECORS", 150, lastY + 20);
 
     doc.text("Authorized Signature", 150, lastY + 30);
 

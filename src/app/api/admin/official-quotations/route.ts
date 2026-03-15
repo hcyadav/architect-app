@@ -55,21 +55,27 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { clientName, clientEmail, items, totalAmount, notes } = body;
 
-    if (!clientName || !clientEmail || !items || items.length === 0) {
+    if (!clientName || !items || items.length === 0) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    await connectToDatabase();
-    const quotation = await OfficialQuotation.create({
+    const quotationData: any = {
       clientName,
-      clientEmail,
       items,
       totalAmount,
       notes,
-    });
+    };
+    if (clientEmail) {
+      quotationData.clientEmail = clientEmail;
+    }
 
-    // Send email to customer
-    await sendCustomerQuotation(clientEmail, clientName, items, totalAmount, notes);
+    await connectToDatabase();
+    const quotation = await OfficialQuotation.create(quotationData);
+
+    // Send email to customer if email is provided
+    if (clientEmail) {
+      await sendCustomerQuotation(clientEmail, clientName, items, totalAmount, notes);
+    }
 
     return NextResponse.json(quotation, { status: 201 });
   } catch (error: any) {
