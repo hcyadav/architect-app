@@ -549,8 +549,8 @@ export default function AdminProductsPage() {
               </div>
 
               {formData.imageUrl && (
-                <div className="mt-4 relative aspect-[16/9] w-full max-w-sm rounded-lg overflow-hidden border">
-                  <img src={formData.imageUrl} className="object-cover w-full h-full" alt="Main upload" />
+                <div className="mt-4 relative h-[300px] w-full max-w-lg rounded-lg overflow-hidden border bg-gray-50 flex items-center justify-center">
+                  <img src={formData.imageUrl} className="object-contain max-h-full max-w-full" alt="Main upload" />
                 </div>
               )}
             </div>

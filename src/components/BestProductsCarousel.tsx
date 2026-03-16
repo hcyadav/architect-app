@@ -79,11 +79,11 @@ export default function BestProductsCarousel() {
                         key={p._id}
                         className="min-w-[70vw] snap-center mx-auto"
                     >
-                        <div className="group relative w-full h-[80vh] overflow-hidden rounded-[2rem] bg-gray-100 shadow-xl border border-gray-100 mx-auto">
+                        <div className="group relative w-full h-[50vh] overflow-hidden rounded-[2rem] bg-gray-100 shadow-xl border border-gray-100 mx-auto">
                             <img
                                 src={p.imageUrl}
                                 alt={p.title}
-                                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
 

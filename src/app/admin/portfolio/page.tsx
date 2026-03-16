@@ -233,7 +233,7 @@ export default function AdminPortfolioPage() {
                                     }}
                                 />
                             </div>
-                            {projectForm.imageUrl && <img src={projectForm.imageUrl} className="w-40 h-24 object-cover rounded-lg border mt-2" />}
+                            {projectForm.imageUrl && <img src={projectForm.imageUrl} className="w-40 h-24 object-contain bg-white rounded-lg border mt-2" />}
                         </div>
 
                         <div className="flex gap-2">
@@ -250,7 +250,7 @@ export default function AdminPortfolioPage() {
                         <div className="divide-y max-h-96 overflow-y-auto custom-scrollbar">
                             {projects.length === 0 ? <p className="p-10 text-center text-gray-400">No projects added yet.</p> : projects.map(p => (
                                 <div key={p._id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
-                                    <img src={p.imageUrl} className="w-16 h-12 object-cover rounded-lg bg-gray-100" />
+                                    <img src={p.imageUrl} className="w-16 h-12 object-contain bg-white rounded-lg border" />
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium">{p.title}</h4>
                                         <p className="text-xs text-gray-400">{p.location || "No location"}</p>

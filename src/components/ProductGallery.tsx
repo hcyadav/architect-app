@@ -48,7 +48,7 @@ export default function ProductGallery({ mainImage, additionalImages = [], title
         <div className="flex flex-col gap-6 relative">
             {/* Main Image Container */}
             <div
-                className="aspect-square relative bg-white rounded-3xl overflow-hidden border border-gray-100 cursor-crosshair group shadow-sm"
+                className="relative bg-white rounded-3xl overflow-hidden border border-gray-100 cursor-crosshair group shadow-sm"
                 onMouseEnter={() => setShowZoom(true)}
                 onMouseLeave={() => setShowZoom(false)}
                 onMouseMove={handleMouseMove}
@@ -56,7 +56,7 @@ export default function ProductGallery({ mainImage, additionalImages = [], title
                 <img
                     src={activeImage}
                     alt={title}
-                    className="object-cover w-full h-full"
+                    className="w-full h-auto"
                 />
 
                 {/* The Lens */}
@@ -107,7 +107,7 @@ export default function ProductGallery({ mainImage, additionalImages = [], title
                                 : "border-gray-50 hover:border-gray-200 grayscale-[0.2] hover:grayscale-0"
                                 }`}
                         >
-                            <img src={img} alt={`${title} ${index}`} className="object-cover w-full h-full" />
+                            <img src={img} alt={`${title} ${index}`} className="object-contain w-full h-full" />
                         </button>
                     ))}
                 </div>
