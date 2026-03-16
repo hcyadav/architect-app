@@ -107,7 +107,7 @@ export default function BestProductsCarousel() {
                                             EXCEPTIONAL WORK
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl md:text-6xl font-serif font-medium text-white tracking-tighter leading-tight drop-shadow-xl">
+                                    <h3 className="text-2xl md:text-3xl font-serif font-medium text-white tracking-tighter leading-tight drop-shadow-xl">
                                         {p.title}
                                     </h3>
                                     <p className="text-gray-300 text-sm md:text-lg line-clamp-2 max-w-xl leading-relaxed font-light drop-shadow-md">
