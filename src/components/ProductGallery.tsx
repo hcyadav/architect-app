@@ -107,7 +107,7 @@ export default function ProductGallery({ mainImage, additionalImages = [], title
                                 : "border-gray-50 hover:border-gray-200 grayscale-[0.2] hover:grayscale-0"
                                 }`}
                         >
-                            <img src={img} alt={`${title} ${index}`} className="object-contain w-full h-full" />
+                            <img src={img} alt={`${title} ${index}`} className="object-cover w-full h-full" />
                         </button>
                     ))}
                 </div>
