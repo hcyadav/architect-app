@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Testimonial from "@/models/Testimonial";
+import prisma from "@/lib/prisma";
 
 export async function PUT(
   req: Request,
@@ -17,11 +16,13 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    await connectToDatabase();
-    const item = await Testimonial.findByIdAndUpdate(id, body, { new: true });
-    if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const item = await prisma.testimonial.update({
+      where: { id },
+      data: body
+    });
     return NextResponse.json(item);
   } catch (error) {
+    console.error("Error updating testimonial:", error);
     return NextResponse.json({ error: "Error updating testimonial" }, { status: 500 });
   }
 }
@@ -38,11 +39,12 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await connectToDatabase();
-    const item = await Testimonial.findByIdAndDelete(id);
-    if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    await prisma.testimonial.delete({
+      where: { id }
+    });
     return NextResponse.json({ message: "Deleted successfully" });
   } catch (error) {
+    console.error("Error deleting testimonial:", error);
     return NextResponse.json({ error: "Error deleting testimonial" }, { status: 500 });
   }
 }

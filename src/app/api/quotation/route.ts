@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Quotation from "@/models/Quotation";
+import prisma from "@/lib/prisma";
 import { sendAdminNotification } from "@/lib/nodemailer";
 
 export async function GET(req: Request) {
@@ -18,15 +17,22 @@ export async function GET(req: Request) {
     const pageSizeParam = searchParams.get("pageSize") || process.env.NEXT_PUBLIC_PAGE_SIZE || "10";
     const pageSize = isNaN(parseInt(pageSizeParam)) ? 10 : parseInt(pageSizeParam);
 
-    await connectToDatabase();
-    
-    const total = await Quotation.countDocuments();
-    // Populate user to get email/name
-    const quotations = await Quotation.find()
-      .populate("userId", "name email")
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
+    const [total, quotations] = await Promise.all([
+      prisma.quotation.count(),
+      prisma.quotation.findMany({
+        include: {
+          user: {
+            select: { name: true, email: true }
+          },
+          product: {
+            select: { title: true, imageUrl: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      })
+    ]);
 
     return NextResponse.json({
       items: quotations,
@@ -36,6 +42,7 @@ export async function GET(req: Request) {
       totalPages: Math.ceil(total / pageSize)
     });
   } catch (error) {
+    console.error("Error fetching quotations:", error);
     return NextResponse.json({ error: "Error fetching quotations" }, { status: 500 });
   }
 }
@@ -49,15 +56,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized or missing guest info" }, { status: 401 });
     }
 
-    await connectToDatabase();
-
-    const quotation = await Quotation.create({
-      // @ts-ignore
-      userId: session?.user?.id,
-      name: name || session?.user?.name,
-      email: email || session?.user?.email,
-      productId,
-      message,
+    const quotation = await prisma.quotation.create({
+      data: {
+        // @ts-ignore
+        userId: session?.user?.id || null,
+        name: name || session?.user?.name,
+        email: email || session?.user?.email,
+        productId: productId || null,
+        message,
+      }
     });
 
     // Send email notification to admin

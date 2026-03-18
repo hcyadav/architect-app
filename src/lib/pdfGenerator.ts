@@ -2,8 +2,21 @@
 
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { IOfficialQuotation } from "@/models/OfficialQuotation";
 import toast from "react-hot-toast";
+
+export interface IOfficialQuotation {
+  clientName: string;
+  clientEmail?: string;
+  items: Array<{
+    description: string;
+    rate: number;
+    quantity: number;
+    amount: number;
+  }>;
+  totalAmount: number;
+  notes?: string;
+  createdAt?: string | Date;
+}
 
 export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
   try {

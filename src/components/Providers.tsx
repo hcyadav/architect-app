@@ -1,12 +1,14 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { SidebarProvider } from "@/context/SidebarContext";
+import { ReactLenis } from "lenis/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <SidebarProvider>{children}</SidebarProvider>
+      <ReactLenis root>
+        {children}
+      </ReactLenis>
     </SessionProvider>
   );
 }

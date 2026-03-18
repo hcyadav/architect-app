@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Employee from "@/models/Employee";
+import prisma from "@/lib/prisma";
 
 export async function GET(req: Request) {
   try {
@@ -20,27 +19,30 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get("limit") || defaultLimit);
     const skip = (page - 1) * limit;
 
-    await connectToDatabase();
-    
-    let query: any = {};
+    let where: any = {};
     
     if (search) {
-      query.$or = [
-        { firstName: { $regex: search, $options: "i" } },
-        { lastName: { $regex: search, $options: "i" } }
+      where.OR = [
+        { firstName: { contains: search, mode: 'insensitive' } },
+        { lastName: { contains: search, mode: 'insensitive' } }
       ];
     }
     
     if (status) {
-      query.status = status;
+      where.status = status;
     }
 
     const [employees, totalEmployees] = await Promise.all([
-      Employee.find(query)
-        .sort({ firstName: 1, lastName: 1 })
-        .skip(skip)
-        .limit(limit),
-      Employee.countDocuments(query)
+      prisma.employee.findMany({
+        where,
+        orderBy: [
+          { firstName: 'asc' },
+          { lastName: 'asc' }
+        ],
+        skip,
+        take: limit,
+      }),
+      prisma.employee.count({ where })
     ]);
 
     return NextResponse.json({
@@ -50,6 +52,7 @@ export async function GET(req: Request) {
       currentPage: page
     });
   } catch (error) {
+    console.error("Fetch employees error:", error);
     return NextResponse.json({ error: "Failed to fetch employees" }, { status: 500 });
   }
 }
@@ -63,8 +66,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    await connectToDatabase();
-    const employee = await Employee.create(body);
+    const employee = await prisma.employee.create({
+      data: body
+    });
     return NextResponse.json(employee, { status: 201 });
   } catch (error: any) {
     console.error("Create employee error:", error);

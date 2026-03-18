@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import OfficialQuotation from "@/models/OfficialQuotation";
+import prisma from "@/lib/prisma";
 import { sendCustomerQuotation } from "@/lib/nodemailer";
 
 export async function GET(req: Request) {
@@ -19,13 +18,14 @@ export async function GET(req: Request) {
     const pageSizeParam = searchParams.get("pageSize") || process.env.NEXT_PUBLIC_PAGE_SIZE || "10";
     const pageSize = isNaN(parseInt(pageSizeParam)) ? 10 : parseInt(pageSizeParam);
 
-    await connectToDatabase();
-    
-    const total = await OfficialQuotation.countDocuments();
-    const quotations = await OfficialQuotation.find()
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
+    const [total, quotations] = await Promise.all([
+      prisma.officialQuotation.count(),
+      prisma.officialQuotation.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      })
+    ]);
 
     return NextResponse.json({
       items: quotations,
@@ -59,18 +59,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const quotationData: any = {
-      clientName,
-      items,
-      totalAmount,
-      notes,
-    };
-    if (clientEmail) {
-      quotationData.clientEmail = clientEmail;
-    }
-
-    await connectToDatabase();
-    const quotation = await OfficialQuotation.create(quotationData);
+    const quotation = await prisma.officialQuotation.create({
+      data: {
+        clientName,
+        clientEmail,
+        items,
+        totalAmount,
+        notes,
+      }
+    });
 
     // Send email to customer if email is provided
     if (clientEmail) {

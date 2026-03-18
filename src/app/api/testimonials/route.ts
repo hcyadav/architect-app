@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Testimonial from "@/models/Testimonial";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    await connectToDatabase();
-    const items = await Testimonial.find({}).sort({ createdAt: -1 });
+    const items = await prisma.testimonial.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
     return NextResponse.json(items);
   } catch (error) {
+    console.error("Error fetching testimonials:", error);
     return NextResponse.json({ error: "Error fetching testimonials" }, { status: 500 });
   }
 }
@@ -23,10 +24,12 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    await connectToDatabase();
-    const item = await Testimonial.create(body);
+    const item = await prisma.testimonial.create({
+      data: body
+    });
     return NextResponse.json(item, { status: 201 });
   } catch (error) {
+    console.error("Error creating testimonial:", error);
     return NextResponse.json({ error: "Error creating testimonial" }, { status: 500 });
   }
 }

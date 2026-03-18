@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Attendance from "@/models/Attendance";
+import prisma from "@/lib/prisma";
+
+const mapStatus = (s: string) => {
+  if (s === '1.5_days') return 'one_five_days';
+  if (s === '2_days') return 'two_days';
+  return s as any;
+}
 
 export async function GET(req: Request) {
   try {
@@ -22,34 +27,37 @@ export async function GET(req: Request) {
     const page = pageParam ? parseInt(pageParam) : null;
     const limit = parseInt(searchParams.get("limit") || defaultLimit);
 
-    await connectToDatabase();
-
-    let query: any = {};
+    let where: any = {};
 
     if (dateStr) {
       const date = new Date(dateStr);
       date.setHours(0, 0, 0, 0);
       const nextDay = new Date(date);
       nextDay.setDate(date.getDate() + 1);
-      query.date = { $gte: date, $lt: nextDay };
+      where.date = { gte: date, lt: nextDay };
     } else if (startDateStr && endDateStr) {
       const start = new Date(startDateStr);
       start.setHours(0, 0, 0, 0);
       const end = new Date(endDateStr);
       end.setHours(23, 59, 59, 999);
-      query.date = { $gte: start, $lte: end };
+      where.date = { gte: start, lte: end };
     }
 
     if (employeeId) {
-      query.employeeId = employeeId;
+      where.employeeId = employeeId;
     }
 
     // Only paginate when `page` param is explicitly provided (calendar needs all records)
     if (page !== null) {
       const skip = (page - 1) * limit;
       const [attendance, totalRecords] = await Promise.all([
-        Attendance.find(query).sort({ date: -1 }).skip(skip).limit(limit),
-        Attendance.countDocuments(query)
+        prisma.attendance.findMany({
+          where,
+          orderBy: { date: 'desc' },
+          skip,
+          take: limit,
+        }),
+        prisma.attendance.count({ where })
       ]);
       return NextResponse.json({
         attendance,
@@ -60,13 +68,16 @@ export async function GET(req: Request) {
     }
 
     // No pagination — return all (used for calendar display)
-    const attendance = await Attendance.find(query).sort({ date: -1 });
+    const attendance = await prisma.attendance.findMany({
+      where,
+      orderBy: { date: 'desc' },
+    });
     return NextResponse.json(attendance);
   } catch (error) {
+    console.error("Fetch attendance error:", error);
     return NextResponse.json({ error: "Failed to fetch attendance" }, { status: 500 });
   }
 }
-
 
 export async function POST(req: Request) {
   try {
@@ -78,8 +89,6 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { employeeId, date, status, hours, remarks, wages } = body;
-
-    await connectToDatabase();
     
     let year, month, day;
     if (date.includes('T')) {
@@ -95,14 +104,32 @@ export async function POST(req: Request) {
     const attendanceDate = new Date(Number(year), Number(month) - 1, Number(day));
     attendanceDate.setHours(0, 0, 0, 0);
 
-    const attendance = await Attendance.findOneAndUpdate(
-      { employeeId, date: attendanceDate },
-      { status, hours, remarks, wages },
-      { upsert: true, new: true }
-    );
+    const attendance = await prisma.attendance.upsert({
+      where: {
+        employeeId_date: {
+          employeeId,
+          date: attendanceDate
+        }
+      },
+      update: {
+        status: mapStatus(status),
+        hours,
+        remarks,
+        wages
+      },
+      create: {
+        employeeId,
+        date: attendanceDate,
+        status: mapStatus(status),
+        hours,
+        remarks,
+        wages
+      }
+    });
 
     return NextResponse.json(attendance);
   } catch (error) {
+    console.error("Save attendance error:", error);
     return NextResponse.json({ error: "Failed to save attendance" }, { status: 500 });
   }
 }

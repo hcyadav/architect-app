@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Employee from "@/models/Employee";
+import prisma from "@/lib/prisma";
 
 export async function PUT(
   req: Request,
@@ -18,15 +17,14 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
     
-    await connectToDatabase();
-    const employee = await Employee.findByIdAndUpdate(id, body, { new: true });
+    const employee = await prisma.employee.update({
+      where: { id },
+      data: body,
+    });
     
-    if (!employee) {
-      return NextResponse.json({ error: "Employee not found" }, { status: 404 });
-    }
-
     return NextResponse.json(employee);
   } catch (error) {
+    console.error("Update employee error:", error);
     return NextResponse.json({ error: "Failed to update employee" }, { status: 500 });
   }
 }
@@ -44,15 +42,13 @@ export async function DELETE(
 
     const { id } = await params;
     
-    await connectToDatabase();
-    const employee = await Employee.findByIdAndDelete(id);
+    await prisma.employee.delete({
+      where: { id },
+    });
     
-    if (!employee) {
-      return NextResponse.json({ error: "Employee not found" }, { status: 404 });
-    }
-
     return NextResponse.json({ message: "Employee deleted successfully" });
   } catch (error) {
+    console.error("Delete employee error:", error);
     return NextResponse.json({ error: "Failed to delete employee" }, { status: 500 });
   }
 }

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Quotation from "@/models/Quotation";
+import prisma from "@/lib/prisma";
 import { sendReframedResponse } from "@/lib/nodemailer";
 
 export async function POST(req: Request) {
@@ -19,9 +18,14 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        await connectToDatabase();
-
-        const quotation = await Quotation.findById(quotationId).populate("userId", "name email");
+        const quotation = await prisma.quotation.findUnique({
+            where: { id: quotationId },
+            include: {
+                user: {
+                    select: { name: true, email: true }
+                }
+            }
+        });
 
         if (!quotation) {
             return NextResponse.json({ error: "Quotation not found" }, { status: 404 });
@@ -29,17 +33,19 @@ export async function POST(req: Request) {
 
         // Send email to customer
         await sendReframedResponse(
-            quotation.email || quotation.userId?.email,
-            quotation.name || quotation.userId?.name,
+            quotation.email || (quotation as any).user?.email,
+            quotation.name || (quotation as any).user?.name,
             quotation.message,
             reframedMessage
         );
 
         // Update status
-        quotation.status = "reviewed";
-        await quotation.save();
+        const updatedQuotation = await prisma.quotation.update({
+            where: { id: quotationId },
+            data: { status: "reviewed" }
+        });
 
-        return NextResponse.json({ success: true, quotation });
+        return NextResponse.json({ success: true, quotation: updatedQuotation });
     } catch (error: any) {
         console.error("Error reframing quotation:", error);
         return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });

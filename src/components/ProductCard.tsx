@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { Plus } from "lucide-react";
 
 export default function ProductCard({ product }: { product: any }) {
   const router = useRouter();
@@ -14,48 +13,53 @@ export default function ProductCard({ product }: { product: any }) {
     if (status === "unauthenticated") {
       signIn("google");
     } else {
-      router.push(`/products/${product._id}`);
+      router.push(`/products/${product._id || product.id}`);
     }
   };
 
   return (
-    <Card className="group overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_12px_48px_rgb(0,0,0,0.08)] transition-all duration-700 flex flex-col h-full rounded-[2rem] bg-white">
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-50">
-        <img
+    <div className="group relative flex flex-col gap-4 rounded-[2rem] bg-white p-4 transition-all hover:shadow-2xl hover:shadow-slate-200/50">
+      <div className="relative aspect-square overflow-hidden rounded-[1.5rem] bg-slate-50">
+        <Image
           src={product.imageUrl || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"}
           alt={product.title}
-          className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <button
+          onClick={handleViewDetails}
+          className="absolute inset-0 z-10"
+        />
       </div>
 
-      <CardContent className="p-6 flex flex-col flex-1 gap-2">
-        <div className="flex-1 space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 bg-gray-50 text-[10px] uppercase tracking-normal font-bold text-gray-400 rounded-lg group-hover:bg-[#D4AF37]/10 group-hover:text-[#D4AF37] transition-colors duration-500">
-              {product.subCategory || "Masterpiece"}
-            </span>
+      <div className="flex flex-1 flex-col px-2 pb-2">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="font-serif text-lg font-medium leading-tight text-slate-900">
+              {product.title}
+            </h3>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              {product.subCategory || product.category || "Collection"}
+            </p>
           </div>
-          <h3 className="text-xl font-medium text-gray-900 font-serif tracking-tighter line-clamp-1 group-hover:text-[#D4AF37] transition-colors duration-500">
-            {product.title}
-          </h3>
-
-          <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed font-light opacity-80">
-            {product.description}
-          </p>
-        </div>
-
-        <div className="mt-auto pt-4">
-          <Button
+          <button 
             onClick={handleViewDetails}
-            variant="outline"
-            className="w-full h-12 bg-gray-50/50 hover:bg-gray-900 border-gray-100 hover:border-gray-900 text-gray-900 hover:text-white font-bold text-xs uppercase tracking-normal rounded-xl transition-all duration-500 flex gap-2 group/btn"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-100 bg-white text-slate-900 transition-all hover:bg-orange-600 hover:border-orange-600 hover:text-white"
           >
-            View Details
-            <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
-          </Button>
+            <Plus className="h-5 w-5" />
+          </button>
         </div>
-      </CardContent>
-    </Card>
+
+        <div className="mt-4 flex items-center gap-3">
+          <span className="font-sans text-base font-bold text-slate-900">
+            {product.price ? `$${product.price}` : "$470"}
+          </span>
+          <span className="text-xs text-slate-300 line-through">
+            $550
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
