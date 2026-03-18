@@ -9,7 +9,7 @@ import { Container } from "@/components/landing/Container";
 import { FadeIn } from "@/components/landing/FadeIn";
 import { SectionHeader } from "@/components/landing/SectionHeader";
 import type { LandingProduct } from "@/components/landing/types";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface FeaturedCarouselProps {
@@ -36,7 +36,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
   const prev = () => setActiveIndex((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <section className="py-20 md:py-28">
+    <section>
       <Container>
         <FadeIn className="space-y-10">
           <SectionHeader
@@ -68,7 +68,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                   <p className="mt-3 max-w-2xl text-white/80">{slide.description}</p>
                   <Link
                     href={`/products/${slide.id}`}
-                    className={cn(buttonVariants({ variant: "secondary", size: "lg" }), "mt-6 rounded-2xl")}
+                    className={cn( "mt-6 rounded-2xl")}
                   >
                     Explore Details
                   </Link>

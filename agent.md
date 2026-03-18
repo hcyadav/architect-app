@@ -35,7 +35,6 @@ Core stack in this repo:
 2. On sign-in, user is upserted into `User` collection.
 3. JWT callback reloads role from DB.
 4. Middleware protects `/admin/*` and `/quotation/*` pages.
-5. API routes enforce admin checks again on sensitive endpoints.
 
 ### 2.2 Public flow
 
@@ -74,18 +73,16 @@ Core stack in this repo:
 
 ## P0 (do first)
 
-1. Stop over-forcing dynamic rendering:
-   - Revisit `export const dynamic = "force-dynamic"` on pages that do not need real-time rendering.
-2. Use `next/image` for major UI images:
+1. Use `next/image` for major UI images:
    - Replace repeated raw `<img>` usage in public and admin pages.
-3. Add DB indexes for hot queries:
+2. Add DB indexes for hot queries:
    - `Product`: `category`, `subCategory`, `isBestProduct`, `createdAt`
    - `Quotation` / `OfficialQuotation`: `createdAt`, `status`
    - `Employee`: `status`, `firstName`, `lastName`
    - `Attendance`: add index on `date` (in addition to `{ employeeId, date }`)
-4. Reduce large list fetches:
+3. Reduce large list fetches:
    - Avoid `pageSize=1000` in admin product listing.
-5. Keep response payloads small:
+4. Keep response payloads small:
    - Use `.lean().select(...)` where full document methods are not needed.
 
 ## P1 (next)

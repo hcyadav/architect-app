@@ -15,7 +15,7 @@ const logos = [
 
 export function ClientLogos() {
   return (
-    <section className="py-20 md:py-28">
+    <section>
       <Container>
         <FadeIn className="space-y-12">
           <SectionHeader

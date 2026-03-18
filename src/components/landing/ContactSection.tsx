@@ -48,7 +48,7 @@ export function ContactSection() {
   }
 
   return (
-    <section className="py-20 md:py-28">
+    <section>
       <Container>
         <div className="grid grid-cols-1 items-start gap-10 md:gap-16 lg:grid-cols-2">
           <FadeIn className="space-y-10">

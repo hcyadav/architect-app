@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Geist } from "next/font/google";
+import { Inter, Geist, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import MainLayout from "@/components/MainLayout";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   title: "Architect & Interior Design Platform",
@@ -20,9 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html lang="en" className={cn("font-sans", geist.variable, inter.variable, instrumentSerif.variable)}>
       <body
-        className={`${inter.className} bg-[#FDFBF7] text-gray-900 antialiased overflow-hidden overflow-x-hidden w-screen max-w-full`}
+        className={`${inter.className} bg-[#F5F3EE] text-gray-900 antialiased overflow-x-hidden`}
       >
         <Providers>
           <MainLayout>{children}</MainLayout>

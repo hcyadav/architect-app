@@ -201,7 +201,6 @@ Benefits:
 ### 7.1 Layout Rules
 
 * Max width: `max-w-7xl mx-auto`
-* Section spacing: `py-20 md:py-28`
 * Grid gap: `gap-6 md:gap-10`
 
 ---

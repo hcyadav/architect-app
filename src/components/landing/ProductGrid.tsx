@@ -12,7 +12,7 @@ export function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-28">
+    <section>
       <Container>
         <FadeIn className="space-y-12">
           <SectionHeader

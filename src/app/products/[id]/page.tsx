@@ -1,14 +1,11 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import connectToDatabase from "@/lib/mongodb";
-import Product from "@/models/Product";
+import prisma from "@/lib/prisma";
 
 import QuotationForm from "@/components/QuotationForm";
 import ProductGallery from "@/components/ProductGallery";
 import BackButton from "@/components/BackButton";
-
-export const dynamic = "force-dynamic";
 
 export default async function ProductDetails({
   params,
@@ -22,8 +19,9 @@ export default async function ProductDetails({
   }
 
   const { id } = await params;
-  await connectToDatabase();
-  const product = await Product.findById(id).lean() as any;
+  const product = await prisma.product.findUnique({
+    where: { id }
+  }) as any;
 
   if (!product) {
     return (

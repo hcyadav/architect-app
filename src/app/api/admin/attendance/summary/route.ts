@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Employee from "@/models/Employee";
-import Attendance from "@/models/Attendance";
-import Settings from "@/models/Settings";
+import prisma from "@/lib/prisma";
 
 export async function GET(req: Request) {
   try {
@@ -21,23 +18,28 @@ export async function GET(req: Request) {
     if (isNaN(month) || isNaN(year)) {
       return NextResponse.json({ error: "Month and Year are required" }, { status: 400 });
     }
-
-    await connectToDatabase();
     
     // Get full day hours setting
-    const settings = await Settings.findOne({ key: "FULL_DAY_HOURS" });
-    const fullDayHours = settings?.value || 9;
+    const settings = await prisma.settings.findUnique({
+      where: { key: "FULL_DAY_HOURS" }
+    });
+    const fullDayHours = (settings?.value as number) || 9;
 
     const startDate = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
 
-    const employees = await Employee.find({ status: "active" });
-    const attendanceRecords = await Attendance.find({
-      date: { $gte: startDate, $lte: endDate }
+    const employees = await prisma.employee.findMany({
+      where: { status: "active" }
+    });
+    
+    const attendanceRecords = await prisma.attendance.findMany({
+      where: {
+        date: { gte: startDate, lte: endDate }
+      }
     });
 
     const summary = employees.map(emp => {
-      const empRecords = attendanceRecords.filter(r => r.employeeId.toString() === emp._id.toString());
+      const empRecords = attendanceRecords.filter(r => r.employeeId === emp.id);
       
       const details = {
           fullDays: empRecords.filter(r => r.status === 'full').length,
@@ -53,7 +55,7 @@ export async function GET(req: Request) {
       const totalPayableDays = details.fullDays + (details.halfDays * 0.5) + payableFromHourly;
 
       return {
-          employeeId: emp._id,
+          employeeId: emp.id,
           name: `${emp.firstName} ${emp.lastName}`,
           designation: emp.designation,
           details,

@@ -5,4 +5,5 @@ export interface LandingProduct {
   imageUrl: string;
   category: "product" | "premium" | "corporate";
   subCategory?: string;
+  price?: string;
 }

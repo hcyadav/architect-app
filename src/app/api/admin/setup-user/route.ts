@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
-import User from "@/models/User";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    await connectToDatabase();
-    
     const body = await req.json();
     const { name, email, role, secretKey } = body;
 
-    // Optional: Simple security check to avoid public abuse
-    // You can set ADMIN_SETUP_KEY in your .env.local
     const expectedKey = process.env.ADMIN_SETUP_KEY || "architect_secret_99";
     
     if (secretKey !== expectedKey) {
@@ -27,40 +22,28 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if user exists
-    let user = await User.findOne({ email });
-
-    if (user) {
-      // Update existing user
-      user.role = role || "admin";
-      user.name = name;
-      await user.save();
-      return NextResponse.json({
-        message: "User updated successfully",
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
-      });
-    } else {
-      // Create new user
-      user = await User.create({
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: {
         name,
-        email,
         role: role || "admin",
-      });
-      return NextResponse.json({
-        message: "User created successfully",
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
-      });
-    }
+      },
+      create: {
+        email,
+        name,
+        role: role || "admin",
+      }
+    });
+
+    return NextResponse.json({
+      message: "User set up successfully",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (error: any) {
     console.error("Setup User Error:", error);
     return NextResponse.json(

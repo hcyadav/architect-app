@@ -1,19 +1,18 @@
 import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
-import Product from "@/models/Product";
+import prisma from "@/lib/prisma";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectToDatabase();
-    // Use the params parameter, wait, params in Next 15 is slightly different
-    // params is a Promise in Next.js 15, let's await it
     const paramsResolved = await params;
     const revalidateTime = parseInt(process.env.CACHE_TTL_PRODUCTS || "3600");
     
-    const product = await Product.findById(paramsResolved.id).lean();
+    const product = await prisma.product.findUnique({
+      where: { id: paramsResolved.id }
+    });
+    
     if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
     
     return NextResponse.json(product, {
@@ -22,6 +21,7 @@ export async function GET(
       }
     });
   } catch (error) {
+    console.error("Error fetching product:", error);
     return NextResponse.json({ error: "Error fetching product" }, { status: 500 });
   }
 }

@@ -1,80 +1,189 @@
-import connectToDatabase from "@/lib/mongodb";
-import Product from "@/models/Product";
-
+import Link from "next/link";
+import prisma from "@/lib/prisma";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { FeatureShowcase } from "@/components/landing/FeatureShowcase";
+import { ExperienceSection } from "@/components/landing/ExperienceSection";
+import { ProductCard } from "@/components/landing/ProductCard";
+import { BestProduct } from "@/components/landing/BestProduct";
+import { HappyPeople } from "@/components/landing/HappyPeople";
 import { ClientLogos } from "@/components/landing/ClientLogos";
 import { ContactSection } from "@/components/landing/ContactSection";
-import { FeaturedCarousel } from "@/components/landing/FeaturedCarousel";
-import { HeroSection } from "@/components/landing/HeroSection";
-import { ProductGrid } from "@/components/landing/ProductGrid";
+import { cn } from "@/lib/utils";
 import type { LandingProduct } from "@/components/landing/types";
+import { FadeIn } from "@/components/landing/FadeIn";
 
 export const revalidate = 300;
 
-interface DbProduct {
-  _id: string | { toString(): string };
+const HOME_PAGE_SIZE = 8;
+
+interface HomePageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+function toProduct(product: {
+  id: string;
   title: string;
   description: string;
   imageUrl: string;
-  category: "product" | "premium" | "corporate";
-  subCategory?: string;
-}
-
-function mapProduct(product: DbProduct): LandingProduct {
+  category: string;
+  subCategory?: string | null;
+  price?: string | null;
+}): LandingProduct {
   return {
-    id: typeof product._id === "string" ? product._id : product._id.toString(),
+    id: product.id,
     title: product.title,
     description: product.description,
     imageUrl: product.imageUrl,
-    category: product.category,
-    subCategory: product.subCategory,
+    category: product.category as LandingProduct["category"],
+    subCategory: product.subCategory || undefined,
+    price: product.price || undefined,
   };
 }
 
-async function getLandingData() {
-  await connectToDatabase();
+function readPage(value?: string) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 1) return 1;
+  return Math.floor(parsed);
+}
 
-  const [featuredDocs, latestDocs] = await Promise.all([
-    Product.find({ isBestProduct: true })
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .select("title description imageUrl category subCategory")
-      .lean<DbProduct[]>(),
-    Product.find({})
-      .sort({ createdAt: -1 })
-      .limit(9)
-      .select("title description imageUrl category subCategory")
-      .lean<DbProduct[]>(),
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const resolvedSearchParams = await searchParams;
+  const requestedPage = readPage(resolvedSearchParams.page);
+
+  const [totalProducts, featured, testimonials] = await Promise.all([
+    prisma.product.count(),
+    prisma.product.findFirst({
+      where: { isBestProduct: true },
+      orderBy: { updatedAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        imageUrl: true,
+        category: true,
+        subCategory: true,
+        price: true,
+      },
+    }),
+    prisma.testimonial.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: {
+        id: true,
+        clientName: true,
+        role: true,
+        company: true,
+        content: true,
+        rating: true,
+        imageUrl: true,
+      },
+    }),
   ]);
 
-  const featured = featuredDocs.map(mapProduct);
-  const products = latestDocs.map(mapProduct);
+  const totalPages = Math.max(1, Math.ceil(totalProducts / HOME_PAGE_SIZE));
+  const currentPage = Math.min(requestedPage, totalPages);
 
-  return {
-    featured: featured.length > 0 ? featured : products.slice(0, 5),
-    products,
-  };
-}
+  const products = await prisma.product.findMany({
+    orderBy: { createdAt: "desc" },
+    skip: (currentPage - 1) * HOME_PAGE_SIZE,
+    take: HOME_PAGE_SIZE,
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      imageUrl: true,
+      category: true,
+      subCategory: true,
+      price: true,
+    },
+  });
 
-export default async function HomePage() {
-  const { featured, products } = await getLandingData();
-
-  const heroImage =
-    featured[0]?.imageUrl || products[0]?.imageUrl || "/uploads/1772704211002-sofa1.jpg";
+  const mappedProducts = products.map(toProduct);
+  const heroProduct = featured ? toProduct(featured) : mappedProducts[0];
 
   return (
-    <main className="bg-background">
+    <div className="bg-background">
       <HeroSection
-        title="Refined Architecture For Contemporary Living"
-        description="We shape spatial experiences through calm minimalism, material intelligence, and execution discipline for homes, premium residences, and corporate environments."
-        ctaLabel="View Collection"
-        ctaHref="/portfolio"
-        backgroundImage={heroImage}
+        title="Create spaces that last a lifetime."
+        description="From concept to execution, we build homes and workspaces with calm detail and premium craftsmanship."
+        ctaLabel="EXPLORE COLLECTIONS"
+        ctaHref="/products"
+        backgroundImage={heroProduct?.imageUrl || "/uploads/1772704211002-sofa1.jpg"}
       />
 
-      <FeaturedCarousel products={featured} />
-      <ProductGrid products={products} />
+      <FeatureShowcase />
+
+      <ExperienceSection />
+
+      {/* Latest Collection */}
+      <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mb-16 flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
+          <div className="space-y-4">
+            <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
+                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">The Catalog</span>
+            </div>
+            <h2 className="font-serif text-4xl font-medium tracking-tight text-slate-900 md:text-6xl">
+              Explore latest collection
+            </h2>
+          </div>
+
+          <Link
+            href="/products"
+            className="group inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold transition hover:bg-slate-50"
+          >
+            Furniture that blends with your personal style
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform group-hover:translate-x-1">
+               <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {mappedProducts.map((product, i) => (
+            <FadeIn key={product.id} delayMs={i * 100} direction="up">
+              <ProductCard product={product} />
+            </FadeIn>
+          ))}
+        </div>
+
+        <div className="mt-16 flex items-center justify-center gap-4">
+          <Link
+            href={`/?page=${Math.max(1, currentPage - 1)}`}
+            className={cn(
+              "p-4 rounded-full border border-slate-200 bg-white transition hover:bg-slate-50 hover:border-slate-300",
+              currentPage === 1 && "pointer-events-none opacity-20"
+            )}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </Link>
+          <span className="text-sm font-bold tracking-widest text-slate-400">
+            {currentPage} / {totalPages}
+          </span>
+          <Link
+            href={`/?page=${Math.min(totalPages, currentPage + 1)}`}
+            className={cn(
+               "p-4 rounded-full border border-slate-200 bg-white transition hover:bg-slate-50 hover:border-slate-300",
+              currentPage === totalPages && "pointer-events-none opacity-20"
+            )}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </Link>
+        </div>
+      </section>
+
+      {featured && <BestProduct product={toProduct(featured)} />}
+
+      <HappyPeople testimonials={testimonials.map(t => ({
+        id: t.id,
+        clientName: t.clientName,
+        role: t.role || undefined,
+        content: t.content,
+        imageUrl: t.imageUrl || undefined
+      }))} />
+
       <ClientLogos />
       <ContactSection />
-    </main>
+    </div>
   );
 }
+

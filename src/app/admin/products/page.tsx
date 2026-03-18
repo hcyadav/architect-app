@@ -237,7 +237,7 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 mb-10">
+    <div className="max-w-6xl mx-auto space-y-12 mb-10">
       <Toaster position="top-right" />
 
       <BackButton />

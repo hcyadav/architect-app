@@ -39,7 +39,7 @@ export default function BestProductsPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-10 mb-10">
+        <div className="max-w-6xl mx-auto space-y-10 mb-10">
             <Toaster position="top-right" />
             <BackButton />
 

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Product from "@/models/Product";
+import prisma from "@/lib/prisma";
 
 export async function PUT(
   req: Request,
@@ -17,16 +16,15 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    await connectToDatabase();
 
-    const product = await Product.findByIdAndUpdate(id, body, { new: true });
-    
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
+    const product = await prisma.product.update({
+      where: { id },
+      data: body,
+    });
     
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
+    console.error("Error updating product:", error);
     return NextResponse.json(
       { error: "Error updating product" },
       { status: 500 }
@@ -46,16 +44,14 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await connectToDatabase();
 
-    const product = await Product.findByIdAndDelete(id);
-    
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
+    await prisma.product.delete({
+      where: { id },
+    });
     
     return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
   } catch (error) {
+    console.error("Error deleting product:", error);
     return NextResponse.json(
       { error: "Error deleting product" },
       { status: 500 }

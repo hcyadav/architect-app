@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { Search, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { FadeIn } from "@/components/landing/FadeIn";
 
 interface CategorizedProducts {
   category: "product" | "corporate" | "premium";
@@ -22,7 +23,6 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   const isFetching = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -59,7 +59,6 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
     fetchProducts(page, page === 1);
   }, [page, fetchProducts]);
 
-  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -77,7 +76,6 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
     return () => observer.disconnect();
   }, [loading, page, totalPages]);
 
-  // Extract unique subCategories for tabs
   const [subCategories, setSubCategories] = useState<string[]>(["All"]);
 
   useEffect(() => {
@@ -104,82 +102,86 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-12 px-4 md:px-8">
-      <div className="space-y-6 pb-6 border-b border-gray-100">
-        <div className="space-y-2">
-          <h1 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-serif">
-            {getTitle()}
-          </h1>
-          <p className="text-gray-500 font-light text-lg max-w-2xl leading-relaxed">
-            {getSubtitle()}
-          </p>
-        </div>
-
-        {/* Search & Sub Category Tabs */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
-          {subCategories.length > 1 && (
-            <div className="flex flex-wrap gap-3 order-2 md:order-1">
-              {subCategories.map((sub) => (
-                <Button
-                  key={sub}
-                  variant={activeSub === sub ? "default" : "outline"}
-                  onClick={() => setActiveSub(sub)}
-                  className={`h-11 px-6 rounded-2xl text-sm font-medium transition-all duration-300 ${activeSub === sub
-                    ? "bg-[#D4AF37] hover:bg-[#B8962E] text-white shadow-lg border-none active:scale-95"
-                    : "bg-white text-gray-500 border-gray-100 hover:border-[#D4AF37] hover:text-[#D4AF37] hover:bg-[#D4AF37]/5"
-                    }`}
-                >
-                  {sub}
-                </Button>
-              ))}
+    <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 bg-background">
+      <FadeIn className="space-y-12" direction="none">
+        <div className="space-y-6 pb-12 border-b border-slate-100">
+          <div className="space-y-4">
+            <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Explore</span>
             </div>
-          )}
-
-          {/* Dynamic Search Input */}
-          <div className="relative w-full md:w-80 order-1 md:order-2 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-12 pl-11 pr-11 bg-white border-gray-100 rounded-2xl focus-visible:ring-2 focus-visible:ring-[#D4AF37]/20 focus-visible:border-[#D4AF37] outline-none transition-all text-sm shadow-sm"
-            />
-            {search && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSearch("")}
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 text-gray-400 hover:text-gray-600 hover:bg-transparent"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.length > 0 ? (
-          products.map((p) => (
-            <ProductCard key={p._id} product={p} />
-          ))
-        ) : !loading && (
-          <div className="col-span-full py-24 text-center border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50">
-            <h3 className="text-lg font-medium text-gray-900 mb-1">No items found</h3>
-            <p className="text-gray-500 font-light">
-              We haven't added any projects in this category yet.
+            <h1 className="text-5xl md:text-7xl font-medium text-slate-900 tracking-tight font-serif leading-tight">
+              {getTitle()}
+            </h1>
+            <p className="text-slate-500 font-light text-xl max-w-2xl leading-relaxed">
+              {getSubtitle()}
             </p>
           </div>
-        )}
-      </div>
 
-      {/* Infinite Scroll Loader */}
-      {(loading || page < totalPages) && (
-        <div ref={loaderRef} className="py-12 flex justify-center">
-          <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pt-8">
+            {subCategories.length > 1 && (
+              <div className="flex flex-wrap gap-3">
+                {subCategories.map((sub) => (
+                  <Button
+                    key={sub}
+                    variant={activeSub === sub ? "default" : "outline"}
+                    onClick={() => setActiveSub(sub)}
+                    className={`h-12 px-8 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeSub === sub
+                      ? "bg-orange-600 hover:bg-orange-700 text-white shadow-xl shadow-orange-600/20 border-none"
+                      : "bg-white text-slate-500 border-slate-200 hover:border-orange-600 hover:text-orange-600 hover:bg-orange-50"
+                      }`}
+                  >
+                    {sub}
+                  </Button>
+                ))}
+              </div>
+            )}
+
+            <div className="relative w-full md:w-96 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+              <Input
+                type="text"
+                placeholder="Search products..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-14 pl-12 pr-12 bg-white border-slate-200 rounded-full focus-visible:ring-2 focus-visible:ring-orange-600/20 focus-visible:border-orange-600 outline-none transition-all text-sm shadow-sm"
+              />
+              {search && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSearch("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 text-slate-400 hover:text-slate-600"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.length > 0 ? (
+            products.map((p, i) => (
+              <FadeIn key={p._id} delayMs={i * 50} direction="up">
+                <ProductCard product={p} />
+              </FadeIn>
+            ))
+          ) : !loading && (
+            <div className="col-span-full py-32 text-center border border-dashed border-slate-200 rounded-[3rem] bg-white">
+              <h3 className="text-xl font-medium text-slate-900 mb-2 font-serif">No items found</h3>
+              <p className="text-slate-500 font-light max-w-sm mx-auto">
+                We haven&apos;t added any projects in this category yet. Please check back soon.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {(loading || page < totalPages) && (
+          <div ref={loaderRef} className="py-24 flex justify-center">
+            <Loader2 className="w-10 h-10 text-orange-600 animate-spin" />
+          </div>
+        )}
+      </FadeIn>
     </div>
   );
 }

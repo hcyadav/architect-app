@@ -1,7 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import connectToDatabase from "./mongodb";
-import User from "../models/User";
+import prisma from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -33,30 +32,24 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          await connectToDatabase();
-
-          // Use findOneAndUpdate with upsert to atomically create or update
-          // This avoids duplicate key errors entirely
-          await User.findOneAndUpdate(
-            { email },
-            {
-              $set: {
-                name: user.name || (profile as any)?.name || "User",
-                image: user.image || (profile as any)?.picture,
-              },
-              $setOnInsert: {
-                email: email,
-                role: "user",
-              },
+          // Use upsert to atomically create or update
+          await prisma.user.upsert({
+            where: { email },
+            update: {
+              name: user.name || (profile as any)?.name || "User",
+              image: user.image || (profile as any)?.picture,
             },
-            { upsert: true, new: true }
-          );
+            create: {
+              email,
+              name: user.name || (profile as any)?.name || "User",
+              image: user.image || (profile as any)?.picture,
+              role: "user",
+            },
+          });
 
           console.log("DEBUG: User upserted successfully:", email);
           return true;
         } catch (error) {
-          // Log the error but DO NOT block sign-in
-          // The user can still sign in, they just might not have a DB record yet
           console.error("DEBUG: DB Error during signIn (non-blocking):", error);
           return true;
         }
@@ -67,17 +60,17 @@ export const authOptions: NextAuthOptions = {
       // Always refresh role from DB on every token refresh
       if (token.email) {
         try {
-          await connectToDatabase();
-          const dbUser = await User.findOne({ email: token.email });
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email },
+          });
           if (dbUser) {
             token.role = dbUser.role;
-            token.id = dbUser._id.toString();
+            token.id = dbUser.id;
           } else {
             token.role = "user";
           }
         } catch (err) {
           console.error("JWT Sync Error:", err);
-          // Keep existing token data if DB lookup fails
           if (!token.role) {
             token.role = "user";
           }

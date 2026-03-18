@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import connectToDatabase from "@/lib/mongodb";
-import Portfolio from "@/models/Portfolio";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    await connectToDatabase();
-    const items = await Portfolio.find({}).sort({ createdAt: -1 });
+    const items = await prisma.portfolio.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
     return NextResponse.json(items);
   } catch (error) {
+    console.error("Error fetching portfolio:", error);
     return NextResponse.json({ error: "Error fetching portfolio" }, { status: 500 });
   }
 }
@@ -23,10 +24,12 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    await connectToDatabase();
-    const item = await Portfolio.create(body);
+    const item = await prisma.portfolio.create({
+      data: body
+    });
     return NextResponse.json(item, { status: 201 });
   } catch (error) {
+    console.error("Error creating portfolio item:", error);
     return NextResponse.json({ error: "Error creating portfolio item" }, { status: 500 });
   }
 }
