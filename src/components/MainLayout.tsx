@@ -16,6 +16,7 @@ import {
   User as UserIcon,
   X,
 } from "lucide-react";
+import { Button } from "./ui/button";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -78,7 +79,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="min-h-screen bg-background text-slate-900 selection:bg-orange-100 selection:text-orange-900">
       <header className="sticky top-0 z-50 border-b border-black/[0.03] bg-background/80 backdrop-blur-xl">
-        <motion.div 
+        <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
@@ -95,9 +96,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-all hover:text-orange-600 ${
-                  isActive(item.href) ? "text-orange-600" : "text-slate-500"
-                }`}
+                className={`text-sm font-medium transition-all hover:text-orange-600 ${isActive(item.href) ? "text-orange-600" : "text-slate-500"
+                  }`}
               >
                 {item.label}
               </Link>
@@ -106,38 +106,41 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
           <div className="flex items-center gap-4">
             {!isAdmin && (
-            <Link
-              href="/products"
-              className="hidden h-11 items-center gap-2 rounded-full bg-orange-600 px-6 text-[13px] font-semibold text-white transition-all hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-200 lg:inline-flex"
-            >
-              SHOP NOW
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="transition-transform group-hover:translate-x-0.5"
+              <Link
+                href="/products"
+                className="hidden h-11 items-center gap-2 rounded-full bg-orange-600 px-6 text-[13px] font-semibold text-white transition-all hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-200 lg:inline-flex"
               >
-                <path
-                  d="M1 6H11M11 6L6 1M11 6L6 11"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Link>)}
+                SHOP NOW
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="transition-transform group-hover:translate-x-0.5"
+                >
+                  <path
+                    d="M1 6H11M11 6L6 1M11 6L6 11"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Link>)}
 
             {status === "loading" ? (
               <div className="h-9 w-9 animate-pulse rounded-full bg-black/5" />
             ) : !session ? (
-              <button
-                onClick={() => signIn("google", { callbackUrl: "/" })}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/5 bg-white text-slate-700 transition hover:border-black/10 hover:bg-slate-50"
-              >
-                <LogIn className="h-4 w-4" />
-              </button>
+              <Button onClick={() => signIn("google", { callbackUrl: "/" })} variant={"default"} className="rounded-full py-5.5 px-6 cursor-pointer">
+                Login
+              </Button>
+              // <button
+              //   onClick={() => signIn("google", { callbackUrl: "/" })}
+              //   className="inline-flex py-2 px-5 items-center justify-center rounded-full border border-black/5 bg-white text-slate-700 transition hover:border-black/10 hover:bg-slate-50"
+              // >
+              //   Login
+              // </button>
             ) : (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -205,11 +208,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block rounded-xl px-3 py-2 text-sm transition-colors ${
-                    isActive(item.href)
-                      ? "bg-[#111827] text-white"
-                      : "text-slate-700 hover:bg-white hover:text-slate-900"
-                  }`}
+                  className={`block rounded-xl px-3 py-2 text-sm transition-colors ${isActive(item.href)
+                    ? "bg-[#111827] text-white"
+                    : "text-slate-700 hover:bg-white hover:text-slate-900"
+                    }`}
                 >
                   {item.label}
                 </Link>

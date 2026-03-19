@@ -109,7 +109,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         description="From concept to execution, we build homes and workspaces with calm detail and premium craftsmanship."
         ctaLabel="EXPLORE COLLECTIONS"
         ctaHref="/products"
-        backgroundImage={heroProduct?.imageUrl || "/uploads/1772704211002-sofa1.jpg"}
+        backgroundImage={"/hero.png"}
       />
 
       <FeatureShowcase />
@@ -121,7 +121,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="mb-16 flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
           <div className="space-y-4">
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
-                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">The Catalog</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">The Catalog</span>
             </div>
             <h2 className="font-serif text-4xl font-medium tracking-tight text-slate-900 md:text-6xl">
               Explore latest collection
@@ -134,7 +134,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           >
             Furniture that blends with your personal style
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform group-hover:translate-x-1">
-               <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>
@@ -155,7 +155,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               currentPage === 1 && "pointer-events-none opacity-20"
             )}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
           </Link>
           <span className="text-sm font-bold tracking-widest text-slate-400">
             {currentPage} / {totalPages}
@@ -163,11 +163,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <Link
             href={`/?page=${Math.min(totalPages, currentPage + 1)}`}
             className={cn(
-               "p-4 rounded-full border border-slate-200 bg-white transition hover:bg-slate-50 hover:border-slate-300",
+              "p-4 rounded-full border border-slate-200 bg-white transition hover:bg-slate-50 hover:border-slate-300",
               currentPage === totalPages && "pointer-events-none opacity-20"
             )}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
           </Link>
         </div>
       </section>

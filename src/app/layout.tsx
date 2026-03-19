@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import MainLayout from "@/components/MainLayout";
 import { cn } from "@/lib/utils";
+import { TailwindIndicator } from "@/components/tailwindcss-indicator";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Providers>
           <MainLayout>{children}</MainLayout>
         </Providers>
+        <TailwindIndicator />
       </body>
     </html>
   );

@@ -32,7 +32,7 @@ export default async function ProductDetails({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 md:px-0">
+    <div className="max-w-6xl mx-auto px-4 md:px-0 p-2">
       <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.03)] border border-gray-100 flex flex-col lg:flex-row gap-8 lg:p-4">
         <div className="lg:w-1/2 p-4 md:p-6 text-center lg:text-left">
           <ProductGallery
@@ -43,7 +43,7 @@ export default async function ProductDetails({
         </div>
 
         {/* Right panel with scrollbar */}
-        <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col max-h-[85vh] overflow-y-auto custom-scrollbar">
+        <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col max-h-[100vh] overflow-y-auto custom-scrollbar">
           {/* Category & Sub Category */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="px-[10px] py-1 bg-[#D4AF37]/10 text-[#D4AF37] rounded-full text-[10px] font-bold uppercase tracking-widest">

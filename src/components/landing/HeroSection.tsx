@@ -30,10 +30,10 @@ export function HeroSection({
             className="object-cover transition-transform duration-1000 hover:scale-105"
             sizes="100vw"
           />
-          
+
           {/* Subtle vignette overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          
+
           <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16">
             <FadeIn className="max-w-3xl space-y-8">
               <div className="inline-flex items-center rounded-full border border-white/30 bg-black/10 px-4 py-1.5 backdrop-blur-md">
@@ -41,18 +41,18 @@ export function HeroSection({
                   Specialized in space creation
                 </span>
               </div>
-              
-              <h1 className="font-serif text-5xl font-medium leading-[1.1] text-white md:text-7xl lg:text-8xl">
+
+              <h1 className="font-serif text-3xl font-medium leading-[1.1] text-white md:text-4xl lg:text-6xl xl:text-6xl mb-2">
                 {title.includes("Lifetime") ? title : "Create spaces that last a lifetime."}
               </h1>
-              
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                <p className="max-w-md text-lg text-white/80 leading-relaxed md:text-xl">
+
+              <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 sm:flex-row sm:items-center sm:justify-between md:justify-start">
+                <p className="max-w-md text-sm text-white/80 leading-relaxed md:text-md">
                   {description}
                 </p>
                 <Link
                   href={ctaHref}
-                  className="group inline-flex h-14 items-center gap-3 rounded-full bg-orange-600 px-8 text-sm font-bold text-white transition-all hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/20"
+                  className={"group inline-flex items-center gap-3 w-full md:w-72 justify-center rounded-full bg-orange-600 py-3 px-3 sm:px-4 md:px-6 lg:px-8 text-sm font-bold text-white transition-all hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/20"}
                 >
                   {ctaLabel}
                   <svg
