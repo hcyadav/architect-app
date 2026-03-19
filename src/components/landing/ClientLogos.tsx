@@ -17,7 +17,7 @@ export function ClientLogos() {
   return (
     <section>
       <Container>
-        <FadeIn className="space-y-12">
+        <FadeIn className="space-y-12 py-10">
           <SectionHeader
             align="center"
             label="Selected Clients"

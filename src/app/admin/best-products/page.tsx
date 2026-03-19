@@ -39,16 +39,14 @@ export default function BestProductsPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto space-y-10 mb-10">
+        <div className="max-w-6xl mx-auto space-y-10">
             <Toaster position="top-right" />
-            <BackButton />
-
-            <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-0">
+            <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-3">
                 <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3 tracking-tight">
                     Best Products
                 </h1>
                 <p className="text-gray-500 font-light text-lg">
-                    Manage your featured "Best Products" that appear on the home page.
+                    Manage your featured &quot;Best Products&quot; that appear on the home page.
                 </p>
             </div>
 
@@ -76,7 +74,7 @@ export default function BestProductsPage() {
                     <ul className="divide-y divide-gray-50">
                         {products.map((p) => (
                             <li
-                                key={p._id}
+                                key={p.id}
                                 className="flex items-center gap-6 p-6 hover:bg-gray-50/50 transition-colors"
                             >
                                 <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
@@ -93,7 +91,7 @@ export default function BestProductsPage() {
                                 </div>
                                 <div className="flex items-center gap-3 shrink-0">
                                     <Link
-                                        href={`/products/${p._id}`}
+                                        href={`/products/${p.id}`}
                                         target="_blank"
                                         className="p-3 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-2xl transition-all"
                                         title="View Product"
@@ -101,7 +99,7 @@ export default function BestProductsPage() {
                                         <ExternalLink className="w-5 h-5" />
                                     </Link>
                                     <button
-                                        onClick={() => handleRemoveFromBest(p._id)}
+                                        onClick={() => handleRemoveFromBest(p.id)}
                                         className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
                                         title="Remove from Best"
                                     >

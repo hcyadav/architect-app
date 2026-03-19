@@ -11,7 +11,7 @@ interface BestProductProps {
 
 export function BestProduct({ product }: BestProductProps) {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8">
+    <section className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="overflow-hidden rounded-[3rem] bg-white border border-slate-100">
           <div className="grid lg:grid-cols-2">

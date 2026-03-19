@@ -5,7 +5,7 @@ import axios from "axios";
 import { Star, Quote } from "lucide-react";
 
 interface ITestimonial {
-    _id: string;
+    id: string;
     clientName: string;
     role?: string;
     company?: string;
@@ -57,7 +57,7 @@ export default function Testimonials() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {testimonials.map((testimonial) => (
                         <div
-                            key={testimonial._id}
+                            key={testimonial.id}
                             className="group bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                         >
                             <div className="flex items-center gap-1 mb-6">

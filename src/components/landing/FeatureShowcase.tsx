@@ -5,7 +5,7 @@ import { Armchair, Sofa, Lamp, Home } from "lucide-react";
 
 export function FeatureShowcase() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-background">
+    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="mx-auto max-w-5xl text-center">
         <FadeIn>
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">

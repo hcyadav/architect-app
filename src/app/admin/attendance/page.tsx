@@ -45,7 +45,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import BackButton from "@/components/BackButton";
 
 interface Employee {
-    _id: string;
+    id: string;
     firstName: string;
     lastName: string;
     designation: string;
@@ -54,7 +54,7 @@ interface Employee {
 }
 
 interface AttendanceRecord {
-    _id?: string;
+    id?: string;
     date: string;
     status: "full_day" | "half_day" | "hourly" | "holiday" | "absent" | "1.5_days" | "2_days";
     hours?: number;
@@ -133,7 +133,7 @@ export default function AttendancePage() {
 
     useEffect(() => {
         if (selectedEmployee) {
-            fetchAttendance(selectedEmployee._id);
+            fetchAttendance(selectedEmployee.id);
         }
     }, [selectedEmployee]);
 
@@ -190,7 +190,7 @@ export default function AttendancePage() {
 
         try {
             await axios.post("/api/admin/attendance", {
-                employeeId: selectedEmployee._id,
+                employeeId: selectedEmployee.id,
                 date: selectedDate, // Send YYYY-MM-DD directly
                 ...formData
             });
@@ -202,7 +202,7 @@ export default function AttendancePage() {
                 wages: 0
             });
             setEntryOpen(false);
-            fetchAttendance(selectedEmployee._id);
+            fetchAttendance(selectedEmployee.id);
         } catch (e) {
             toast.error("Failed to save attendance");
         }
@@ -239,14 +239,7 @@ export default function AttendancePage() {
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="space-y-6">
-
-                {/* Back Button */}
-                <BackButton />
-
-                {/* Title + Search */}
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-
-                    {/* Left - Title */}
                     <div>
                         <h1 className="text-3xl font-serif text-gray-900">Attendance</h1>
                         <p className="text-gray-500 font-light">
@@ -294,7 +287,7 @@ export default function AttendancePage() {
                                     </TableRow>
                                 ) : (
                                     employees.map((emp) => (
-                                        <TableRow key={emp._id} className="hover:bg-gray-50/30 border-gray-50 transition-colors group">
+                                        <TableRow key={emp.id} className="hover:bg-gray-50/30 border-gray-50 transition-colors group">
                                             <TableCell className="px-8 py-5">
                                                 <div className="flex items-center gap-4">
                                                     <div>

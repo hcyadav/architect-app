@@ -56,7 +56,6 @@ export default function AdminDashboard() {
             <div className="max-w-6xl mx-auto space-y-8">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <BackButton />
                         <div>
                             <h1 className="text-4xl font-serif text-gray-900 italic">Admin Console</h1>
                             <p className="text-gray-500 font-light mt-1">Management hub for your architecture firm</p>

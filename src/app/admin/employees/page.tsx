@@ -31,7 +31,7 @@ import {
 import BackButton from "@/components/BackButton";
 
 interface Employee {
-    _id: string;
+    id: string;
     firstName: string;
     lastName: string;
     phoneNumber: string;
@@ -138,7 +138,7 @@ export default function EmployeesPage() {
 
         try {
             if (editMode && selectedEmployee) {
-                await axios.put(`/api/admin/employees/${selectedEmployee._id}`, formData);
+                await axios.put(`/api/admin/employees/${selectedEmployee.id}`, formData);
                 toast.success("Employee updated successfully");
             } else {
                 await axios.post("/api/admin/employees", formData);
@@ -168,11 +168,6 @@ export default function EmployeesPage() {
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="space-y-6">
-
-                {/* Back Button */}
-                <BackButton />
-
-                {/* Title Section */}
                 <div>
                     <h1 className="text-3xl font-serif text-gray-900">Employees</h1>
                     <p className="text-gray-500 font-light">
@@ -245,7 +240,7 @@ export default function EmployeesPage() {
                             </TableRow>
                         ) : (
                             employees.map((emp) => (
-                                <TableRow key={emp._id} className="hover:bg-gray-50/30 border-gray-50 transition-colors group">
+                                <TableRow key={emp.id} className="hover:bg-gray-50/30 border-gray-50 transition-colors group">
                                     <TableCell className="px-8 py-5">
                                         <div className="flex items-center gap-4">
                                             {/* <div className="w-10 h-10 rounded-2xl bg-gray-50 flex items-center justify-center text-[#D4AF37] font-bold border border-gray-100">
@@ -285,7 +280,7 @@ export default function EmployeesPage() {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => setConfirmDelete(emp._id)}
+                                                onClick={() => setConfirmDelete(emp.id)}
                                                 className="w-9 h-9 rounded-xl hover:bg-red-50 hover:text-red-500 text-gray-400"
                                             >
                                                 <Trash2 className="w-4 h-4" />

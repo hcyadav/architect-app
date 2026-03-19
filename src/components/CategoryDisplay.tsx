@@ -13,7 +13,7 @@ interface CategorizedProducts {
 }
 
 export default function PublicCategoryPage({ category }: CategorizedProducts) {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeSub, setActiveSub] = useState("All");
   const [search, setSearch] = useState("");
@@ -102,9 +102,9 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 bg-background">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-background">
       <FadeIn className="space-y-12" direction="none">
-        <div className="space-y-6 pb-12 border-b border-slate-100">
+        <div className="space-y-6 border-b border-slate-100">
           <div className="space-y-4">
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Explore</span>
@@ -117,7 +117,7 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pt-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pt-2">
             {subCategories.length > 1 && (
               <div className="flex flex-wrap gap-3">
                 {subCategories.map((sub) => (
@@ -162,7 +162,7 @@ export default function PublicCategoryPage({ category }: CategorizedProducts) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.length > 0 ? (
             products.map((p, i) => (
-              <FadeIn key={p._id} delayMs={i * 50} direction="up">
+              <FadeIn key={p?.id} delayMs={i * 50} direction="up">
                 <ProductCard product={p} />
               </FadeIn>
             ))

@@ -11,13 +11,8 @@ import { FadeIn } from "@/components/landing/FadeIn";
 
 export default function ContactPage() {
     return (
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 bg-background">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-background">
             <FadeIn className="space-y-16">
-                <div>
-                   <BackButton />
-                </div>
-
-                {/* Header */}
                 <section className="text-center space-y-4">
                     <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Contact Us</span>
@@ -26,7 +21,7 @@ export default function ContactPage() {
                       Get in <span className="text-orange-600">Touch</span>
                     </h1>
                     <p className="text-slate-500 font-light text-xl max-w-2xl mx-auto">
-                      We'd love to hear about your next architectural masterpiece.
+                      We&apos;d love to hear about your next architectural masterpiece.
                     </p>
                 </section>
 

@@ -18,7 +18,7 @@ interface HappyPeopleProps {
 
 export function HappyPeople({ testimonials }: HappyPeopleProps) {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8">
+    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="mx-auto max-w-7xl">
         <div className="grid lg:grid-cols-12 gap-16 items-center">
           <div className="lg:col-span-7 space-y-12">
@@ -45,7 +45,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                       <h4 className="font-serif text-xl font-medium text-slate-900">{item.clientName}</h4>
                       <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{item.role || "Client"}</p>
                       <p className="mt-2 text-slate-500 max-w-md leading-relaxed">
-                        "{item.content}"
+                        &quot;{item.content}&quot;
                       </p>
                     </div>
                   </div>
@@ -56,7 +56,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
 
           <div className="lg:col-span-5 relative">
             <FadeIn delayMs={300}>
-               <div className="relative aspect-[4/5] overflow-hidden rounded-[3rem] shadow-2xl">
+               <div className="relative aspect-4/5 overflow-hidden rounded-[3rem] border">
                  <Image 
                    src="/uploads/1772704211002-sofa1.jpg" 
                    alt="Interior" 
@@ -64,7 +64,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                    className="object-cover"
                  />
                  <div className="absolute inset-x-0 bottom-0 p-8">
-                    <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-2xl flex items-center justify-between">
+                    <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 flex items-center justify-between border">
                        <div className="space-y-1">
                           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Arm Chair</p>
                           <p className="font-sans text-xl font-bold text-slate-900">$220 <span className="text-sm font-normal text-slate-400 line-through ml-2">$265</span></p>

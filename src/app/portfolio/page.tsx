@@ -15,10 +15,10 @@ export default async function PortfolioPage() {
     ]);
 
     return (
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 bg-background">
-            <FadeIn className="space-y-24" direction="none">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-background">
+            <FadeIn className="" direction="none">
                 {/* Hero Section */}
-                <div className="text-center max-w-3xl mx-auto space-y-6">
+                <div className="text-center max-w-3xl mx-auto">
                     <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Our Work</span>
                     </div>
@@ -54,13 +54,13 @@ export default async function PortfolioPage() {
                                     {project.location && (
                                         <span className="flex items-center gap-2">
                                             <MapPin className="w-3 h-3" />
-                                            {(project as any).location}
+                                            {(project).location}
                                         </span>
                                     )}
                                     {project.completionDate && (
                                         <span className="flex items-center gap-2">
                                             <Calendar className="w-3 h-3" />
-                                            {(project as any).completionDate}
+                                            {(project).completionDate}
                                         </span>
                                     )}
                                 </div>
@@ -75,7 +75,7 @@ export default async function PortfolioPage() {
                         <div className="bg-white rounded-[3rem] p-12 md:p-20 border border-slate-100 shadow-2xl shadow-slate-200/50 space-y-8">
                             <h3 className="text-4xl font-serif text-slate-900">Inspired by our work?</h3>
                             <p className="text-slate-500 max-w-xl mx-auto text-lg font-light">
-                                Let's collaborate to build your dream space. Our team is ready to bring your vision to life.
+                                Let&apos;s collaborate to build your dream space. Our team is ready to bring your vision to life.
                             </p>
                             <Link
                                 href="/contact"

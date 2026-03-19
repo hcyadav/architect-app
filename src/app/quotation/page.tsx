@@ -73,7 +73,7 @@ export default function QuotationDashboard() {
     setSendingResponse(true);
     try {
       await axios.post("/api/admin/quotation/reframe", {
-        quotationId: selectedQuote._id,
+        quotationId: selectedQuote.id,
         reframedMessage: reframedMessage.trim()
       });
       toast.success("Response sent to client email!");
@@ -89,9 +89,6 @@ export default function QuotationDashboard() {
   return (
     <div className="max-w-6xl mx-auto space-y-10 mb-20">
       <Toaster position="top-right" />
-
-      <BackButton />
-
       <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-0">
         <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3 tracking-tight">
           Quotation Management
@@ -138,7 +135,7 @@ export default function QuotationDashboard() {
           ) : (
             <ul className="divide-y divide-gray-50">
               {requests.map((q) => (
-                <li key={q._id} className="p-6 md:p-8 hover:bg-gray-50/50 transition-colors">
+                <li key={q.id} className="p-6 md:p-8 hover:bg-gray-50/50 transition-colors">
                   <div className="flex flex-col md:flex-row justify-between gap-6">
                     <div className="flex-1 space-y-4">
                       <div className="flex items-center gap-3">
@@ -241,7 +238,7 @@ export default function QuotationDashboard() {
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {officialQuotes.map((q) => (
-                      <tr key={q._id} className="hover:bg-gray-50/30 transition-colors group">
+                      <tr key={q.id} className="hover:bg-gray-50/30 transition-colors group">
                         <td className="px-8 py-6">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-400">
@@ -290,7 +287,7 @@ export default function QuotationDashboard() {
                 {/* Mobile Card View */}
                 <div className="md:hidden divide-y divide-gray-50">
                   {officialQuotes.map((q) => (
-                    <div key={q._id} className="p-6 space-y-4">
+                    <div key={q.id} className="p-6 space-y-4">
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-xs font-bold text-gray-400">

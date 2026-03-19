@@ -76,7 +76,7 @@ export default function BestProductsCarousel() {
             >
                 {products.map((p, index) => (
                     <div
-                        key={p._id}
+                        key={p.id}
                         className="min-w-full snap-center relative"
                     >
                         <div className="group relative w-full h-[80vh] overflow-hidden rounded-[2.5rem] bg-gray-900 shadow-2xl mx-auto">
@@ -117,7 +117,7 @@ export default function BestProductsCarousel() {
 
                                 <div className="pt-2">
                                     <Link
-                                        href={`/products/${p._id}`}
+                                        href={`/products/${p.id}`}
                                         className="group/btn inline-flex items-center gap-3 px-10 py-4 bg-white text-gray-900 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-[#D4AF37] hover:text-white transition-all shadow-2xl"
                                     >
                                         View Details

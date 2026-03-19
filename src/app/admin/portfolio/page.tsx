@@ -3,13 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Upload, X, Plus, Trash2, Pencil, ChevronDown, ChevronUp, Star } from "lucide-react";
-import BackButton from "@/components/BackButton";
+import { Trash2, Pencil, Star } from "lucide-react";
 import { UploadButton } from "@/lib/uploadthing";
 
 
 interface PortfolioItem {
-    _id?: string;
+    id?: string;
     title: string;
     description: string;
     imageUrl: string;
@@ -20,7 +19,7 @@ interface PortfolioItem {
 }
 
 interface TestimonialItem {
-    _id?: string;
+    id?: string;
     clientName: string;
     role: string;
     content: string;
@@ -146,8 +145,6 @@ export default function AdminPortfolioPage() {
     return (
         <div className="max-w-6xl mx-auto py-10 px-4">
             <Toaster />
-            <BackButton />
-
             <div className="mb-8 mt-4">
                 <h1 className="text-3xl font-serif text-gray-900 mb-2">Portfolio & Testimonials Manager</h1>
                 <p className="text-gray-500">Manage your major works and client feedback.</p>
@@ -203,7 +200,7 @@ export default function AdminPortfolioPage() {
 
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-gray-700">Project Image</label>
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 mt-2">
                                 <UploadButton
                                     endpoint="imageUploader"
                                     onClientUploadComplete={(res) => {
@@ -221,8 +218,9 @@ export default function AdminPortfolioPage() {
                                         setUploadingImage(true);
                                     }}
                                     appearance={{
-                                        button: "bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 hover:bg-gray-100 text-gray-900 font-medium w-full h-auto py-4 after:bg-[#D4AF37]",
-                                        allowedContent: "hidden"
+                                        container: "!w-72",
+                                        button: "bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center gap-2 hover:bg-gray-100 !text-xs !text-black font-medium w-full h-auto py-4 after:bg-[#D4AF37]",
+                                        allowedContent: "block"
                                     }}
                                     content={{
                                         button({ ready }) {
@@ -249,15 +247,15 @@ export default function AdminPortfolioPage() {
                         <div className="p-6 border-b"><h3 className="font-medium">Existing Projects</h3></div>
                         <div className="divide-y max-h-96 overflow-y-auto custom-scrollbar">
                             {projects.length === 0 ? <p className="p-10 text-center text-gray-400">No projects added yet.</p> : projects.map(p => (
-                                <div key={p._id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
+                                <div key={p.id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
                                     <img src={p.imageUrl} className="w-16 h-12 object-contain bg-white rounded-lg border" />
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium">{p.title}</h4>
                                         <p className="text-xs text-gray-400">{p.location || "No location"}</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button onClick={() => { setEditingProject(p._id!); setProjectForm(p) }} className="p-2 text-gray-400 hover:text-[#D4AF37]"><Pencil className="w-4 h-4" /></button>
-                                        <button onClick={() => handleProjectDelete(p._id!)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                                        <button onClick={() => { setEditingProject(p.id!); setProjectForm(p) }} className="p-2 text-gray-400 hover:text-[#D4AF37]"><Pencil className="w-4 h-4" /></button>
+                                        <button onClick={() => handleProjectDelete(p.id!)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                                     </div>
                                 </div>
                             ))}
@@ -307,14 +305,14 @@ export default function AdminPortfolioPage() {
                         <div className="p-6 border-b"><h3 className="font-medium">Client Feedback</h3></div>
                         <div className="divide-y max-h-96 overflow-y-auto custom-scrollbar">
                             {testimonials.length === 0 ? <p className="p-10 text-center text-gray-400">No testimonials added yet.</p> : testimonials.map(t => (
-                                <div key={t._id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
+                                <div key={t.id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium">{t.clientName}</h4>
                                         <p className="text-xs text-gray-400 line-clamp-1">{t.content}</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button onClick={() => { setEditingTestimonial(t._id!); setTestimonialForm(t) }} className="p-2 text-gray-400 hover:text-[#D4AF37]"><Pencil className="w-4 h-4" /></button>
-                                        <button onClick={() => handleTestimonialDelete(t._id!)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                                        <button onClick={() => { setEditingTestimonial(t.id!); setTestimonialForm(t) }} className="p-2 text-gray-400 hover:text-[#D4AF37]"><Pencil className="w-4 h-4" /></button>
+                                        <button onClick={() => handleTestimonialDelete(t.id!)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                                     </div>
                                 </div>
                             ))}

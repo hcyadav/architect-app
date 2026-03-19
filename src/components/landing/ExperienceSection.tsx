@@ -23,7 +23,7 @@ export function ExperienceSection() {
   }, []);
 
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
+    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
       <div className="mx-auto max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-12">
@@ -71,11 +71,11 @@ export function ExperienceSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="relative aspect-[4/5] w-full max-w-md ml-auto"
+              className="relative aspect-4/5 w-full max-w-md ml-auto"
             >
-              <div className="absolute -top-6 -left-6 h-full w-full rounded-[2.5rem] bg-orange-100/30" />
+              <div className="absolute -top-6 -left-6 h-full w-full rounded-[2.5rem] border bg-orange-100/30" />
               
-              <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] shadow-2xl border-8 border-white">
+              <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] border-8">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={index}
@@ -100,7 +100,7 @@ export function ExperienceSection() {
                 initial={{ x: 20, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                className="absolute -bottom-10 -left-10 rounded-[2rem] bg-white p-6 shadow-xl border border-slate-50"
+                className="absolute -bottom-10 -left-10 rounded-[2rem] bg-white p-6 border"
               >
                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Premium quality</p>
                  <p className="mt-1 font-serif text-xl font-medium text-slate-900">Certified Design</p>

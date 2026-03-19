@@ -63,9 +63,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   });
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 bg-background">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-background">
       <FadeIn className="space-y-12" direction="none">
-        <div className="space-y-6 pb-12 border-b border-slate-100">
+        <div className="space-y-6 pb-6 border-b border-slate-100">
           <div className="space-y-4">
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Our Collection</span>
@@ -82,7 +82,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product, i) => (
             <FadeIn key={product.id} delayMs={i * 50} direction="up">
-              <ProductCard product={toProduct(product as any)} />
+              <ProductCard product={toProduct(product)} />
             </FadeIn>
           ))}
         </div>

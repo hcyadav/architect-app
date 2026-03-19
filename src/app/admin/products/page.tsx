@@ -14,7 +14,7 @@ interface CustomField {
 }
 
 interface ProductData {
-  _id?: string;
+  id?: string;
   title: string;
   description: string;
   category: "product" | "corporate" | "premium";
@@ -152,7 +152,7 @@ export default function AdminProductsPage() {
   // Load product data for editing
   const startEditing = (product: any) => {
     setEditMode(true);
-    setEditingProductId(product._id);
+    setEditingProductId(product.id);
     setShowProductList(false);
     setFormData({
       title: product.title || "",
@@ -237,12 +237,9 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 mb-10">
+    <div className="max-w-6xl mx-auto space-y-12 mb-10 mt-3">
       <Toaster position="top-right" />
-
-      <BackButton />
-
-      <div className="space-y-6 pb-6 border-b border-gray-100">
+      <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl md:text-4xl font-serif text-gray-900 tracking-tight">
             Manage Architecture
@@ -254,7 +251,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex space-x-1 p-1 bg-gray-100 rounded-2xl max-w-lg">
+      <div className="flex space-x-1 bg-gray-100 rounded-2xl max-w-lg">
         <button
           onClick={() => handleTabChange("product")}
           className={`flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "product"
@@ -329,15 +326,15 @@ export default function AdminProductsPage() {
             <ul className="divide-y divide-gray-50 max-h-[400px] overflow-y-auto custom-scrollbar">
               {products.map((p) => (
                 <li
-                  key={p._id}
-                  className={`flex items-center gap-4 p-4 md:p-5 hover:bg-gray-50/50 transition-colors ${editingProductId === p._id ? "bg-[#D4AF37]/5 border-l-4 border-[#D4AF37]" : ""
+                  key={p.id}
+                  className={`flex items-center gap-4 p-4 md:p-5 hover:bg-gray-50/50 transition-colors ${editingProductId === p.id ? "bg-[#D4AF37]/5 border-l-4 border-[#D4AF37]" : ""
                     }`}
                 >
                   <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
-                      checked={selectedProductIds.includes(p._id)}
-                      onChange={() => toggleSelectProduct(p._id)}
+                      checked={selectedProductIds.includes(p.id)}
+                      onChange={() => toggleSelectProduct(p.id)}
                       className="w-4 h-4 rounded border-gray-300 text-[#D4AF37] focus:ring-[#D4AF37]"
                     />
                     <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
@@ -357,7 +354,7 @@ export default function AdminProductsPage() {
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(p._id)}
+                      onClick={() => handleDelete(p.id)}
                       className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                       title="Delete"
                     >
@@ -392,7 +389,7 @@ export default function AdminProductsPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Project Title</label>
               <input
@@ -511,7 +508,7 @@ export default function AdminProductsPage() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700 flex justify-between">
                 <span>Main Featured Image <span className="text-red-500">*</span></span>
@@ -535,8 +532,9 @@ export default function AdminProductsPage() {
                     setUploadingImage(true);
                   }}
                   appearance={{
-                    button: "bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl hover:border-[#D4AF37] hover:bg-[#FDFBF7] text-gray-600 font-medium w-full h-auto py-4 after:bg-[#D4AF37]",
-                    allowedContent: "hidden"
+                    container: "!w-full",
+                    button: "bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl hover:border-[#D4AF37] hover:bg-[#FDFBF7] !text-xs !text-black font-medium w-full h-auto py-4 after:bg-[#D4AF37]",
+                    allowedContent: "block"
                   }}
                   content={{
                     button({ ready }) {
@@ -580,8 +578,9 @@ export default function AdminProductsPage() {
                     setAdditionalUploading(true);
                   }}
                   appearance={{
-                    button: "bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl hover:border-[#D4AF37] hover:bg-[#FDFBF7] text-gray-600 font-medium w-full h-auto py-4 after:bg-[#D4AF37]",
-                    allowedContent: "hidden"
+                    container: "!w-full",
+                    button: "bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl hover:border-[#D4AF37] hover:bg-[#FDFBF7] p-4 !text-xs !text-black font-medium w-full h-auto py-4 after:bg-[#D4AF37]",
+                    allowedContent: "block"
                   }}
                   content={{
                     button({ ready }) {
@@ -675,7 +674,7 @@ export default function AdminProductsPage() {
               onChange={handleChange}
               required
               rows={5}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none transition-all resize-none"
+              className="w-full mt-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none transition-all resize-none"
               placeholder="Describe the architectural aspects, client goals, materials used..."
             />
           </div>

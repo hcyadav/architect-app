@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: Request) {
-  console.log("GET request to /api/products------------->");
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
@@ -12,8 +11,11 @@ export async function GET(req: Request) {
     const isBestProduct = searchParams.get("isBestProduct");
     const searchTerm = searchParams.get("search");
     const page = parseInt(searchParams.get("page") || "1");
-    const pageSizeParam = searchParams.get("pageSize") || process.env.NEXT_PUBLIC_PAGE_SIZE || "10";
-    const pageSize = isNaN(parseInt(pageSizeParam)) ? 10 : parseInt(pageSizeParam);
+    const pageSizeParam =
+      searchParams.get("pageSize") || process.env.NEXT_PUBLIC_PAGE_SIZE || "10";
+    const pageSize = isNaN(parseInt(pageSizeParam))
+      ? 10
+      : parseInt(pageSizeParam);
 
     let where: any = {};
     if (category) where.category = category;
@@ -21,8 +23,8 @@ export async function GET(req: Request) {
     if (subCategory && subCategory !== "All") where.subCategory = subCategory;
     if (searchTerm) {
       where.OR = [
-        { title: { contains: searchTerm, mode: 'insensitive' } },
-        { description: { contains: searchTerm, mode: 'insensitive' } }
+        { title: { contains: searchTerm, mode: "insensitive" } },
+        { description: { contains: searchTerm, mode: "insensitive" } },
       ];
     }
 
@@ -30,28 +32,31 @@ export async function GET(req: Request) {
       prisma.product.count({ where }),
       prisma.product.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
-      })
+      }),
     ]);
 
-    return NextResponse.json({
-      items: products,
-      total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize)
-    }, {
-      headers: {
-        'Cache-Control': 'no-store, max-age=0'
-      }
-    });
+    return NextResponse.json(
+      {
+        items: products,
+        total,
+        page,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      },
+    );
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
       { error: "Error fetching products" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -65,16 +70,16 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    
+
     const product = await prisma.product.create({
-      data: body
+      data: body,
     });
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json(
       { error: "Error creating product" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

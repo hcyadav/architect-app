@@ -26,7 +26,6 @@ export default async function ProductDetails({
   if (!product) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <BackButton />
         <h2 className="text-2xl font-light text-gray-900">Product Not Found</h2>
       </div>
     );
@@ -34,8 +33,6 @@ export default async function ProductDetails({
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-0">
-      <BackButton />
-
       <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.03)] border border-gray-100 flex flex-col lg:flex-row gap-8 lg:p-4">
         <div className="lg:w-1/2 p-4 md:p-6 text-center lg:text-left">
           <ProductGallery
