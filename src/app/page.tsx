@@ -129,7 +129,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </div>
 
           <Link
-            href="/products"
+            href="/residential"
             className="group inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold transition hover:bg-slate-50"
           >
             Furniture that blends with your personal style

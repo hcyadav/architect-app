@@ -21,7 +21,7 @@ export default function ContactPage() {
                         Get in <span className="text-orange-600">Touch</span>
                     </h1>
                     <p className="text-slate-500 font-light text-xl max-w-2xl mx-auto">
-                        We&apos;d love to hear about your next architectural masterpiece.
+                        Share your ideas with us — we’re ready to turn them into reality.
                     </p>
                 </section>
 
