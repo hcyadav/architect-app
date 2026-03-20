@@ -21,8 +21,8 @@ export function FeatureShowcase() {
             We are crafting amazing{" "}
 
             {/* Hover Card 1 – Seating / Armchairs */}
-            <HoverCard openDelay={10} closeDelay={100}>
-              <HoverCardTrigger asChild>
+            <HoverCard>
+              <HoverCardTrigger>
                 <Image
                   className="inline-block mx-1 -translate-y-1 rounded-md cursor-pointer ring-2 ring-transparent hover:ring-orange-400 transition-all"
                   src="/uploads/hover/without-color.jpg"
@@ -54,8 +54,8 @@ export function FeatureShowcase() {
             product that{" "}
 
             {/* Hover Card 2 – Sofas & Living */}
-            <HoverCard openDelay={10} closeDelay={100}>
-              <HoverCardTrigger asChild>
+            <HoverCard>
+              <HoverCardTrigger>
                 <Image
                   className="inline-block mx-1 -translate-y-1 rounded-md cursor-pointer ring-2 ring-transparent hover:ring-orange-400 transition-all"
                   src="/uploads/hover/color.jpg"
@@ -87,8 +87,8 @@ export function FeatureShowcase() {
             delight, constantly uplift the home, office{" "}
 
             {/* Hover Card 3 – Lighting & Ambience */}
-            <HoverCard openDelay={10} closeDelay={100}>
-              <HoverCardTrigger asChild>
+            <HoverCard>
+              <HoverCardTrigger>
                 <Image
                   className="inline-block mx-1 -translate-y-1 rounded-md cursor-pointer ring-2 ring-transparent hover:ring-orange-400 transition-all"
                   src="/uploads/hover/without-color.jpg"
