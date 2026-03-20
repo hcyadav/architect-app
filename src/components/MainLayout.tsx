@@ -31,10 +31,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/premium", label: "Premium" },
-    { href: "/corporate", label: "Corporate" },
+    // { href: "/products", label: "All Products" },
+    // { href: "/residential", label: "Residential" },
+    { href: "/residential", label: "Home Furniture" },
+    { href: "/premium", label: "Premium Collections" },
+    { href: "/corporate", label: "Corporate Works" },
     { href: "/portfolio", label: "Portfolio" },
-    { href: "/products", label: "Products" },
+
     { href: "/contact", label: "Contact" },
   ];
 

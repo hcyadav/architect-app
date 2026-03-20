@@ -50,7 +50,7 @@ export default function ProductCard({ product }: { product: any }) {
 
         <div className="mt-4 flex items-center gap-3">
           <span className="font-sans text-base font-bold text-slate-900">
-            {product.price ? `$${product.price}` : "$470"}
+            {product.price ? `₹${product.price}` : "₹470"}
           </span>
           <span className="text-xs text-slate-300 line-through">
             $550

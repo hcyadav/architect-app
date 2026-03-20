@@ -23,7 +23,7 @@ export default async function PortfolioPage() {
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Our Work</span>
                     </div>
                     <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight tracking-tight">
-                      Our Portfolio
+                        Our Portfolio
                     </h1>
                     <p className="text-slate-500 text-xl font-light leading-relaxed">
                         Exploring the boundaries of architecture and design through our most significant works.
@@ -79,10 +79,20 @@ export default async function PortfolioPage() {
                             </p>
                             <Link
                                 href="/contact"
-                                className="group inline-flex items-center gap-3 px-12 py-5 bg-orange-600 text-white rounded-full font-bold shadow-xl shadow-orange-600/20 hover:bg-orange-700 transition-all text-lg"
+                                className="group inline-flex items-center justify-center gap-2 sm:gap-3 
+             px-6 sm:px-8 md:px-12 
+             py-3 sm:py-4 md:py-5 
+             w-full sm:w-auto
+             text-sm sm:text-base md:text-base 
+             bg-orange-600 text-white 
+             rounded-full font-bold 
+             shadow-lg sm:shadow-xl shadow-orange-600/20 
+             hover:bg-orange-700 
+             transition-all duration-300"
                             >
-                                START A PROJECT
-                                <MoveRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                                <span className="whitespace-nowrap">START A PROJECT</span>
+
+                                <MoveRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
                             </Link>
                         </div>
                     </FadeIn>

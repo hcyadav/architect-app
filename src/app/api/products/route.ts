@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function GET(req: Request) {
   try {
@@ -74,6 +75,18 @@ export async function POST(req: Request) {
     const product = await prisma.product.create({
       data: body,
     });
+
+    // Revalidate paths cache
+    revalidatePath("/products");
+    revalidatePath("/premium");
+    revalidatePath("/corporate");
+    revalidatePath("/residential");
+    revalidatePath("/");
+    // @ts-ignore
+    revalidateTag("products");
+    // @ts-ignore
+    revalidateTag("subcategories");
+
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);

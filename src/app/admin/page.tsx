@@ -7,7 +7,8 @@ import {
     Users,
     ClipboardCheck,
     Home,
-    Star
+    Star,
+    FileText
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BackButton from "@/components/BackButton";
@@ -47,6 +48,13 @@ const adminModules = [
         href: "/admin/attendance",
         icon: ClipboardCheck,
         color: "bg-[#D4AF37]/10 text-[#D4AF37]"
+    },
+    {
+        title: "Quotation",
+        description: "Review client inquiries and manage officially generated quotes with items.",
+        href: "/quotation",
+        icon: FileText,
+        color: "bg-orange-50 text-orange-600"
     }
 ];
 

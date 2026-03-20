@@ -27,9 +27,9 @@ export default function Sidebar() {
   }, [pathname, close]);
 
   const navItems = [
-    { name: "Products", href: "/", icon: Home },
+    { name: "Home Furniture", href: "/residential", icon: Home },
     { name: "Premium Products", href: "/premium", icon: Gem },
-    { name: "Corporate Work", href: "/corporate", icon: Building2 },
+    { name: "Corporate Works", href: "/corporate", icon: Building2 },
     { name: "Portfolio", href: "/portfolio", icon: Briefcase },
   ];
 

@@ -122,7 +122,7 @@ enum AttendanceStatus {
 model Attendance {
   id         String           @id @default(auto()) @map("_id") @db.ObjectId
   employeeId String           @db.ObjectId
-  employee   Employee         @relation(fields: [employeeId], references: [id])
+  employee   Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   date       DateTime
   status     AttendanceStatus
   hours      Float?

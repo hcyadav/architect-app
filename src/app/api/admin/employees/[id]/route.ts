@@ -16,10 +16,14 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
+    const { joiningDate, ...rest } = body;
     
     const employee = await prisma.employee.update({
       where: { id },
-      data: body,
+      data: {
+        ...rest,
+        joiningDate: joiningDate ? new Date(joiningDate) : undefined
+      },
     });
     
     return NextResponse.json(employee);
@@ -47,8 +51,8 @@ export async function DELETE(
     });
     
     return NextResponse.json({ message: "Employee deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Delete employee error:", error);
-    return NextResponse.json({ error: "Failed to delete employee" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to delete employee", details: error.message }, { status: 500 });
   }
 }

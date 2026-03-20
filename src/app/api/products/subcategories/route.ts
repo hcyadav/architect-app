@@ -1,33 +1,26 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { unstable_cache } from "next/cache";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
-    const revalidateTime = parseInt(process.env.CACHE_TTL_PRODUCTS || "3600");
-
-    const getCachedSubcategories = unstable_cache(
-      async (cat: string | null) => {
-        const products = await prisma.product.findMany({
-          where: cat ? { category: cat as any } : {},
-          distinct: ['subCategory'],
-          select: { subCategory: true }
-        });
-        return products
-          .map(p => p.subCategory)
-          .filter((sub): sub is string => !!sub && sub.trim() !== "");
-      },
-      [`subcategories-${category}`],
-      { revalidate: revalidateTime, tags: ["products", "subcategories"] }
-    );
-
-    const filteredSubCategories = await getCachedSubcategories(category);
+    console.log("Fetching subcategories for category:", category);
+    const products = await prisma.product.findMany({
+      where: category ? { category: category as any } : {},
+      distinct: ['subCategory'],
+      select: { subCategory: true }
+    });
+    
+    const filteredSubCategories = products
+      .map((p: any) => p.subCategory)
+      .filter((sub: any): sub is string => !!sub && sub.trim() !== "");
+      
+    console.log("Filtered subcategories for", category, ":", filteredSubCategories);
 
     return NextResponse.json(filteredSubCategories, {
       headers: {
-        'Cache-Control': `public, max-age=${revalidateTime}, stale-while-revalidate=59`
+        'Cache-Control': 'no-store, max-age=0'
       }
     });
   } catch (error) {

@@ -80,7 +80,7 @@ export function ContactSection() {
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Our Studio</p>
                       <p className="text-slate-700 font-light leading-relaxed">
-                        Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (Work)
+                        Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)
                       </p>
                     </div>
                   </div>
@@ -111,7 +111,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Working Hours</p>
-                      <p className="text-slate-700 font-light">Mon - Sat: 10:00 AM - 7:00 PM</p>
+                      <p className="text-slate-700 font-light">Mon - Sat: 9:00 AM - 9:00 PM</p>
                     </div>
                   </div>
                 </div>
@@ -161,8 +161,8 @@ export function ContactSection() {
                         className="bg-slate-50 border-slate-100 rounded-2xl focus-visible:ring-2 focus-visible:ring-orange-600/20 focus-visible:border-orange-600 transition-all resize-none"
                       />
                     </div>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={loading}
                       className="w-full h-16 bg-orange-600 hover:bg-orange-700 text-white rounded-full font-bold text-lg shadow-xl shadow-orange-600/20 transition-all duration-300 flex items-center justify-center gap-3 group"
                     >

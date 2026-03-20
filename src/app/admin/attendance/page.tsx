@@ -56,7 +56,7 @@ interface Employee {
 interface AttendanceRecord {
     id?: string;
     date: string;
-    status: "full_day" | "half_day" | "hourly" | "holiday" | "absent" | "1.5_days" | "2_days";
+    status: "full_day" | "half_day" | "hourly" | "holiday" | "absent" | "1.5_days" | "2_days" | "full" | "half" | "one_five_days" | "two_days";
     hours?: number;
     remarks?: string;
     wages?: number;
@@ -223,14 +223,16 @@ export default function AttendancePage() {
     }, [attendanceRecords]);
 
     const totalPayableDays = useMemo(() => {
+        // We'll use 9 as the base to match the backend summary default
+        const FULL_DAY_BASE = 9;
+
         return attendanceRecords.reduce((sum, r) => {
-            if (r.status === "full_day") return sum + 1;
-            if (r.status === "half_day") return sum + 0.5;
-            if (r.status === "1.5_days") return sum + 1.5;
-            if (r.status === "2_days") return sum + 2;
+            if (r.status === "full_day" || r.status === "full") return sum + 1;
+            if (r.status === "half_day" || r.status === "half") return sum + 0.5;
+            if (r.status === "1.5_days" || r.status === "one_five_days") return sum + 1.5;
+            if (r.status === "2_days" || r.status === "two_days") return sum + 2;
             if (r.status === "hourly" && r.hours) {
-                if (r.hours >= 8) return sum + 1;
-                if (r.hours === 4) return sum + 0.5;
+                return sum + (r.hours / FULL_DAY_BASE);
             }
             return sum;
         }, 0);

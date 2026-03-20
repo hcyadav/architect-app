@@ -187,6 +187,7 @@ export default function AdminProductsPage() {
         toast.success("Item saved successfully!");
       }
       resetForm();
+      fetchSubCategories();
       if (showProductList) fetchProducts();
     } catch (error: any) {
       toast.error(error.response?.data?.error || "Failed to save item");
@@ -201,6 +202,7 @@ export default function AdminProductsPage() {
       await axios.delete(`/api/products/${productId}/admin`);
       toast.success("Product deleted");
       fetchProducts();
+      fetchSubCategories();
       if (editingProductId === productId) resetForm();
     } catch (error: any) {
       toast.error("Failed to delete product");
@@ -433,12 +435,15 @@ export default function AdminProductsPage() {
                     <input
                       type="text"
                       value={newSubCat}
-                      onChange={(e) => setNewSubCat(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setNewSubCat(val);
+                        setFormData((prev) => ({ ...prev, subCategory: val }));
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
                           if (newSubCat.trim()) {
-                            setFormData({ ...formData, subCategory: newSubCat.trim() });
                             if (!subCategories.includes(newSubCat.trim())) {
                               setSubCategories([...subCategories, newSubCat.trim()]);
                             }

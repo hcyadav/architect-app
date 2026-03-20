@@ -18,10 +18,10 @@ export default function ContactPage() {
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Contact Us</span>
                     </div>
                     <h1 className="text-5xl md:text-7xl font-serif text-slate-900 tracking-tight leading-tight">
-                      Get in <span className="text-orange-600">Touch</span>
+                        Get in <span className="text-orange-600">Touch</span>
                     </h1>
                     <p className="text-slate-500 font-light text-xl max-w-2xl mx-auto">
-                      We&apos;d love to hear about your next architectural masterpiece.
+                        We&apos;d love to hear about your next architectural masterpiece.
                     </p>
                 </section>
 
@@ -38,7 +38,7 @@ export default function ContactPage() {
                                     <div>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Our Studio</p>
                                         <p className="text-slate-700 font-light leading-relaxed">
-                                            Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (Work)
+                                            Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)
                                         </p>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Working Hours</p>
-                                        <p className="text-slate-700 font-light">Mon - Sat: 10:00 AM - 7:00 PM</p>
+                                        <p className="text-slate-700 font-light">Mon - Sat: 9:00 AM - 9:00 PM</p>
                                     </div>
                                 </div>
                             </div>

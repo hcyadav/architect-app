@@ -14,11 +14,11 @@ export default function AboutPage() {
                         Our Story
                     </div>
                     <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight tracking-tight">
-                        Crafting Spaces with <br />
-                        <span className="text-orange-600">Timeless Elegance</span>
+                        Elevate Your Living Space <br />
+                        <span className="text-orange-600">With Aesthetica</span>
                     </h1>
                     <p className="max-w-2xl mx-auto text-slate-500 font-light text-xl leading-relaxed">
-                        At AESTHETICA, we believe that architecture is more than just buildings—it&apos;s about creating environments that inspire, comfort, and endure.
+                        At AESTHETICA, Everything your home needs—it&apos;s about designed, built, and delivered by us.
                     </p>
                 </section>
 
@@ -35,7 +35,7 @@ export default function AboutPage() {
                     <FadeIn direction="right" className="space-y-10">
                         <h2 className="text-4xl font-serif text-slate-900 leading-tight">Our Philosophy</h2>
                         <p className="text-slate-600 font-light text-lg leading-relaxed">
-                            Founded with a vision to redefine interior and architectural standards, ABC DECORS (AESTHETICA) has grown into a premier studio known for its meticulous attention to detail and commitment to quality wooden and steel craftsmanship.
+                            Founded with a vision is to be a trusted partner for complete interior solutions. We deliver end-to-end services, combining design, execution, and functionality under one roof. By focusing on quality, efficiency, and customer satisfaction, we create spaces that meet real needs and modern lifestyles.
                         </p>
                         <div className="space-y-6">
                             {[
@@ -58,10 +58,10 @@ export default function AboutPage() {
                 {/* Stats */}
                 <section className="grid grid-cols-2 md:grid-cols-4 gap-12 py-20 border-y border-slate-100">
                     {[
-                        { label: "Years Experience", value: "15+" },
-                        { label: "Projects Completed", value: "250+" },
-                        { label: "Expert Workers", value: "40+" },
-                        { label: "Happy Clients", value: "100%" },
+                        { label: "Years Experience", value: "25+" },
+                        { label: "Projects Completed", value: "1500+" },
+                        { label: "Cost Effective", value: "100%" },
+                        { label: "Client Satisfaction", value: "100%" },
                     ].map((stat, i) => (
                         <FadeIn key={i} delayMs={i * 100} direction="up" className="text-center space-y-2">
                             <p className="text-4xl font-serif text-orange-600 leading-none">{stat.value}</p>
@@ -75,12 +75,12 @@ export default function AboutPage() {
                     <section className="bg-slate-900 text-white rounded-[5rem] p-12 md:p-32 text-center space-y-12 shadow-2xl overflow-hidden relative group">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(212,175,55,0.1),transparent)] transition-opacity duration-1000 group-hover:opacity-70" />
                         <h2 className="text-4xl md:text-5xl font-serif leading-tight relative z-10 italic">
-                            &quot;Architecture should speak of its time and place, <br className="hidden md:block" />
-                            but yearn for timelessness.&quot;
+                            &quot;Crafted for today, <br className="hidden md:block" />
+                            remembered for years.&quot;
                         </h2>
                         <div className="w-24 h-px bg-orange-600/50 mx-auto relative z-10" />
                         <p className="max-w-2xl mx-auto text-slate-400 font-light text-xl tracking-wide leading-relaxed relative z-10">
-                            Our mission is to deliver bespoke designs that reflect the unique personality of our clients while maintaining the highest standards of integrity and aesthetic beauty.
+                            Our mission is to deliver complete home solutions that combine design, quality, and functionality — making every space beautiful, comfortable, and ready to live in.
                         </p>
                     </section>
                 </FadeIn>

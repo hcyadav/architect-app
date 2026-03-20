@@ -122,7 +122,7 @@ export default function EmployeesPage() {
             phoneNumber: emp.phoneNumber,
             designation: emp.designation,
             status: emp.status,
-            joiningDate: new Date(emp.joiningDate).toISOString().split('T')[0],
+            joiningDate: new Date(emp.joiningDate).toISOString().split('T')[0]
         });
         setOpen(true);
     };
@@ -159,8 +159,9 @@ export default function EmployeesPage() {
             toast.success("Employee deleted successfully");
             setConfirmDelete(null);
             fetchEmployees(currentPage, searchTerm, statusFilter);
-        } catch (e) {
-            toast.error("Failed to delete employee");
+        } catch (e: any) {
+            const errorMsg = e.response?.data?.details || "Failed to delete employee";
+            toast.error(errorMsg);
         }
     };
 

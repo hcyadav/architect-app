@@ -42,8 +42,10 @@ export async function GET(req: Request) {
       const empRecords = attendanceRecords.filter(r => r.employeeId === emp.id);
       
       const details = {
-          fullDays: empRecords.filter(r => r.status === 'full').length,
-          halfDays: empRecords.filter(r => r.status === 'half').length,
+          fullDays: empRecords.filter(r => r.status === 'full' || r.status === 'full_day').length,
+          halfDays: empRecords.filter(r => r.status === 'half' || r.status === 'half_day').length,
+          oneFiveDays: empRecords.filter(r => r.status === 'one_five_days').length,
+          twoDays: empRecords.filter(r => r.status === 'two_days').length,
           holidays: empRecords.filter(r => r.status === 'holiday').length,
           absents: empRecords.filter(r => r.status === 'absent').length,
           hourlyHours: empRecords
@@ -52,7 +54,11 @@ export async function GET(req: Request) {
       };
 
       const payableFromHourly = details.hourlyHours / fullDayHours;
-      const totalPayableDays = details.fullDays + (details.halfDays * 0.5) + payableFromHourly;
+      const totalPayableDays = details.fullDays + 
+                               (details.halfDays * 0.5) + 
+                               (details.oneFiveDays * 1.5) + 
+                               (details.twoDays * 2.0) + 
+                               payableFromHourly;
 
       return {
           employeeId: emp.id,

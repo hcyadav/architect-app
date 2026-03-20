@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function PUT(
   req: Request,
@@ -21,6 +22,17 @@ export async function PUT(
       where: { id },
       data: body,
     });
+
+    // Revalidate paths cache
+    revalidatePath("/products");
+    revalidatePath("/premium");
+    revalidatePath("/corporate");
+    revalidatePath("/residential");
+    revalidatePath("/");
+    // @ts-ignore
+    revalidateTag("products");
+    // @ts-ignore
+    revalidateTag("subcategories");
     
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
@@ -48,6 +60,17 @@ export async function DELETE(
     await prisma.product.delete({
       where: { id },
     });
+
+    // Revalidate paths cache
+    revalidatePath("/products");
+    revalidatePath("/premium");
+    revalidatePath("/corporate");
+    revalidatePath("/residential");
+    revalidatePath("/");
+    // @ts-ignore
+    revalidateTag("products");
+    // @ts-ignore
+    revalidateTag("subcategories");
     
     return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
   } catch (error) {

@@ -32,15 +32,15 @@ export function ExperienceSection() {
                 We Provide You The <br /> Best Experience
               </h2>
               <p className="mt-8 text-lg text-slate-500 max-w-lg leading-relaxed">
-                With our mature experience, several honors, and numerous items sold, we feel we can always deliver the finest results and service to our devoted clients.
+                With our mature experience and numerous products sold, we feel we can always deliver the finest results and service to our devoted clients.
               </p>
             </FadeIn>
 
             <div className="grid grid-cols-3 gap-8">
               {[
-                { label: "Years experience", val: 13 },
-                { label: "Awards gained", val: 54 },
-                { label: "Furnitures sold", val: 1203 },
+                { label: "Years experience", val: "25+" },
+                // { label: "Awards gained", val: 54 },
+                { label: "Furnitures sold", val: "1500+" },
               ].map((stat, i) => (
                 <FadeIn key={i} delayMs={i * 100}>
                   <div className="space-y-2">
@@ -55,12 +55,12 @@ export function ExperienceSection() {
               ))}
             </div>
 
-            <FadeIn delayMs={400}>
+            {/* <FadeIn delayMs={400}>
               <button className="group inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-sm font-bold text-slate-900 transition-all hover:bg-slate-50">
                 Learn more
                 <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
-            </FadeIn>
+            </FadeIn> */}
           </div>
 
           <div className="relative">
@@ -100,10 +100,10 @@ export function ExperienceSection() {
                 initial={{ x: 20, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                className="absolute -bottom-10 -left-10 rounded-[2rem] bg-white p-6 border"
+                className="absolute -bottom-10 -left-10 rounded-[2rem] bg-white p-4 border ml-2.5"
               >
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Premium quality</p>
-                <p className="mt-1 font-serif text-xl font-medium text-slate-900">Certified Design</p>
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-orange-600">Premium quality</p>
+                {/* <p className="mt-1 font-serif text-xl font-medium text-slate-900">Certified Design</p> */}
               </motion.div>
             </motion.div>
           </div>

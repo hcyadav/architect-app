@@ -13,7 +13,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-slate-400">
-              Crafting premium architectural experiences and interior masterpieces since 2010. We believe in spaces that tell a story.
+              Since 2003, we’ve been redefining spaces through design, quality, and creativity.
             </p>
             <div className="mt-8 flex gap-4">
               {[Instagram, Twitter, Linkedin, Facebook].map((Icon, i) => (
@@ -32,7 +32,7 @@ export default function Footer() {
             <h4 className="font-serif text-lg font-medium">Discover</h4>
             <ul className="mt-6 space-y-4 text-sm text-slate-400">
               <li><Link href="/products" className="hover:text-white transition-colors">Shop All</Link></li>
-              <li><Link href="/premium" className="hover:text-white transition-colors">Premium Collection</Link></li>
+              <li><Link href="/premium" className="hover:text-white transition-colors">Premium Collections</Link></li>
               <li><Link href="/corporate" className="hover:text-white transition-colors">Corporate</Link></li>
               <li><Link href="/portfolio" className="hover:text-white transition-colors">Latest Projects</Link></li>
             </ul>
@@ -43,7 +43,7 @@ export default function Footer() {
             <ul className="mt-6 space-y-4 text-sm text-slate-400">
               <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
               <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
+              {/* <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li> */}
               <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
@@ -53,9 +53,9 @@ export default function Footer() {
               <h4 className="font-serif text-lg font-medium">Find out how to style</h4>
               <p className="mt-2 text-sm text-slate-400">Get expert interior design tips and exclusive collection updates.</p>
               <div className="mt-6 flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Your email" 
+                <input
+                  type="email"
+                  placeholder="Your email"
                   className="w-full rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-600"
                 />
                 <button className="rounded-full bg-orange-600 px-6 py-2 text-sm font-semibold transition hover:bg-orange-700">
