@@ -47,6 +47,8 @@ model Product {
   isBestProduct    Boolean     @default(false)
   customFields     CustomField[]
   quotations       Quotation[]
+  portfolios       Portfolio[]
+  testimonials     Testimonial[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
 }
@@ -143,6 +145,8 @@ model Portfolio {
   location         String?
   completionDate   String?
   clientName       String?
+  productId        String?  @db.ObjectId
+  product          Product? @relation(fields: [productId], references: [id])
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
@@ -163,6 +167,8 @@ model Testimonial {
   content    String
   rating     Int      @default(5)
   imageUrl   String?
+  productId  String?  @db.ObjectId
+  product    Product? @relation(fields: [productId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

@@ -6,7 +6,8 @@ import prisma from "@/lib/prisma";
 export async function GET() {
   try {
     const items = await prisma.testimonial.findMany({
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      include: { product: true }
     });
     return NextResponse.json(items);
   } catch (error) {

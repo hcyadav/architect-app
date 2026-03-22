@@ -7,10 +7,12 @@ import { FadeIn } from "@/components/landing/FadeIn";
 export default async function PortfolioPage() {
     const [projects, testimonials] = await Promise.all([
         prisma.portfolio.findMany({
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            include: { product: true }
         }),
         prisma.testimonial.findMany({
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            include: { product: true }
         }),
     ]);
 
@@ -37,7 +39,7 @@ export default async function PortfolioPage() {
                         <FadeIn key={project.id} delayMs={i * 100} direction="up" className="group">
                             <div className="aspect-[4/5] relative rounded-[3rem] overflow-hidden bg-slate-100 mb-8 shadow-sm border border-slate-50">
                                 <Image
-                                    src={project.imageUrl}
+                                    src={project.imageUrl || (project as any).product?.imageUrl}
                                     alt={project.title}
                                     fill
                                     className="object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"

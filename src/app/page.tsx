@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 
 export const revalidate = 300;
 
-const HOME_PAGE_SIZE = 8;
+const HOME_PAGE_SIZE = 7;
 
 interface HomePageProps {
   searchParams: Promise<{ page?: string }>;
@@ -69,15 +69,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     prisma.testimonial.findMany({
       orderBy: { createdAt: "desc" },
       take: 6,
-      select: {
-        id: true,
-        clientName: true,
-        role: true,
-        company: true,
-        content: true,
-        rating: true,
-        imageUrl: true,
-      },
+      include: {
+        product: {
+          select: {
+            imageUrl: true,
+            id: true,
+            title: true,
+            price: true,
+          }
+        }
+      }
     }),
   ]);
 
@@ -114,7 +115,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <FeatureShowcase />
 
-      <ExperienceSection />
+      {/* <ExperienceSection /> */}
 
       {/* Latest Collection */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -128,15 +129,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </h2>
           </div>
 
-          <Link
-            href="/residential"
-            className="group inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold transition hover:bg-slate-50"
-          >
-            Furniture that blends with your personal style
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform group-hover:translate-x-1">
-              <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -145,6 +137,30 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <ProductCard product={product} />
             </FadeIn>
           ))}
+          <FadeIn key="cta-redirect" delayMs={mappedProducts.length * 100} direction="up">
+            <Link
+              href="/residential"
+              className="group relative flex flex-col items-center justify-center h-full rounded-[2rem] bg-orange-50 border-2 border-dashed border-orange-200 p-8 transition-all hover:bg-orange-100/50 hover:border-orange-300 hover:shadow-2xl hover:shadow-orange-200/50 text-center min-h-[400px]"
+            >
+              <div className="space-y-4">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600 transition-transform group-hover:scale-110">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-2xl font-medium tracking-tight text-slate-900 leading-tight">
+                  Furniture that blends with your personal style
+                </h3>
+                <div className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-orange-600">
+                  EXPLORE NOW
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform group-hover:translate-x-1">
+                    <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </FadeIn>
         </div>
 
         <div className="mt-16 flex items-center justify-center gap-4">
@@ -172,16 +188,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      {featured && <BestProduct product={toProduct(featured)} />}
-      <HappyPeople testimonials={testimonials.map(t => ({
-        id: t.id,
-        clientName: t.clientName,
-        role: t.role || undefined,
-        content: t.content,
-        imageUrl: t.imageUrl || undefined
-      }))} />
+      {/* {featured && <BestProduct product={toProduct(featured)} />} */}
+      <HappyPeople testimonials={testimonials} />
 
       <ClientLogos />
+      <ExperienceSection />
+
       <ContactSection />
     </div>
   );

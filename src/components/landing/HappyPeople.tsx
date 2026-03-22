@@ -3,13 +3,35 @@
 import Image from "next/image";
 import { FadeIn } from "./FadeIn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Star } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
+
+interface Product {
+  id: string;
+  title: string;
+  price: string | null;
+  imageUrl: string;
+}
 
 interface Testimonial {
   id: string;
   clientName: string;
-  role?: string;
+  role: string | null;
+  company: string | null;
   content: string;
-  imageUrl?: string;
+  rating: number;
+  imageUrl: string | null;
+  productId?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  product?: Product | null;
 }
 
 interface HappyPeopleProps {
@@ -17,67 +39,116 @@ interface HappyPeopleProps {
 }
 
 export function HappyPeople({ testimonials }: HappyPeopleProps) {
+  if (!testimonials || testimonials.length === 0) return null;
+
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
       <div className="mx-auto max-w-7xl">
-        <div className="grid lg:grid-cols-12 gap-16 items-center">
-          <div className="lg:col-span-7 space-y-12">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[Autoplay({ delay: 5000 })]}
+          className="w-full"
+        >
+          <div className="flex items-center justify-between mb-8">
             <FadeIn>
               <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Testimonials</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">
+                  Testimonials
+                </span>
               </div>
-              <h2 className="mt-8 font-serif text-5xl font-medium leading-tight text-slate-900 md:text-6xl">
+              <h2 className="mt-4 font-serif text-4xl font-medium leading-tight text-slate-900 md:text-6xl">
                 Hear from happy customers
               </h2>
             </FadeIn>
-
-            <div className="space-y-8">
-              {testimonials.slice(0, 3).map((item, i) => (
-                <FadeIn key={item.id} delayMs={i * 100}>
-                  <div className="flex gap-6 group">
-                    <Avatar className="h-16 w-16 border-2 border-white shadow-xl transition-transform group-hover:scale-110">
-                      <AvatarImage src={item.imageUrl} alt={item.clientName} />
-                      <AvatarFallback className="bg-orange-50 text-orange-600 font-bold">
-                        {item.clientName[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="space-y-1">
-                      <h4 className="font-serif text-xl font-medium text-slate-900">{item.clientName}</h4>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{item.role || "Client"}</p>
-                      <p className="mt-2 text-slate-500 max-w-md leading-relaxed">
-                        &quot;{item.content}&quot;
-                      </p>
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
+            <div className="hidden md:flex gap-2">
+              <CarouselPrevious className="static translate-y-0" />
+              <CarouselNext className="static translate-y-0" />
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative">
-            <FadeIn delayMs={300}>
-               <div className="relative aspect-4/5 overflow-hidden rounded-[3rem] border">
-                 <Image 
-                   src="/uploads/1772704211002-sofa1.jpg" 
-                   alt="Interior" 
-                   fill 
-                   className="object-cover"
-                 />
-                 <div className="absolute inset-x-0 bottom-0 p-8">
-                    <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 flex items-center justify-between border">
-                       <div className="space-y-1">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Arm Chair</p>
-                          <p className="font-sans text-xl font-bold text-slate-900">$220 <span className="text-sm font-normal text-slate-400 line-through ml-2">$265</span></p>
-                       </div>
-                       <button className="h-12 w-12 rounded-full bg-orange-600 text-white flex items-center justify-center transition-transform hover:scale-110">
-                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-                       </button>
+          <CarouselContent>
+            {testimonials.map((item) => (
+              <CarouselItem key={item.id} className="basis-full">
+                <div className="grid lg:grid-cols-12 gap-16 items-center px-1">
+                  <div className="lg:col-span-7 space-y-8">
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-5 w-5 ${
+                            i < item.rating
+                              ? "fill-orange-500 text-orange-500"
+                              : "fill-slate-200 text-slate-200"
+                          }`}
+                        />
+                      ))}
                     </div>
-                 </div>
-               </div>
-            </FadeIn>
+
+                    <div className="relative">
+                      <p className="font-serif text-2xl md:text-3xl italic leading-relaxed text-slate-700">
+                        &quot;{item.content}&quot;
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-14 w-14 border-2 border-white shadow-lg transition-transform hover:scale-110">
+                        <AvatarImage src={item.product?.imageUrl || ""} alt={item.clientName} />
+                        <AvatarFallback className="bg-orange-50 text-orange-600 font-bold">
+                          {item.clientName[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h4 className="font-serif text-lg font-medium text-slate-900">
+                          {item.clientName}
+                        </h4>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                          {item.role || "Verified Client"} {item.company && `at ${item.company}`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-5 relative">
+                    <FadeIn delayMs={300}>
+                      <div className="relative h-[450px] w-full overflow-hidden border border-slate-100 rounded-lg shadow-xl shadow-slate-100">
+                        <Image
+                          src={item.product?.imageUrl || "/placeholder-product.jpg"}
+                          alt={item.product?.title || "Product"}
+                          fill
+                          className="object-cover transition-transform duration-700 hover:scale-105"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 p-6">
+                          <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 flex items-center justify-between border border-white/20 shadow-lg">
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">
+                                Featured Product
+                              </p>
+                              <p className="font-sans text-lg font-bold text-slate-900 line-clamp-1">
+                                {item.product?.title}
+                              </p>
+                            </div>
+                            <button className="h-10 w-10 shrink-0 rounded-full bg-orange-600 text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M5 12h14m-7-7 7 7-7 7" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </FadeIn>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex md:hidden justify-center gap-4 mt-8">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
           </div>
-        </div>
+        </Carousel>
       </div>
     </section>
   );

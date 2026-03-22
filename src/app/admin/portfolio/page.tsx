@@ -5,6 +5,14 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Trash2, Pencil, Star } from "lucide-react";
 import { UploadButton } from "@/lib/uploadthing";
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList,
+} from "@/components/ui/combobox";
 
 
 interface PortfolioItem {
@@ -16,6 +24,8 @@ interface PortfolioItem {
     location: string;
     completionDate: string;
     clientName: string;
+    productId?: string | null;
+    product?: { title: string; imageUrl: string };
 }
 
 interface TestimonialItem {
@@ -24,13 +34,15 @@ interface TestimonialItem {
     role: string;
     content: string;
     rating: number;
+    productId?: string | null;
+    product?: { title: string; imageUrl: string };
 }
 
 export default function AdminPortfolioPage() {
     const [loading, setLoading] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [activeTab, setActiveTab] = useState<"projects" | "testimonials">("projects");
-
+    const [products, setProducts] = useState<{ items: { id: string, title: string, imageUrl: string }[] }>({ items: [] });
     // Projects State
     const [projects, setProjects] = useState<PortfolioItem[]>([]);
     const [editingProject, setEditingProject] = useState<string | null>(null);
@@ -57,12 +69,14 @@ export default function AdminPortfolioPage() {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const [portRes, testRes] = await Promise.all([
+            const [portRes, testRes, prodRes] = await Promise.all([
                 axios.get("/api/portfolio"),
                 axios.get("/api/testimonials"),
+                axios.get("/api/products?pageSize=1000"),
             ]);
             setProjects(portRes.data);
             setTestimonials(testRes.data);
+            setProducts(prodRes.data);
         } catch (error) {
             toast.error("Failed to fetch data");
         } finally {
@@ -87,7 +101,7 @@ export default function AdminPortfolioPage() {
                 toast.success("Project added");
             }
             setEditingProject(null);
-            setProjectForm({ title: "", description: "", imageUrl: "", additionalImages: [], location: "", completionDate: "", clientName: "" });
+            setProjectForm({ title: "", description: "", imageUrl: "", additionalImages: [], location: "", completionDate: "", clientName: "", productId: "" });
             fetchData();
         } catch (error) {
             toast.error("Failed to save project");
@@ -122,7 +136,7 @@ export default function AdminPortfolioPage() {
                 toast.success("Testimonial added");
             }
             setEditingTestimonial(null);
-            setTestimonialForm({ clientName: "", role: "", content: "", rating: 5 });
+            setTestimonialForm({ clientName: "", role: "", content: "", rating: 5, productId: "" });
             fetchData();
         } catch (error) {
             toast.error("Failed to save testimonial");
@@ -166,7 +180,7 @@ export default function AdminPortfolioPage() {
             </div>
 
             {activeTab === "projects" ? (
-                <div className="space-y-8">
+                <div className="space-y-8 min-h-screen overflow-y-auto pr-2 custom-scrollbar">
                     {/* Project Form */}
                     <form onSubmit={handleProjectSubmit} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-4">
                         <h2 className="text-xl font-medium mb-4">{editingProject ? "Edit Project" : "Add New Project"}</h2>
@@ -191,6 +205,29 @@ export default function AdminPortfolioPage() {
                                 value={projectForm.completionDate} onChange={e => setProjectForm({ ...projectForm, completionDate: e.target.value })}
                                 className="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none"
                             />
+                            <Combobox
+                                value={projectForm.productId || ""}
+                                onValueChange={val => setProjectForm({ ...projectForm, productId: val as string })}
+                            >
+                                <ComboboxInput
+                                    placeholder="Select Product (Optional)"
+                                    className="w-full h-12 py-3 bg-gray-50 border rounded-xl outline-none"
+                                />
+                                <ComboboxContent className="w-full">
+                                    <ComboboxList>
+                                        <ComboboxItem value="" textValue="None">None</ComboboxItem>
+                                        {products?.items?.map(p => (
+                                            <ComboboxItem key={p.id} value={p.id} textValue={p.title}>
+                                                <div className="flex items-center gap-2 py-0.5">
+                                                    {p.imageUrl && <img src={p.imageUrl} alt="" className="w-8 h-8 object-cover rounded bg-white border" />}
+                                                    <span className="text-sm leading-tight truncate max-w-[200px]">{p.title}</span>
+                                                </div>
+                                            </ComboboxItem>
+                                        ))}
+                                    </ComboboxList>
+                                    <ComboboxEmpty>No products found</ComboboxEmpty>
+                                </ComboboxContent>
+                            </Combobox>
                         </div>
                         <textarea
                             placeholder="Description" required rows={4}
@@ -238,7 +275,7 @@ export default function AdminPortfolioPage() {
                             <button type="submit" disabled={loading} className="px-8 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all">
                                 {editingProject ? "Update Project" : "Add Project"}
                             </button>
-                            {editingProject && <button onClick={() => { setEditingProject(null); setProjectForm({ title: "", description: "", imageUrl: "", additionalImages: [], location: "", completionDate: "", clientName: "" }) }} className="px-6 py-3 border rounded-xl">Cancel</button>}
+                            {editingProject && <button onClick={() => { setEditingProject(null); setProjectForm({ title: "", description: "", imageUrl: "", additionalImages: [], location: "", completionDate: "", clientName: "", productId: "" }) }} className="px-6 py-3 border rounded-xl">Cancel</button>}
                         </div>
                     </form>
 
@@ -251,7 +288,7 @@ export default function AdminPortfolioPage() {
                                     <img src={p.imageUrl} className="w-16 h-12 object-contain bg-white rounded-lg border" />
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium">{p.title}</h4>
-                                        <p className="text-xs text-gray-400">{p.location || "No location"}</p>
+                                        <p className="text-xs text-gray-400">{p.location || "No location"}{p.product ? ` • Linked: ${p.product.title}` : ""}</p>
                                     </div>
                                     <div className="flex gap-2">
                                         <button onClick={() => { setEditingProject(p.id!); setProjectForm(p) }} className="p-2 text-gray-400 hover:text-[#D4AF37]"><Pencil className="w-4 h-4" /></button>
@@ -263,7 +300,7 @@ export default function AdminPortfolioPage() {
                     </div>
                 </div>
             ) : (
-                <div className="space-y-8">
+                <div className="space-y-8 min-h-screen overflow-y-auto pr-2 custom-scrollbar">
                     {/* Testimonial Form */}
                     <form onSubmit={handleTestimonialSubmit} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-4">
                         <h2 className="text-xl font-medium mb-4">{editingTestimonial ? "Edit Testimonial" : "Add New Testimonial"}</h2>
@@ -278,6 +315,29 @@ export default function AdminPortfolioPage() {
                                 value={testimonialForm.role} onChange={e => setTestimonialForm({ ...testimonialForm, role: e.target.value })}
                                 className="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none"
                             />
+                            <Combobox
+                                value={testimonialForm.productId || ""}
+                                onValueChange={val => setTestimonialForm({ ...testimonialForm, productId: val as string })}
+                            >
+                                <ComboboxInput
+                                    placeholder="Select Product (Optional)"
+                                    className="w-full h-12 py-3 bg-gray-50 border rounded-xl outline-none"
+                                />
+                                <ComboboxContent className="w-full">
+                                    <ComboboxList>
+                                        <ComboboxItem value="" textValue="None">None</ComboboxItem>
+                                        {products?.items?.map(p => (
+                                            <ComboboxItem key={p.id} value={p.id} textValue={p.title}>
+                                                <div className="flex items-center gap-2 py-0.5">
+                                                    {p.imageUrl && <img src={p.imageUrl} alt="" className="w-8 h-8 object-cover rounded bg-white border" />}
+                                                    <span className="text-sm leading-tight truncate max-w-[200px]">{p.title}</span>
+                                                </div>
+                                            </ComboboxItem>
+                                        ))}
+                                    </ComboboxList>
+                                    <ComboboxEmpty>No products found</ComboboxEmpty>
+                                </ComboboxContent>
+                            </Combobox>
                         </div>
                         <textarea
                             placeholder="Testimonial Content" required rows={3}
@@ -296,7 +356,7 @@ export default function AdminPortfolioPage() {
                             <button type="submit" disabled={loading} className="px-8 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all">
                                 {editingTestimonial ? "Update Testimonial" : "Add Testimonial"}
                             </button>
-                            {editingTestimonial && <button onClick={() => { setEditingTestimonial(null); setTestimonialForm({ clientName: "", role: "", content: "", rating: 5 }) }} className="px-6 py-3 border rounded-xl">Cancel</button>}
+                            {editingTestimonial && <button onClick={() => { setEditingTestimonial(null); setTestimonialForm({ clientName: "", role: "", content: "", rating: 5, productId: "" }) }} className="px-6 py-3 border rounded-xl">Cancel</button>}
                         </div>
                     </form>
 
@@ -308,7 +368,7 @@ export default function AdminPortfolioPage() {
                                 <div key={t.id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium">{t.clientName}</h4>
-                                        <p className="text-xs text-gray-400 line-clamp-1">{t.content}</p>
+                                        <p className="text-xs text-gray-400 line-clamp-1">{t.content}{t.product ? ` • Linked: ${t.product.title}` : ""}</p>
                                     </div>
                                     <div className="flex gap-2">
                                         <button onClick={() => { setEditingTestimonial(t.id!); setTestimonialForm(t) }} className="p-2 text-gray-400 hover:text-[#D4AF37]"><Pencil className="w-4 h-4" /></button>
