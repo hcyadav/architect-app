@@ -78,7 +78,7 @@ export default async function ProductDetails({
                 </div>
                 {product.mrp && (
                   <p className="text-sm text-gray-400 ml-1">
-                    M.R.P: <span className="line-through decoration-gray-300">₹{Number(product.mrp).toLocaleString()}</span>
+                    M.R.P: <span className="line-through decoration-gray-500">₹{Number(product.mrp).toLocaleString()}</span>
                   </p>
                 )}
               </div>

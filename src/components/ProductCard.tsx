@@ -53,7 +53,7 @@ export default function ProductCard({ product }: { product: any }) {
             ₹{product.price ? Number(product.price).toLocaleString() : "470"}
           </span>
           {product.mrp && (
-            <span className="text-[10px] text-slate-400 line-through decoration-slate-300">
+            <span className="text-[10px] text-slate-400 line-through decoration-slate-500">
               M.R.P: ₹{Number(product.mrp).toLocaleString()}
             </span>
           )}
