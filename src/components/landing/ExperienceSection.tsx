@@ -62,8 +62,7 @@ export function ExperienceSection() {
               </button>
             </FadeIn> */}
           </div>
-
-          <div className="relative">
+          <div className="relative px-4 sm:px-0">
             {/* Background Accent */}
             <div className="absolute -top-10 -right-10 h-64 w-64 rounded-[3rem] bg-orange-50 opacity-50 blur-3xl" />
 
@@ -71,11 +70,13 @@ export function ExperienceSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, ease: "easeInOut" }}
-              className="relative aspect-4/5 w-full max-w-md ml-auto"
+              className="relative aspect-[4/5] w-full max-w-md ml-auto"
             >
-              <div className="absolute -top-6 -left-6 h-full w-full rounded-[2.5rem] border bg-orange-100/30" />
+              {/* Outer Frame */}
+              <div className="absolute -top-3 -left-3 sm:-top-6 sm:-left-6 h-full w-full rounded-[2.5rem] border bg-orange-100/30" />
 
-              <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] border-8">
+              {/* Image Container */}
+              <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] border-4 sm:border-6 md:border-8">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={index}
@@ -95,15 +96,14 @@ export function ExperienceSection() {
                 </AnimatePresence>
               </div>
 
-              {/* Overlapping Floating Badge */}
+              {/* Floating Badge */}
               <motion.div
                 initial={{ x: 20, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                className="absolute -bottom-10 -left-10 rounded-[2rem] bg-white p-4 border ml-2.5"
+                className="absolute -bottom-11 -left-4 rounded-[2rem] bg-white p-4 border ml-2.5"
               >
                 <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-orange-600">Premium quality</p>
-                {/* <p className="mt-1 font-serif text-xl font-medium text-slate-900">Certified Design</p> */}
               </motion.div>
             </motion.div>
           </div>
