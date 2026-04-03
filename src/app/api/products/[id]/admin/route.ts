@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { UTApi } from "uploadthing/server";
+
+const utapi = new UTApi();
 
 export async function PUT(
   req: Request,
@@ -64,6 +67,38 @@ export async function DELETE(
 
     const { id } = await params;
 
+    // 1. Fetch product to get image URLs
+    const product = await prisma.product.findUnique({
+      where: { id },
+      select: { imageUrl: true, additionalImages: true }
+    });
+
+    if (product) {
+      // 2. Collect all image keys
+      const imageKeys: string[] = [];
+      if (product.imageUrl) {
+        const key = product.imageUrl.split("/").pop();
+        if (key) imageKeys.push(key);
+      }
+      if (product.additionalImages && Array.isArray(product.additionalImages)) {
+        product.additionalImages.forEach(url => {
+          const key = url.split("/").pop();
+          if (key) imageKeys.push(key);
+        });
+      }
+
+      // 3. Delete from UploadThing
+      if (imageKeys.length > 0) {
+        try {
+          await utapi.deleteFiles(imageKeys);
+        } catch (utError) {
+          console.error("Error deleting files from UploadThing:", utError);
+          // Continue even if UT delete fails
+        }
+      }
+    }
+
+    // 4. Delete from Database
     await prisma.product.delete({
       where: { id },
     });
