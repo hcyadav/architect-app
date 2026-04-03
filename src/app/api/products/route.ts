@@ -71,6 +71,11 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+    
+    // Ensure data types are correct for Prisma
+    if (body.discountPercentage) {
+      body.discountPercentage = parseFloat(body.discountPercentage);
+    }
 
     const product = await prisma.product.create({
       data: body,

@@ -41,7 +41,25 @@ export function BestProduct({ product }: BestProductProps) {
                 <div className="flex items-center justify-between gap-8 border-t border-slate-100 pt-8">
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-slate-400 uppercase tracking-widest text-[10px]">Price</p>
-                    <p className="text-4xl font-bold text-slate-900">₹{product.price || "1850.65"}</p>
+                    <div className="flex flex-col">
+                      <p className="text-4xl font-bold text-slate-900">
+                        ₹{product.price ? Number(product.price).toLocaleString() : "1,850.65"}
+                      </p>
+                      {(product.mrp || product.discountPercentage) && (
+                        <div className="flex items-center gap-2 mt-1">
+                          {product.mrp && (
+                            <span className="text-sm text-slate-400 line-through">
+                              M.R.P: ₹{Number(product.mrp).toLocaleString()}
+                            </span>
+                          )}
+                          {product.discountPercentage && (
+                            <span className="text-sm font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md">
+                              {product.discountPercentage}% OFF
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <Link

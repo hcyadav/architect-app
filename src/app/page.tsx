@@ -29,6 +29,8 @@ function toProduct(product: {
   category: string;
   subCategory?: string | null;
   price?: string | null;
+  mrp?: string | null;
+  discountPercentage?: number | null;
 }): LandingProduct {
   return {
     id: product.id,
@@ -38,6 +40,8 @@ function toProduct(product: {
     category: product.category as LandingProduct["category"],
     subCategory: product.subCategory || undefined,
     price: product.price || undefined,
+    mrp: product.mrp || undefined,
+    discountPercentage: product.discountPercentage || undefined,
   };
 }
 
@@ -64,6 +68,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         category: true,
         subCategory: true,
         price: true,
+        mrp: true,
+        discountPercentage: true,
       },
     }),
     prisma.testimonial.findMany({
@@ -76,6 +82,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             id: true,
             title: true,
             price: true,
+            mrp: true,
+            discountPercentage: true,
           }
         }
       }
@@ -97,6 +105,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       category: true,
       subCategory: true,
       price: true,
+      mrp: true,
+      discountPercentage: true,
     },
   });
 

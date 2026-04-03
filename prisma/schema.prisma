@@ -43,6 +43,8 @@ model Product {
   imageUrl         String
   additionalImages String[]
   price            String?
+  mrp              String?
+  discountPercentage Float?
   companyName      String?
   isBestProduct    Boolean     @default(false)
   customFields     CustomField[]

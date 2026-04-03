@@ -6,4 +6,6 @@ export interface LandingProduct {
   category: "product" | "premium" | "corporate";
   subCategory?: string;
   price?: string;
+  mrp?: string;
+  discountPercentage?: number;
 }

@@ -48,17 +48,26 @@ export default function ProductCard({ product }: { product: any }) {
 
         </div>
 
-        <div className="mt-4 flex items-center gap-3">
+        <div className="mt-4 flex flex-wrap items-baseline gap-2">
           <span className="font-sans text-base font-bold text-slate-900">
-            {product.price ? `₹${product.price}` : "₹470"}
+            ₹{product.price ? Number(product.price).toLocaleString() : "470"}
           </span>
-          <span className="text-xs text-slate-300 line-through">
-            $550
-          </span>
+          {product.mrp && (
+            <span className="text-[10px] text-slate-400 line-through decoration-slate-300">
+              M.R.P: ₹{Number(product.mrp).toLocaleString()}
+            </span>
+          )}
+          {product.discountPercentage && (
+            <span className="text-[10px] font-bold text-orange-600">
+              ({product.discountPercentage}% off)
+            </span>
+          )}
         </div>
-        <Button className="w-full"><Link
-          href={`/products/${product._id || product.id}`}
-        >See Details</Link></Button>
+        <Link href={`/products/${product.id}`} className="w-full">
+          <Button className="w-full cursor-pointer">
+            See Details
+          </Button>
+        </Link>
       </div>
     </div>
   );

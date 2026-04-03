@@ -64,10 +64,23 @@ export default async function ProductDetails({
           {/* Price & Company Name */}
           <div className="flex flex-wrap items-center gap-4 mb-6">
             {product.price && (
-              <div className="inline-flex items-center gap-1 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-semibold">
-                <span className="text-xs font-light mr-0.5">₹</span>
-                {Number(product.price).toLocaleString()}
-                <span className="text-xs font-light text-gray-300 ml-1">onwards</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-baseline gap-3">
+                  <div className="inline-flex items-center gap-1 px-4 py-2 bg-gray-900 text-white rounded-xl text-lg font-bold">
+                    <span className="text-xs font-light mr-0.5">₹</span>
+                    {Number(product.price).toLocaleString()}
+                  </div>
+                  {product.discountPercentage && (
+                    <span className="px-2 py-1 bg-orange-50 text-orange-600 rounded-lg text-xs font-bold ring-1 ring-orange-100">
+                      {product.discountPercentage}% OFF
+                    </span>
+                  )}
+                </div>
+                {product.mrp && (
+                  <p className="text-sm text-gray-400 ml-1">
+                    M.R.P: <span className="line-through decoration-gray-300">₹{Number(product.mrp).toLocaleString()}</span>
+                  </p>
+                )}
               </div>
             )}
             {product.companyName && (
@@ -92,7 +105,7 @@ export default async function ProductDetails({
                 {/* Displaying Sub Category as Category per request */}
                 {product.subCategory && (
                   <div className="flex items-start">
-                    <span className="w-32 md:w-40 font-bold text-gray-900 shrink-0">
+                    <span className="w-32 md:w-40 font-bold text-gray-700 shrink-0">
                       Category
                     </span>
                     <span className="text-gray-700">
@@ -102,7 +115,7 @@ export default async function ProductDetails({
                 )}
 
                 {/* Price */}
-                {product.price && (
+                {/* {product.price && (
                   <div className="flex items-start">
                     <span className="w-32 md:w-40 font-bold text-gray-900 shrink-0">
                       Starting Price
@@ -111,7 +124,7 @@ export default async function ProductDetails({
                       ₹{Number(product.price).toLocaleString()}
                     </span>
                   </div>
-                )}
+                )} */}
 
                 {/* Company Name */}
                 {product.companyName && (

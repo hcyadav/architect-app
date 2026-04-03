@@ -17,6 +17,13 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
+    
+    // Ensure data types are correct for Prisma
+    if (body.discountPercentage) {
+      body.discountPercentage = parseFloat(body.discountPercentage);
+    } else if (body.discountPercentage === "" || body.discountPercentage === null) {
+      body.discountPercentage = null;
+    }
 
     const product = await prisma.product.update({
       where: { id },

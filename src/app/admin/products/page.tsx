@@ -23,6 +23,8 @@ interface ProductData {
   additionalImages: string[];
   companyName: string;
   price: string;
+  mrp: string;
+  discountPercentage: string;
   customFields: CustomField[];
 }
 
@@ -35,6 +37,8 @@ const emptyForm: ProductData = {
   additionalImages: [],
   companyName: "",
   price: "",
+  mrp: "",
+  discountPercentage: "",
   customFields: [],
 };
 
@@ -95,7 +99,23 @@ export default function AdminProductsPage() {
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    let newFormData = { ...formData, [name]: value };
+
+    // Auto-calculate price if MRP or Discount changes
+    if (name === "mrp" || name === "discountPercentage") {
+      const mrp = name === "mrp" ? value : formData.mrp;
+      const discount = name === "discountPercentage" ? value : formData.discountPercentage;
+      
+      const m = parseFloat(mrp);
+      const d = parseFloat(discount);
+      if (!isNaN(m) && !isNaN(d)) {
+        const discountedPrice = Math.round(m * (1 - d / 100));
+        newFormData.price = String(discountedPrice);
+      }
+    }
+
+    setFormData(newFormData);
   };
 
   const handleTabChange = (tab: "product" | "corporate" | "premium") => {
@@ -107,6 +127,8 @@ export default function AdminProductsPage() {
       subCategory: "",
       companyName: tab === "corporate" ? prev.companyName : "",
       price: tab === "corporate" ? "" : prev.price,
+      mrp: tab === "corporate" ? "" : prev.mrp,
+      discountPercentage: tab === "corporate" ? "" : prev.discountPercentage,
     }));
   };
 
@@ -163,6 +185,8 @@ export default function AdminProductsPage() {
       additionalImages: product.additionalImages || [],
       companyName: product.companyName || "",
       price: product.price ? String(product.price) : "",
+      mrp: product.mrp ? String(product.mrp) : "",
+      discountPercentage: product.discountPercentage ? String(product.discountPercentage) : "",
       customFields: product.customFields || [],
     });
   };
@@ -499,17 +523,41 @@ export default function AdminProductsPage() {
             )}
 
             {activeTab === "product" && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Starting Price (Optional)</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none transition-all"
-                  placeholder="Ex. 1200"
-                />
-              </div>
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">M.R.P (Original Price)</label>
+                  <input
+                    type="number"
+                    name="mrp"
+                    value={formData.mrp}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none transition-all"
+                    placeholder="Ex. 46890"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Discount (%)</label>
+                  <input
+                    type="number"
+                    name="discountPercentage"
+                    value={formData.discountPercentage}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none transition-all"
+                    placeholder="Ex. 36"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Sale Price (Calculated)</label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none transition-all font-bold text-gray-900"
+                    placeholder="Ex. 29990"
+                  />
+                </div>
+              </>
             )}
           </div>
 
