@@ -24,9 +24,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const body = await req.json();
+    const { id: _id, product, createdAt, updatedAt, ...data } = await req.json();
     const item = await prisma.portfolio.create({
-      data: body
+      data: data
     });
     return NextResponse.json(item, { status: 201 });
   } catch (error) {

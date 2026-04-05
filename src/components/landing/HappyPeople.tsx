@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/carousel";
 import { Star } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
+import { useRouter } from "next/navigation";
+
 
 interface Product {
   id: string;
@@ -39,7 +41,9 @@ interface HappyPeopleProps {
 }
 
 export function HappyPeople({ testimonials }: HappyPeopleProps) {
+  const router = useRouter();
   if (!testimonials || testimonials.length === 0) return null;
+  console.log("testimonials", testimonials[0]?.productId);
 
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
@@ -78,11 +82,10 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-5 w-5 ${
-                            i < item.rating
-                              ? "fill-orange-500 text-orange-500"
-                              : "fill-slate-200 text-slate-200"
-                          }`}
+                          className={`h-5 w-5 ${i < item.rating
+                            ? "fill-orange-500 text-orange-500"
+                            : "fill-slate-200 text-slate-200"
+                            }`}
                         />
                       ))}
                     </div>
@@ -95,7 +98,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
 
                     <div className="flex items-center gap-4">
                       <Avatar className="h-14 w-14 border-2 border-white shadow-lg transition-transform hover:scale-110">
-                        <AvatarImage src={item.product?.imageUrl || ""} alt={item.clientName} />
+                        <AvatarImage src={item.product?.imageUrl || undefined} alt={item.clientName} />
                         <AvatarFallback className="bg-orange-50 text-orange-600 font-bold">
                           {item.clientName[0]}
                         </AvatarFallback>
@@ -113,12 +116,12 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
 
                   <div className="lg:col-span-5 relative">
                     <FadeIn delayMs={300}>
-                      <div className="relative h-[450px] w-full overflow-hidden border border-slate-100 rounded-lg shadow-xl shadow-slate-100">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden border border-slate-100 rounded-lg shadow-xl shadow-slate-100">
                         <Image
                           src={item.product?.imageUrl || "/placeholder-product.jpg"}
                           alt={item.product?.title || "Product"}
                           fill
-                          className="object-cover transition-transform duration-700 hover:scale-105"
+                          className="object-unset transition-transform duration-700 hover:scale-105"
                         />
                         <div className="absolute inset-x-0 bottom-0 p-6">
                           <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 flex items-center justify-between border border-white/20 shadow-lg">
@@ -130,7 +133,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                                 {item.product?.title}
                               </p>
                             </div>
-                            <button className="h-10 w-10 shrink-0 rounded-full bg-orange-600 text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
+                            <button className="h-10 w-10 shrink-0 rounded-full bg-orange-600 text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95" onClick={() => router.push(`/products/${item?.productId}`)}>
                               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M5 12h14m-7-7 7 7-7 7" />
                               </svg>

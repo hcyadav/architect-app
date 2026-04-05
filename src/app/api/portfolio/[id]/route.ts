@@ -15,10 +15,10 @@ export async function PUT(
     }
 
     const { id } = await params;
-    const body = await req.json();
+    const { id: _id, product, createdAt, updatedAt, ...data } = await req.json();
     const item = await prisma.portfolio.update({
       where: { id },
-      data: body
+      data: data
     });
     return NextResponse.json(item);
   } catch (error) {

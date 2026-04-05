@@ -219,7 +219,7 @@ export default function AdminPortfolioPage() {
                                         {products?.items?.map(p => (
                                             <ComboboxItem key={p.id} value={p.id} textValue={p.title}>
                                                 <div className="flex items-center gap-2 py-0.5">
-                                                    {p.imageUrl && <img src={p.imageUrl} alt="" className="w-8 h-8 object-cover rounded bg-white border" />}
+                                                    {p.imageUrl && <img src={p.imageUrl || undefined} alt="" className="w-8 h-8 object-cover rounded bg-white border" />}
                                                     <span className="text-sm leading-tight truncate max-w-[200px]">{p.title}</span>
                                                 </div>
                                             </ComboboxItem>
@@ -268,7 +268,7 @@ export default function AdminPortfolioPage() {
                                     }}
                                 />
                             </div>
-                            {projectForm.imageUrl && <img src={projectForm.imageUrl} className="w-40 h-24 object-contain bg-white rounded-lg border mt-2" />}
+                            {projectForm.imageUrl && <img src={projectForm.imageUrl || undefined} className="w-40 h-24 object-contain bg-white rounded-lg border mt-2" />}
                         </div>
 
                         <div className="flex gap-2">
@@ -285,7 +285,7 @@ export default function AdminPortfolioPage() {
                         <div className="divide-y max-h-96 overflow-y-auto custom-scrollbar">
                             {projects.length === 0 ? <p className="p-10 text-center text-gray-400">No projects added yet.</p> : projects.map(p => (
                                 <div key={p.id} className="p-4 flex items-center gap-4 hover:bg-gray-50">
-                                    <img src={p.imageUrl} className="w-16 h-12 object-contain bg-white rounded-lg border" />
+                                    {p.imageUrl && <img src={p.imageUrl || undefined} className="w-16 h-12 object-contain bg-white rounded-lg border" />}
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium">{p.title}</h4>
                                         <p className="text-xs text-gray-400">{p.location || "No location"}{p.product ? ` • Linked: ${p.product.title}` : ""}</p>
@@ -329,7 +329,7 @@ export default function AdminPortfolioPage() {
                                         {products?.items?.map(p => (
                                             <ComboboxItem key={p.id} value={p.id} textValue={p.title}>
                                                 <div className="flex items-center gap-2 py-0.5">
-                                                    {p.imageUrl && <img src={p.imageUrl} alt="" className="w-8 h-8 object-cover rounded bg-white border" />}
+                                                    {p.imageUrl && <img src={p.imageUrl || undefined} alt="" className="w-8 h-8 object-cover rounded bg-white border" />}
                                                     <span className="text-sm leading-tight truncate max-w-[200px]">{p.title}</span>
                                                 </div>
                                             </ComboboxItem>
