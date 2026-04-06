@@ -18,8 +18,10 @@ import { useRouter } from "next/navigation";
 interface Product {
   id: string;
   title: string;
-  price: string | null;
   imageUrl: string;
+  price: number | null;
+  mrp: number | null;
+  discountPercentage: number | null;
 }
 
 interface Testimonial {
