@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
-  Star, 
+import {
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Star,
   MessageSquare,
   Search,
   Filter,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { formatDistanceToNow } from "date-fns";
+
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -68,7 +69,7 @@ export default function AdminReviewsPage() {
     }
   };
 
-  const filteredReviews = reviews.filter(r => 
+  const filteredReviews = reviews.filter(r =>
     r.user.name.toLowerCase().includes(search.toLowerCase()) ||
     r.product.title.toLowerCase().includes(search.toLowerCase()) ||
     r.comment.toLowerCase().includes(search.toLowerCase())
@@ -87,11 +88,10 @@ export default function AdminReviewsPage() {
             <button
               key={s}
               onClick={() => setStatus(s)}
-              className={`px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${
-                status === s 
-                  ? "bg-white text-gray-900 shadow-sm border border-gray-100" 
+              className={`px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${status === s
+                  ? "bg-white text-gray-900 shadow-sm border border-gray-100"
                   : "text-gray-400 hover:text-gray-600"
-              }`}
+                }`}
             >
               {s}
             </button>
@@ -127,13 +127,12 @@ export default function AdminReviewsPage() {
             <div key={review.id} className="group flex flex-col bg-white border border-gray-100 rounded-[2.5rem] p-8 space-y-6 transition-all hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:border-[#D4AF37]/10 relative overflow-hidden">
               {/* Status Badge */}
               <div className="absolute top-4 right-8">
-                 <div className={`px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-[0.2em] ${
-                   review.status === 'approved' ? 'bg-green-50 text-green-600' :
-                   review.status === 'rejected' ? 'bg-red-50 text-red-600' :
-                   'bg-[#D4AF37]/10 text-[#D4AF37]'
-                 }`}>
-                   {review.status}
-                 </div>
+                <div className={`px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-[0.2em] ${review.status === 'approved' ? 'bg-green-50 text-green-600' :
+                    review.status === 'rejected' ? 'bg-red-50 text-red-600' :
+                      'bg-[#D4AF37]/10 text-[#D4AF37]'
+                  }`}>
+                  {review.status}
+                </div>
               </div>
 
               <div className="space-y-4 flex-1">
@@ -172,10 +171,10 @@ export default function AdminReviewsPage() {
                   <Clock className="w-3 h-3" />
                   {formatDistanceToNow(new Date(review.createdAt))}
                 </span>
-                
+
                 <div className="flex gap-2">
                   {review.status !== 'approved' && (
-                    <button 
+                    <button
                       onClick={() => handleAction(review.id, "approved")}
                       className="p-3 bg-green-50 hover:bg-green-600 text-green-600 hover:text-white rounded-xl transition-all shadow-sm"
                       title="Approve"
@@ -184,7 +183,7 @@ export default function AdminReviewsPage() {
                     </button>
                   )}
                   {review.status !== 'rejected' && (
-                    <button 
+                    <button
                       onClick={() => handleAction(review.id, "rejected")}
                       className="p-3 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white rounded-xl transition-all shadow-sm"
                       title="Reject"
@@ -192,7 +191,7 @@ export default function AdminReviewsPage() {
                       <XCircle className="w-4 h-4" />
                     </button>
                   )}
-                  <button 
+                  <button
                     onClick={() => handleAction(review.id, "delete")}
                     className="p-3 bg-gray-50 hover:bg-gray-900 text-gray-400 hover:text-white rounded-xl transition-all"
                     title="Delete Permanently"
