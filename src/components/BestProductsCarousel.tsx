@@ -117,7 +117,7 @@ export default function BestProductsCarousel() {
 
                                 <div className="pt-2">
                                     <Link
-                                        href={`/products/${p.id}`}
+                                        href={`/products/${p.slug || p.id}`}
                                         className="group/btn inline-flex items-center gap-3 px-10 py-4 bg-white text-gray-900 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-[#D4AF37] hover:text-white transition-all shadow-2xl"
                                     >
                                         View Details

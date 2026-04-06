@@ -48,6 +48,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const adminItems = [
     { href: "/admin", label: "Admin Panel" },
     { href: "/admin/products", label: "Manage Products" },
+    { href: "/admin/reviews", label: "Manage Reviews" },
     { href: "/admin/best-products", label: "Best Products" },
     { href: "/admin/portfolio", label: "Manage Portfolio" },
     { href: "/admin/employees", label: "Employees" },

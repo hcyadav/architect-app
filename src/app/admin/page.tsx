@@ -8,7 +8,8 @@ import {
     ClipboardCheck,
     Home,
     Star,
-    FileText
+    FileText,
+    MessageSquare
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BackButton from "@/components/BackButton";
@@ -48,6 +49,13 @@ const adminModules = [
         href: "/admin/attendance",
         icon: ClipboardCheck,
         color: "bg-[#D4AF37]/10 text-[#D4AF37]"
+    },
+    {
+        title: "Product Reviews",
+        description: "Moderate user feedback, approve high-quality reviews, and manage design insights.",
+        href: "/admin/reviews",
+        icon: MessageSquare,
+        color: "bg-pink-50 text-pink-600"
     },
     {
         title: "Quotation",

@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma";
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const category = searchParams.get("category");
+    let category = searchParams.get("category");
+    if (category === "product") category = "residential";
     console.log("Fetching subcategories for category:", category);
     const products = await prisma.product.findMany({
       where: category ? { category: category as any } : {},

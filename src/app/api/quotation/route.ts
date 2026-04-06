@@ -50,18 +50,19 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const { name, email, message, productId } = await req.json();
+    const { name, email, phone, message, productId } = await req.json();
 
-    if (!session && (!name || !email)) {
-      return NextResponse.json({ error: "Unauthorized or missing guest info" }, { status: 401 });
+    if (!session) {
+      return NextResponse.json({ error: "Please log in to send a quotation request" }, { status: 401 });
     }
 
     const quotation = await prisma.quotation.create({
       data: {
         // @ts-ignore
-        userId: session?.user?.id || null,
+        userId: session?.user?.id,
         name: name || session?.user?.name,
         email: email || session?.user?.email,
+        phone: phone || null,
         productId: productId || null,
         message,
       }

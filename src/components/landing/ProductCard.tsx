@@ -21,7 +21,7 @@ export function ProductCard({ product }: ProductCardProps) {
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
         <Link
-          href={`/products/${product.id}`}
+          href={`/products/${product.slug || product.id}`}
           className="absolute inset-0 z-10"
         />
       </div>
@@ -58,7 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="mt-auto pt-4">
-          <Link href={`/products/${product.id}`} className="w-full">
+          <Link href={`/products/${product.slug || product.id}`} className="w-full">
             <Button className="w-full cursor-pointer">
               See Details
             </Button>

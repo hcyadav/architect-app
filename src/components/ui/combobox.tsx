@@ -128,6 +128,7 @@ function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
 function ComboboxItem({
     className,
     children,
+    textValue,
     ...props
 }: ComboboxPrimitive.Item.Props & { textValue?: string }) {
     return (

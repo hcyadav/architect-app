@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { FadeIn } from "@/components/landing/FadeIn";
 
 interface CategoryDisplayProps {
-  category?: "product" | "corporate" | "premium" | "all";
+  category?: "residential" | "corporate" | "premium" | "all";
 }
 
 export default function CategoryDisplay({ category = "all" }: CategoryDisplayProps) {
@@ -91,14 +91,14 @@ export default function CategoryDisplay({ category = "all" }: CategoryDisplayPro
   }, [category]);
 
   const getTitle = () => {
-    if (category === "product") return "Residential & Products";
+    if (category === "residential") return "Residential & Products";
     if (category === "premium") return "Premium Collections";
     if (category === "corporate") return "Corporate Projects";
     return "Our Complete Collection";
   };
 
   const getSubtitle = () => {
-    if (category === "product") return "Explore our curated collection of architectural designs and interior products.";
+    if (category === "residential") return "Explore our curated collection of architectural designs and interior products.";
     if (category === "premium") return "Unveiling our most exclusive and luxurious architectural masterpieces.";
     if (category === "corporate") return "Discover our bespoke corporate and commercial architectural designs.";
     return "Browse our complete collection of design-led products and crafted spaces.";

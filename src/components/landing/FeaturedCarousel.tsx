@@ -67,7 +67,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                   <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white md:text-4xl">{slide.title}</h3>
                   <p className="mt-3 max-w-2xl text-white/80">{slide.description}</p>
                   <Link
-                    href={`/products/${slide.id}`}
+                    href={`/products/${slide.slug || slide.id}`}
                     className={cn( "mt-6 rounded-2xl")}
                   >
                     Explore Details

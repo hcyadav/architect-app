@@ -7,6 +7,16 @@ import { UTApi } from "uploadthing/server";
 
 const utapi = new UTApi();
 
+const slugify = (text: string) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/[^\w-]+/g, "") // Remove all non-word chars
+    .replace(/--+/g, "-"); // Replace multiple - with single -
+};
+
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -22,10 +32,21 @@ export async function PUT(
     const body = await req.json();
     
     // Ensure data types are correct for Prisma
-    if (body.discountPercentage) {
-      body.discountPercentage = parseFloat(body.discountPercentage);
-    } else if (body.discountPercentage === "" || body.discountPercentage === null) {
-      body.discountPercentage = null;
+    if (body.discountPercentage !== undefined) body.discountPercentage = parseFloat(body.discountPercentage || 0);
+    if (body.price) body.price = parseFloat(body.price);
+    if (body.mrp) body.mrp = parseFloat(body.mrp);
+    if (body.stock) body.stock = parseInt(body.stock || 1);
+
+    // Slug generation on update
+    if (body.title && !body.slug) {
+      let slug = slugify(body.title);
+      const existingSlug = await prisma.product.findFirst({
+        where: { slug, id: { not: id } }
+      });
+      if (existingSlug) {
+        slug = `${slug}-${Math.random().toString(36).substring(2, 6)}`;
+      }
+      body.slug = slug;
     }
 
     const product = await prisma.product.update({

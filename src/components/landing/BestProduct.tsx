@@ -63,7 +63,7 @@ export function BestProduct({ product }: BestProductProps) {
                   </div>
 
                   <Link
-                    href={`/products/${product.id}`}
+                    href={`/products/${product.slug || product.id}`}
                     className="group inline-flex h-14 items-center gap-3 rounded-full bg-orange-600 px-8 text-sm font-bold text-white transition-all hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/20"
                   >
                     VISIT SHOP

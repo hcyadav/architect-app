@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: any }) {
     if (status === "unauthenticated") {
       signIn("google");
     } else {
-      router.push(`/products/${product._id || product.id}`);
+      router.push(`/products/${product.slug || product._id || product.id}`);
     }
   };
 
@@ -38,7 +38,7 @@ export default function ProductCard({ product }: { product: any }) {
       <div className="flex flex-1 flex-col px-2 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="font-serif text-lg font-medium leading-tight text-slate-900">
+            <h3 className="font-serif text-lg font-medium leading-tight text-slate-900 line-clamp-2 min-h-[3rem]">
               {product.title}
             </h3>
             <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
@@ -63,7 +63,7 @@ export default function ProductCard({ product }: { product: any }) {
             </span>
           )}
         </div>
-        <Link href={`/products/${product.id}`} className="w-full">
+        <Link href={`/products/${product.slug || product.id}`} className="w-full">
           <Button className="w-full cursor-pointer">
             See Details
           </Button>

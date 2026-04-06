@@ -28,8 +28,8 @@ function toProduct(product: {
   imageUrl: string;
   category: string;
   subCategory?: string | null;
-  price?: string | null;
-  mrp?: string | null;
+  price?: number | null;
+  mrp?: number | null;
   discountPercentage?: number | null;
 }): LandingProduct {
   return {
@@ -110,8 +110,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     },
   });
 
-  const mappedProducts = products.map(toProduct);
-  const heroProduct = featured ? toProduct(featured) : mappedProducts[0];
+  const mappedProducts = products.map((p: any) => toProduct(p));
+  const heroProduct = featured ? toProduct(featured as any) : mappedProducts[0];
 
   return (
     <div className="bg-background">

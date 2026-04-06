@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/client_v6"
 }
 
 datasource db {
@@ -19,12 +20,13 @@ model User {
   image     String?
   role      Role        @default(user)
   quotations Quotation[]
+  reviews   Review[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
 
 enum Category {
-  product
+  residential
   corporate
   premium
 }
@@ -34,25 +36,37 @@ type CustomField {
   value String
 }
 
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
 model Product {
-  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
   title            String
   description      String
   category         Category
   subCategory      String?
+  sku              String?         @unique
+  slug             String?         @unique
+  status           ProductStatus   @default(ACTIVE)
   imageUrl         String
   additionalImages String[]
-  price            String?
-  mrp              String?
+  price            Float?
+  mrp              Float?
   discountPercentage Float?
+  stock            Int             @default(1)
   companyName      String?
-  isBestProduct    Boolean     @default(false)
+  isBestProduct    Boolean         @default(false)
   customFields     CustomField[]
+  bundleProductIds String[]        @db.ObjectId
   quotations       Quotation[]
   portfolios       Portfolio[]
   testimonials     Testimonial[]
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  reviews          Review[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 }
 
 enum QuotationStatus {
@@ -62,17 +76,20 @@ enum QuotationStatus {
 }
 
 model Quotation {
-  id        String          @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String?         @db.ObjectId
-  user      User?           @relation(fields: [userId], references: [id])
-  name      String?
-  email     String?
-  productId String?         @db.ObjectId
-  product   Product?        @relation(fields: [productId], references: [id])
-  message   String
-  status    QuotationStatus @default(pending)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?         @db.ObjectId
+  user        User?           @relation(fields: [userId], references: [id])
+  name        String?
+  email       String?
+  phone       String?
+  productId   String?         @db.ObjectId
+  product     Product?        @relation(fields: [productId], references: [id])
+  message     String
+  status      QuotationStatus @default(pending)
+  quotedPrice Float?
+  adminNotes  String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 }
 
 type QuotationItem {
@@ -173,4 +190,26 @@ model Testimonial {
   product    Product? @relation(fields: [productId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+}
+
+model Review {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String       @db.ObjectId
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId  String       @db.ObjectId
+  product    Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating     Int          @default(5)
+  comment    String
+  status     ReviewStatus @default(pending)
+  approvedAt DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@unique([userId, productId])
 }

@@ -1,13 +1,24 @@
 import { NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { revalidateTag, revalidatePath } from "next/cache";
+
+const slugify = (text: string) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/[^\w-]+/g, "") // Remove all non-word chars
+    .replace(/--+/g, "-"); // Replace multiple - with single -
+};
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const category = searchParams.get("category");
+    let category = searchParams.get("category");
+    if (category === "product") category = "residential";
     const subCategory = searchParams.get("subCategory");
     const isBestProduct = searchParams.get("isBestProduct");
     const searchTerm = searchParams.get("search");
@@ -72,10 +83,29 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     
-    // Ensure data types are correct for Prisma
-    if (body.discountPercentage) {
-      body.discountPercentage = parseFloat(body.discountPercentage);
+    // Auto-generate SKU if not provided
+    if (!body.sku) {
+      const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+      const prefix = body.companyName ? body.companyName.substring(0, 3).toUpperCase() : "ARCH";
+      body.sku = `${prefix}-${randomStr}`;
     }
+
+    // Ensure data types are correct for Prisma
+    if (body.discountPercentage) body.discountPercentage = parseFloat(body.discountPercentage);
+    if (body.price) body.price = parseFloat(body.price);
+    if (body.mrp) body.mrp = parseFloat(body.mrp);
+    if (body.stock) body.stock = parseInt(body.stock);
+
+    // Generate Slug
+    let slug = slugify(body.title);
+    // Check for uniqueness
+    const existingSlug = await prisma.product.findUnique({
+      where: { slug }
+    });
+    if (existingSlug) {
+      slug = `${slug}-${Math.random().toString(36).substring(2, 6)}`;
+    }
+    body.slug = slug;
 
     const product = await prisma.product.create({
       data: body,
@@ -83,14 +113,12 @@ export async function POST(req: Request) {
 
     // Revalidate paths cache
     revalidatePath("/products");
-    revalidatePath("/premium");
-    revalidatePath("/corporate");
     revalidatePath("/residential");
+    revalidatePath("/corporate");
+    revalidatePath("/premium");
     revalidatePath("/");
     // @ts-ignore
     revalidateTag("products");
-    // @ts-ignore
-    revalidateTag("subcategories");
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {

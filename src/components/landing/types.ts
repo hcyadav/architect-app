@@ -3,9 +3,10 @@ export interface LandingProduct {
   title: string;
   description: string;
   imageUrl: string;
-  category: "product" | "premium" | "corporate";
+  category: "residential" | "corporate" | "premium";
   subCategory?: string;
-  price?: string;
-  mrp?: string;
+  price?: number;
+  mrp?: number;
   discountPercentage?: number;
+  slug?: string;
 }
