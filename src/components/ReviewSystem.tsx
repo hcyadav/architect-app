@@ -25,7 +25,7 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
     if (!review) return false;
     // Users can always edit if not yet approved (pending or rejected)
     if (review.status !== "approved") return true;
-    
+
     // If approved, check if it's within 24 hours
     if (!review.approvedAt) return true; // Safety fallback
     const approvedTime = new Date(review.approvedAt).getTime();
@@ -67,15 +67,16 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
           <div className="space-y-6">
             <div className="p-8 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-[2.5rem] relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
-              
+
               <div className="relative space-y-5">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></div>
-                    {userReview.user?.name}'s {userReview.status} Review
+                    {userReview.user?.name}'s
+                    {/* {userReview.status} Review */}
                   </span>
                   {canEdit(userReview) && (
-                    <button 
+                    <button
                       onClick={() => setIsEditing(true)}
                       className="p-3 bg-white hover:bg-gray-900 group/btn rounded-xl transition-all shadow-sm border border-gray-100 flex items-center gap-2"
                     >
@@ -98,7 +99,7 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
                     <p className="text-sm font-light text-gray-600 italic leading-relaxed line-clamp-3">"{userReview.comment}"</p>
                   </div>
                 </div>
-                
+
                 {userReview.status === 'pending' && (
                   <div className="flex items-center gap-2 pt-4 py-2 border-t border-gray-100 mt-4">
                     <ShieldAlert className="w-4 h-4 text-gray-400" />
@@ -109,9 +110,9 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
             </div>
           </div>
         ) : (
-          <ReviewForm 
-            productId={productId} 
-            onSuccess={handleSuccess} 
+          <ReviewForm
+            productId={productId}
+            onSuccess={handleSuccess}
             isEditing={isEditing}
             initialData={userReview ? { rating: userReview.rating, comment: userReview.comment } : undefined}
           />

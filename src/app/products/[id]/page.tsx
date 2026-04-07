@@ -25,9 +25,9 @@ export default async function ProductDetails({
 
   // Safely handle ObjectID vs Slug
   const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
-  
+
   const product = await prisma.product.findFirst({
-    where: isObjectId 
+    where: isObjectId
       ? { OR: [{ id: id }, { slug: id }] }
       : { slug: id }
   }) as any;
@@ -84,12 +84,13 @@ export default async function ProductDetails({
 
   const avgRating = reviewStats._avg.rating || 5.0;
   const reviewCount = reviewStats._count.id || 0;
+  console.log("product", product);
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
     { label: product.category, href: `/${product.category}` },
     { label: product.subCategory, href: `/${product.category}?sub=${product.subCategory}` },
-    { label: product.title, href: "#" },
+    // { label: product.title, href: "#" },
   ];
 
   const highlights = product.customFields?.slice(0, 4) || [];
@@ -181,15 +182,15 @@ export default async function ProductDetails({
                   )}
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map(i => (
-                      <Star 
-                        key={i} 
-                        className={`w-3 h-3 ${i <= Math.round(avgRating) ? "fill-[#D4AF37] text-[#D4AF37]" : "fill-gray-200 text-gray-200"}`} 
+                      <Star
+                        key={i}
+                        className={`w-3 h-3 ${i <= Math.round(avgRating) ? "fill-[#D4AF37] text-[#D4AF37]" : "fill-gray-200 text-gray-200"}`}
                       />
                     ))}
                     <span className="text-[10px] font-bold ml-1 text-gray-900">{avgRating.toFixed(1)}</span>
                   </div>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-serif text-gray-900 leading-[1.1] tracking-tight">
+                <h1 className="text-2xl md:text-4xl font-serif text-gray-900 leading-[1.1] tracking-tight">
                   {product.title}
                 </h1>
               </div>
