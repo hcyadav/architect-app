@@ -121,7 +121,7 @@ export default function AdminQuotationsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
             <BackButton />
-            <h1 className="text-4xl font-serif text-gray-900 tracking-tight">Project Enquiries</h1>
+            <h1 className="text-4xl font-sans text-gray-900 tracking-tight">Project Enquiries</h1>
             <p className="text-gray-400 font-light text-lg">Manage user requirements and architectural quotations.</p>
         </div>
 
@@ -259,7 +259,7 @@ export default function AdminQuotationsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setEditingId(null)} />
             <div className="relative bg-white rounded-[2.5rem] w-full max-w-lg p-10 shadow-2xl animate-in fade-in zoom-in duration-300">
-                <h3 className="text-2xl font-serif text-gray-900 mb-8">Process Enquiry</h3>
+                <h3 className="text-2xl font-sans text-gray-900 mb-8">Process Enquiry</h3>
                 
                 <div className="space-y-6">
                     <div className="space-y-2">

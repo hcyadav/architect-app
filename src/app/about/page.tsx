@@ -13,7 +13,7 @@ export default function AboutPage() {
                         <Building2 className="w-3.5 h-3.5" />
                         Our Story
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight tracking-tight">
+                    <h1 className="text-5xl md:text-7xl font-sans text-slate-900 leading-tight tracking-tight">
                         Elevate Your Living Space <br />
                         <span className="text-orange-600">With Aesthetica</span>
                     </h1>
@@ -33,7 +33,7 @@ export default function AboutPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     </FadeIn>
                     <FadeIn direction="right" className="space-y-10">
-                        <h2 className="text-4xl font-serif text-slate-900 leading-tight">Our Philosophy</h2>
+                        <h2 className="text-4xl font-sans text-slate-900 leading-tight">Our Philosophy</h2>
                         <p className="text-slate-600 font-light text-lg leading-relaxed">
                             Founded with a vision is to be a trusted partner for complete interior solutions. We deliver end-to-end services, combining design, execution, and functionality under one roof. By focusing on quality, efficiency, and customer satisfaction, we create spaces that meet real needs and modern lifestyles.
                         </p>
@@ -48,7 +48,7 @@ export default function AboutPage() {
                                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100">
                                         <CheckCircle2 className="w-4 h-4 text-orange-600" />
                                     </div>
-                                    <span className="font-serif text-lg">{item}</span>
+                                    <span className="font-sans text-lg">{item}</span>
                                 </div>
                             ))}
                         </div>
@@ -64,7 +64,7 @@ export default function AboutPage() {
                         { label: "Client Satisfaction", value: "100%" },
                     ].map((stat, i) => (
                         <FadeIn key={i} delayMs={i * 100} direction="up" className="text-center space-y-2">
-                            <p className="text-4xl font-serif text-orange-600 leading-none">{stat.value}</p>
+                            <p className="text-4xl font-sans text-orange-600 leading-none">{stat.value}</p>
                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.25em]">{stat.label}</p>
                         </FadeIn>
                     ))}
@@ -74,7 +74,7 @@ export default function AboutPage() {
                 <FadeIn direction="up">
                     <section className="bg-slate-900 text-white rounded-[5rem] p-12 md:p-32 text-center space-y-12 shadow-2xl overflow-hidden relative group">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(212,175,55,0.1),transparent)] transition-opacity duration-1000 group-hover:opacity-70" />
-                        <h2 className="text-4xl md:text-5xl font-serif leading-tight relative z-10 italic">
+                        <h2 className="text-4xl md:text-5xl font-sans leading-tight relative z-10 italic">
                             &quot;Crafted for today, <br className="hidden md:block" />
                             remembered for years.&quot;
                         </h2>

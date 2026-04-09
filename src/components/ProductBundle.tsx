@@ -26,7 +26,7 @@ export default function ProductBundle({ currentProduct, bundleProducts }: Produc
     <div className="mt-16 bg-gray-50/50 rounded-[2.5rem] p-8 md:p-12 border border-blue-50/50">
       <div className="flex items-center gap-2 mb-8">
         <CheckCircle2 className="w-5 h-5 text-gray-900" />
-        <h3 className="text-xl font-serif text-gray-900 tracking-tight">Frequently Bought Together</h3>
+        <h3 className="text-xl font-sans text-gray-900 tracking-tight">Frequently Bought Together</h3>
       </div>
 
       <div className="flex flex-col lg:flex-row items-center gap-8">

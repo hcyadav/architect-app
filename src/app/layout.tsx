@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Geist, Instrument_Serif } from "next/font/google";
+import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import MainLayout from "@/components/MainLayout";
 import { cn } from "@/lib/utils";
 import { TailwindIndicator } from "@/components/tailwindcss-indicator";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"],
@@ -27,9 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable, inter.variable, instrumentSerif.variable)}>
+    <html lang="en" className={cn("font-sans", inter.variable, instrumentSerif.variable)}>
       <body
-        className={`${inter.className} bg-[#F5F3EE] text-gray-900 antialiased overflow-x-hidden`}
+        className={`bg-[#F5F3EE] text-gray-900 antialiased overflow-x-hidden`}
       >
         <Providers>
           <MainLayout>{children}</MainLayout>

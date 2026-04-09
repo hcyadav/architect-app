@@ -79,7 +79,7 @@ export default function AdminReviewsPage() {
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          <h1 className="text-4xl font-serif text-gray-900 tracking-tight">Review Moderation</h1>
+          <h1 className="text-4xl font-sans text-gray-900 tracking-tight">Review Moderation</h1>
           <p className="text-sm text-gray-400 font-light italic">Uphold architectural standards by moderating user feedback.</p>
         </div>
 

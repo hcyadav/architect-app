@@ -24,7 +24,7 @@ export default async function PortfolioPage() {
                     <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Our Work</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight tracking-tight">
+                    <h1 className="text-5xl md:text-7xl font-sans text-slate-900 leading-tight tracking-tight">
                         Our Portfolio
                     </h1>
                     <p className="text-slate-500 text-xl font-light leading-relaxed">
@@ -51,7 +51,7 @@ export default async function PortfolioPage() {
                                 </div>
                             </div>
                             <div className="px-4 space-y-3">
-                                <h3 className="text-2xl font-serif text-slate-900 group-hover:text-orange-600 transition-colors">{project.title}</h3>
+                                <h3 className="text-2xl font-sans text-slate-900 group-hover:text-orange-600 transition-colors">{project.title}</h3>
                                 <div className="flex flex-wrap gap-6 text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600/60">
                                     {project.location && (
                                         <span className="flex items-center gap-2">
@@ -75,7 +75,7 @@ export default async function PortfolioPage() {
                 <div className="text-center pt-12">
                     <FadeIn direction="up">
                         <div className="bg-white rounded-[3rem] p-12 md:p-20 border border-slate-100 shadow-2xl shadow-slate-200/50 space-y-8">
-                            <h3 className="text-4xl font-serif text-slate-900">Inspired by our work?</h3>
+                            <h3 className="text-4xl font-sans text-slate-900">Inspired by our work?</h3>
                             <p className="text-slate-500 max-w-xl mx-auto text-lg font-light">
                                 Let&apos;s collaborate to build your dream space. Our team is ready to bring your vision to life.
                             </p>

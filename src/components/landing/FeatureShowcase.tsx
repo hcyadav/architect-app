@@ -17,7 +17,7 @@ export function FeatureShowcase() {
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Why from us?</span>
           </div>
 
-          <h2 className="font-serif text-4xl font-medium leading-[1.3] text-slate-900 md:text-6xl lg:text-7xl relative">
+          <h2 className="font-sans text-4xl font-medium leading-[1.3] text-slate-900 md:text-6xl lg:text-7xl relative">
             We are crafting amazing{" "}
 
             {/* Hover Card 1 – Seating / Armchairs */}

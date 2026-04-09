@@ -48,7 +48,7 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
     <div className="mt-20 pt-20 border-t border-gray-100 max-w-2xl mx-auto">
       <div className="space-y-8">
         <div className="space-y-3 text-center">
-          <h3 className="text-3xl font-serif text-gray-900 leading-tight tracking-tight">Luxury Feedback</h3>
+          <h3 className="text-3xl font-sans text-gray-900 leading-tight tracking-tight">Luxury Feedback</h3>
           <p className="text-sm text-gray-400 font-light leading-relaxed max-w-lg mx-auto">
             Share your architectural perspective. Your insights help us maintain the highest standards of luxury and design.
           </p>

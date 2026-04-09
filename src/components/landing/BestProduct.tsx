@@ -30,7 +30,7 @@ export function BestProduct({ product }: BestProductProps) {
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Featured Item</span>
                 </div>
 
-                <h2 className="font-serif text-5xl font-medium leading-[1.1] text-slate-900 md:text-7xl">
+                <h2 className="font-sans text-5xl font-medium leading-[1.1] text-slate-900 md:text-7xl">
                   {product.title}
                 </h2>
 

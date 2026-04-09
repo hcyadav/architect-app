@@ -170,7 +170,7 @@ export default function EmployeesPage() {
         <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-3xl font-serif text-gray-900">Employees</h1>
+                    <h1 className="text-3xl font-sans text-gray-900">Employees</h1>
                     <p className="text-gray-500 font-light">
                         Manage your staff and team members
                     </p>
@@ -360,7 +360,7 @@ export default function EmployeesPage() {
                 <DialogContent className="p-0 border-none overflow-hidden w-[95vw] sm:w-[90vw] md:w-160 max-w-160 sm:max-w-160 mx-auto flex flex-col rounded-[3rem] shadow-2xl bg-white">
                     <div className="bg-gray-900 p-10 relative">
                         <DialogHeader>
-                            <DialogTitle className="text-3xl font-serif text-white">{editMode ? "Edit Employee" : "New Employee"}</DialogTitle>
+                            <DialogTitle className="text-3xl font-sans text-white">{editMode ? "Edit Employee" : "New Employee"}</DialogTitle>
                             {/* <p className="text-gray-400 font-light mt-1">Enter details to {editMode ? "update" : "register"} a team member</p> */}
                         </DialogHeader>
                         <Button
@@ -457,7 +457,7 @@ export default function EmployeesPage() {
                         <Trash2 className="w-8 h-8" />
                     </div>
                     <DialogHeader>
-                        <DialogTitle className="text-2xl font-serif">Are you sure?</DialogTitle>
+                        <DialogTitle className="text-2xl font-sans">Are you sure?</DialogTitle>
                         <p className="text-gray-500 font-light mt-2">This action will permanently delete the employee record and cannot be undone.</p>
                     </DialogHeader>
                     <DialogFooter className="mt-8 flex gap-3 sm:justify-center">

@@ -65,7 +65,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                   Testimonials
                 </span>
               </div>
-              <h2 className="mt-4 font-serif text-4xl font-medium leading-tight text-slate-900 md:text-6xl">
+              <h2 className="mt-4 font-sans text-4xl font-medium leading-tight text-slate-900 md:text-6xl">
                 Hear from happy customers
               </h2>
             </FadeIn>
@@ -93,7 +93,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                     </div>
 
                     <div className="relative">
-                      <p className="font-serif text-2xl md:text-3xl italic leading-relaxed text-slate-700">
+                      <p className="font-sans text-2xl md:text-3xl italic leading-relaxed text-slate-700">
                         &quot;{item.content}&quot;
                       </p>
                     </div>
@@ -106,7 +106,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h4 className="font-serif text-lg font-medium text-slate-900">
+                        <h4 className="font-sans text-lg font-medium text-slate-900">
                           {item.clientName}
                         </h4>
                         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">

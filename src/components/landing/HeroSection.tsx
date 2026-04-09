@@ -42,7 +42,7 @@ export function HeroSection({
                 </span>
               </div>
 
-              <h1 className="font-serif text-2xl font-medium leading-[1.1] text-white  md:text-4xl lg:text-6xl xl:text-6xl mb-2">
+              <h1 className="font-sans text-2xl font-medium leading-[1.1] text-white  md:text-4xl lg:text-6xl xl:text-6xl mb-2">
                 {title.includes("Lifetime") ? title : "Create spaces that last a lifetime."}
               </h1>
 

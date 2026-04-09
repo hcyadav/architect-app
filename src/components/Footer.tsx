@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <Link href="/" className="inline-block">
-              <span className="font-serif text-3xl font-medium tracking-tight">
+              <span className="font-sans text-3xl font-medium tracking-tight">
                 Aesthetica<span className="text-orange-600">.</span>
               </span>
             </Link>
@@ -29,7 +29,7 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="font-serif text-lg font-medium">Discover</h4>
+            <h4 className="font-sans text-lg font-medium">Discover</h4>
             <ul className="mt-6 space-y-4 text-sm text-slate-400">
               <li><Link href="/products" className="hover:text-white transition-colors">Shop All</Link></li>
               <li><Link href="/premium" className="hover:text-white transition-colors">Premium Collections</Link></li>
@@ -39,7 +39,7 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="font-serif text-lg font-medium">Company</h4>
+            <h4 className="font-sans text-lg font-medium">Company</h4>
             <ul className="mt-6 space-y-4 text-sm text-slate-400">
               <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
               <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
@@ -50,7 +50,7 @@ export default function Footer() {
 
           <div className="lg:col-span-4">
             <div className="rounded-3xl bg-white/[0.03] p-8 border border-white/[0.05]">
-              <h4 className="font-serif text-lg font-medium">Find out how to style</h4>
+              <h4 className="font-sans text-lg font-medium">Find out how to style</h4>
               <p className="mt-2 text-sm text-slate-400">Get expert interior design tips and exclusive collection updates.</p>
               <div className="mt-6 flex gap-2">
                 <input

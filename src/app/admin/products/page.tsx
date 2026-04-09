@@ -292,7 +292,7 @@ export default function AdminProductsPage() {
       <Toaster position="top-right" />
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-serif text-gray-900 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-sans text-gray-900 tracking-tight">
             Manage Architecture
           </h1>
           <p className="text-gray-500 font-light text-lg">

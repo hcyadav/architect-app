@@ -43,7 +43,7 @@ export default function ContactSection() {
                     {/* Left Side: Content & Info */}
                     <div className="space-y-12 animate-in fade-in slide-in-from-left-8 duration-1000">
                         <div className="space-y-6">
-                            <h2 className="text-4xl md:text-5xl font-serif text-gray-900 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-sans text-gray-900 tracking-tight">
                                 Let's Build Your <br />
                                 <span className="text-[#D4AF37]">Vision Together</span>
                             </h2>
@@ -59,7 +59,7 @@ export default function ContactSection() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Our Studio</p>
-                                    <p className="text-gray-900 font-medium font-serif text-lg leading-snug">
+                                    <p className="text-gray-900 font-medium font-sans text-lg leading-snug">
                                         Gala No.6, Shantidham Apartment, <br />
                                         Lokmanya Nagar, Thane
                                     </p>
@@ -72,7 +72,7 @@ export default function ContactSection() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Email Us</p>
-                                    <p className="text-gray-900 font-medium font-serif text-lg">official@aesthetica.com</p>
+                                    <p className="text-gray-900 font-medium font-sans text-lg">official@aesthetica.com</p>
                                 </div>
                             </div>
 
@@ -82,7 +82,7 @@ export default function ContactSection() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Call Us</p>
-                                    <p className="text-gray-900 font-medium font-serif text-lg">+91 99999 88888</p>
+                                    <p className="text-gray-900 font-medium font-sans text-lg">+91 99999 88888</p>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@ export default function ContactSection() {
                                             <CheckCircle2 className="w-10 h-10 text-green-500" />
                                         </div>
                                         <div className="space-y-2">
-                                            <h3 className="text-2xl font-serif text-gray-900">Message Received</h3>
+                                            <h3 className="text-2xl font-sans text-gray-900">Message Received</h3>
                                             <p className="text-gray-500 font-light">Thank you for reaching out. Our team will get back to you shortly.</p>
                                         </div>
                                         <Button
@@ -116,7 +116,7 @@ export default function ContactSection() {
                                 ) : (
                                     <>
                                         <div className="space-y-2">
-                                            <h3 className="text-2xl font-serif text-gray-900">Inquiry Form</h3>
+                                            <h3 className="text-2xl font-sans text-gray-900">Inquiry Form</h3>
                                             <p className="text-gray-500 font-light text-sm">Tell us about your project requirements.</p>
                                         </div>
 

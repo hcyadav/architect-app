@@ -112,7 +112,7 @@ export default function CategoryDisplay({ category = "all" }: CategoryDisplayPro
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Explore</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-medium text-slate-900 tracking-tight font-serif leading-tight">
+            <h1 className="text-5xl md:text-7xl font-medium text-slate-900 tracking-tight font-sans leading-tight">
               {getTitle()}
             </h1>
             <p className="text-slate-500 font-light text-xl max-w-2xl leading-relaxed">
@@ -169,7 +169,7 @@ export default function CategoryDisplay({ category = "all" }: CategoryDisplayPro
             ))
           ) : !loading && (
             <div className="col-span-full py-32 text-center border border-dashed border-slate-200 rounded-[3rem] bg-white">
-              <h3 className="text-xl font-medium text-slate-900 mb-2 font-serif">No items found</h3>
+              <h3 className="text-xl font-medium text-slate-900 mb-2 font-sans">No items found</h3>
               <p className="text-slate-500 font-light max-w-sm mx-auto">
                 We haven&apos;t added any projects in this category yet. Please check back soon.
               </p>

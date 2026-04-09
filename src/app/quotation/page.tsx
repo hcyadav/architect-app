@@ -90,7 +90,7 @@ export default function QuotationDashboard() {
     <div className="max-w-6xl mx-auto space-y-10 mb-20">
       <Toaster position="top-right" />
       <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-0">
-        <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3 tracking-tight">
+        <h1 className="text-3xl md:text-4xl font-sans text-gray-900 mb-3 tracking-tight">
           Quotation Management
         </h1>
         <p className="text-gray-500 font-light text-lg">
@@ -311,7 +311,7 @@ export default function QuotationDashboard() {
                       <div className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100/50">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Valuation</span>
-                          <span className="text-lg font-serif text-[#D4AF37]">₹{q.totalAmount?.toLocaleString()}</span>
+                          <span className="text-lg font-sans text-[#D4AF37]">₹{q.totalAmount?.toLocaleString()}</span>
                         </div>
                         <p className="text-sm text-gray-600 font-light line-clamp-2">
                           {q.items?.length} items: {q.items?.map((i: any) => i.description).join(", ")}
@@ -359,7 +359,7 @@ export default function QuotationDashboard() {
                   <Sparkles className="w-6 h-6 text-[#D4AF37]" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-serif text-gray-900">Reframe & Respond</h2>
+                  <h2 className="text-xl font-sans text-gray-900">Reframe & Respond</h2>
                   <p className="text-xs text-gray-400 font-light mt-1">Refine customer inquiry into a professional response</p>
                 </div>
               </div>

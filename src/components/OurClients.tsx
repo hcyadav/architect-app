@@ -54,7 +54,7 @@ export default function OurClients() {
                         Partnerships
                     </h2>
 
-                    <h3 className="text-4xl md:text-5xl font-serif text-gray-900 tracking-tight">
+                    <h3 className="text-4xl md:text-5xl font-sans text-gray-900 tracking-tight">
                         Our Trusted Clients
                     </h3>
 

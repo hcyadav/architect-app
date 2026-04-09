@@ -73,7 +73,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div>
-                            <h1 className="text-4xl font-serif text-gray-900 italic">Admin Console</h1>
+                            <h1 className="text-4xl font-sans text-gray-900 italic">Admin Console</h1>
                             <p className="text-gray-500 font-light mt-1">Management hub for your architecture firm</p>
                         </div>
                     </div>
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
                                     <div className={`w-14 h-14 rounded-2xl ${module.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}>
                                         <module.icon className="w-7 h-7" />
                                     </div>
-                                    <CardTitle className="text-2xl font-serif text-gray-900 group-hover:text-[#D4AF37] transition-colors">{module.title}</CardTitle>
+                                    <CardTitle className="text-2xl font-sans text-gray-900 group-hover:text-[#D4AF37] transition-colors">{module.title}</CardTitle>
                                     <CardDescription className="text-gray-400 font-light leading-relaxed">
                                         {module.description}
                                     </CardDescription>

@@ -17,7 +17,7 @@ export default function ContactPage() {
                     <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Contact Us</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-serif text-slate-900 tracking-tight leading-tight">
+                    <h1 className="text-5xl md:text-7xl font-sans text-slate-900 tracking-tight leading-tight">
                         Get in <span className="text-orange-600">Touch</span>
                     </h1>
                     <p className="text-slate-500 font-light text-xl max-w-2xl mx-auto">
@@ -29,7 +29,7 @@ export default function ContactPage() {
                     {/* Contact Info */}
                     <div className="lg:col-span-1 space-y-10">
                         <div className="space-y-8">
-                            <h2 className="text-3xl font-serif text-slate-900">Office Details</h2>
+                            <h2 className="text-3xl font-sans text-slate-900">Office Details</h2>
                             <div className="space-y-8">
                                 <div className="flex gap-6 group">
                                     <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shrink-0 border border-slate-100 shadow-sm group-hover:border-orange-600/30 group-hover:bg-orange-50 transition-all duration-300">
@@ -80,7 +80,7 @@ export default function ContactPage() {
                     <Card className="lg:col-span-2 border-none shadow-2xl shadow-slate-200/50 bg-white rounded-[3rem] overflow-hidden">
                         <CardContent className="p-8 md:p-16 space-y-10">
                             <div className="space-y-6">
-                                <h2 className="text-3xl font-serif text-slate-900">Send a Message</h2>
+                                <h2 className="text-3xl font-sans text-slate-900">Send a Message</h2>
                                 <form className="space-y-8">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-3">

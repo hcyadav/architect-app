@@ -42,7 +42,7 @@ export default function BestProductsPage() {
         <div className="max-w-6xl mx-auto space-y-10">
             <Toaster position="top-right" />
             <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-3">
-                <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3 tracking-tight">
+                <h1 className="text-3xl md:text-4xl font-sans text-gray-900 mb-3 tracking-tight">
                     Best Products
                 </h1>
                 <p className="text-gray-500 font-light text-lg">

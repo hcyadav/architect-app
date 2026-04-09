@@ -61,7 +61,7 @@ export default function QuotationForm({ productId }: { productId: string }) {
           <CheckCircle2 className="w-10 h-10 text-[#D4AF37]" />
         </div>
         <div className="space-y-2">
-            <h3 className="text-2xl font-serif text-gray-900">Request Received</h3>
+            <h3 className="text-2xl font-sans text-gray-900">Request Received</h3>
             <p className="text-gray-500 font-light max-w-xs mx-auto">
               Our architectural specialists will analyze your requirements and contact you within 24 hours.
             </p>
@@ -84,7 +84,7 @@ export default function QuotationForm({ productId }: { productId: string }) {
                 <div className="w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center mx-auto mb-4">
                     <Lock className="w-5 h-5" />
                 </div>
-                <h4 className="text-lg font-serif">Logged-in Users Only</h4>
+                <h4 className="text-lg font-sans">Logged-in Users Only</h4>
                 <p className="text-sm text-gray-400 font-light">To maintain data security and provide a personalized experience, please log in to send a request.</p>
                 <button 
                     onClick={() => signIn()}
@@ -100,7 +100,7 @@ export default function QuotationForm({ productId }: { productId: string }) {
         <div className="w-10 h-10 bg-[#D4AF37]/10 rounded-xl flex items-center justify-center">
             <MessageSquare className="w-5 h-5 text-[#D4AF37]" />
         </div>
-        <h3 className="text-xl font-serif text-gray-900 tracking-tight">Request a Quote</h3>
+        <h3 className="text-xl font-sans text-gray-900 tracking-tight">Request a Quote</h3>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">

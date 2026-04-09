@@ -31,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Title + Category */}
         <div className="space-y-1">
-          <h3 className="font-serif text-lg font-medium leading-tight text-slate-900 line-clamp-2 min-h-[3rem]">
+          <h3 className="font-sans text-lg font-medium leading-tight text-slate-900 line-clamp-2 min-h-[3rem]">
             {product.title}
           </h3>
 

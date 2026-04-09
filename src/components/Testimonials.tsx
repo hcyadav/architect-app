@@ -46,7 +46,7 @@ export default function Testimonials() {
         <section className="bg-gray-50/50 ">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="text-center space-y-4 mb-16">
-                    <h2 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-serif">
+                    <h2 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight font-sans">
                         Client Feedback
                     </h2>
                     <p className="text-gray-500 font-light text-lg max-w-2xl mx-auto leading-relaxed">

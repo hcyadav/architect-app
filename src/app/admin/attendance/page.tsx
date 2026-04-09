@@ -243,7 +243,7 @@ export default function AttendancePage() {
             <div className="space-y-6">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-serif text-gray-900">Attendance</h1>
+                        <h1 className="text-3xl font-sans text-gray-900">Attendance</h1>
                         <p className="text-gray-500 font-light">
                             Select an active employee to track attendance and wages
                         </p>
@@ -396,7 +396,7 @@ export default function AttendancePage() {
                                     <ChevronLeft className="w-6 h-6" />
                                 </Button>
                                 <div>
-                                    <h2 className="text-2xl font-serif text-gray-900">{selectedEmployee.firstName} {selectedEmployee.lastName}</h2>
+                                    <h2 className="text-2xl font-sans text-gray-900">{selectedEmployee.firstName} {selectedEmployee.lastName}</h2>
                                     <p className="text-gray-400 font-light text-sm italic">Attendance Calendar</p>
                                 </div>
                             </div>
@@ -435,7 +435,7 @@ export default function AttendancePage() {
                             {/* Total Wages */}
                             <div className="lg:w-80 bg-gray-900 p-6 rounded-[2rem] text-white shadow-xl flex flex-col justify-center">
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Wages Taken</p>
-                                <h3 className="text-3xl font-serif text-[#D4AF37]">₹ {totalWages.toLocaleString()}</h3>
+                                <h3 className="text-3xl font-sans text-[#D4AF37]">₹ {totalWages.toLocaleString()}</h3>
                                 <div className="mt-4 pt-4 border-t border-gray-800 flex justify-between items-center">
                                     <p className="text-xs text-gray-400">Total payable days</p>
                                     <p className="text-sm font-bold">{totalPayableDays}</p>
@@ -495,7 +495,7 @@ export default function AttendancePage() {
                 <DialogContent className="p-0 border-none overflow-hidden max-w-7xl flex flex-col rounded-[3rem] shadow-2xl bg-white w-[95vw]">
                     <div className="bg-gray-900 p-10 relative text-white">
                         <DialogHeader>
-                            <DialogTitle className="text-3xl font-serif">
+                            <DialogTitle className="text-3xl font-sans">
                                 {selectedDate ? format(new Date(selectedDate), "PPPP") : ""}
                             </DialogTitle>
                             <p className="text-gray-400 font-light mt-1">Set status and track wages for this day</p>

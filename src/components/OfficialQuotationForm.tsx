@@ -126,7 +126,7 @@ export default function OfficialQuotationForm({
           <Calculator className="w-6 h-6 text-[#D4AF37]" />
         </div>
         <div>
-          <h2 className="text-2xl font-serif text-gray-900">New Itemized Quotation</h2>
+          <h2 className="text-2xl font-sans text-gray-900">New Itemized Quotation</h2>
           <p className="text-sm text-gray-400 font-light">Generate detailed professional quotes in ₹</p>
         </div>
         {prefillData && (
@@ -235,7 +235,7 @@ export default function OfficialQuotationForm({
                 <div className="flex items-center justify-between md:col-span-2 pt-2 md:pt-0">
                   <div className="md:hidden">
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 block">Subtotal</label>
-                    <span className="text-lg font-serif text-[#D4AF37]">₹{item.amount.toLocaleString()}</span>
+                    <span className="text-lg font-sans text-[#D4AF37]">₹{item.amount.toLocaleString()}</span>
                   </div>
                   <div className="hidden md:block text-right font-medium text-gray-900 pr-2 flex-1">
                     ₹{item.amount.toLocaleString()}
@@ -266,7 +266,7 @@ export default function OfficialQuotationForm({
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-gray-50 gap-6">
           <div className="bg-[#D4AF37]/5 px-6 py-4 rounded-2xl border border-[#D4AF37]/10 flex items-center gap-4">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Valuation</span>
-            <span className="text-2xl font-serif text-[#D4AF37]">₹{totalAmount.toLocaleString()}</span>
+            <span className="text-2xl font-sans text-[#D4AF37]">₹{totalAmount.toLocaleString()}</span>
           </div>
 
           <button

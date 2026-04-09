@@ -28,7 +28,7 @@ export function ExperienceSection() {
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-12">
             <FadeIn>
-              <h2 className="font-serif text-5xl font-medium leading-tight text-slate-900 md:text-6xl">
+              <h2 className="font-sans text-5xl font-medium leading-tight text-slate-900 md:text-6xl">
                 We Provide You The <br /> Best Experience
               </h2>
               <p className="mt-8 text-lg text-slate-500 max-w-lg leading-relaxed">

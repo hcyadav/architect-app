@@ -134,7 +134,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">The Catalog</span>
             </div>
-            <h2 className="font-serif text-4xl font-medium tracking-tight text-slate-900 md:text-6xl">
+            <h2 className="font-sans text-4xl font-medium tracking-tight text-slate-900 md:text-6xl">
               Explore latest collection
             </h2>
           </div>
@@ -159,7 +159,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <polyline points="9 22 9 12 15 12 15 22" />
                   </svg>
                 </div>
-                <h3 className="font-serif text-2xl font-medium tracking-tight text-slate-900 leading-tight">
+                <h3 className="font-sans text-2xl font-medium tracking-tight text-slate-900 leading-tight">
                   Furniture that blends with your personal style
                 </h3>
                 <div className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-orange-600">

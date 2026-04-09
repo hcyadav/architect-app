@@ -160,7 +160,7 @@ export default function AdminPortfolioPage() {
         <div className="max-w-6xl mx-auto py-10 px-4">
             <Toaster />
             <div className="mb-8 mt-4">
-                <h1 className="text-3xl font-serif text-gray-900 mb-2">Portfolio & Testimonials Manager</h1>
+                <h1 className="text-3xl font-sans text-gray-900 mb-2">Portfolio & Testimonials Manager</h1>
                 <p className="text-gray-500">Manage your major works and client feedback.</p>
             </div>
 

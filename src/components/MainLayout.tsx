@@ -90,7 +90,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
           <Link href="/" className="group flex items-center gap-2">
-            <span className="font-serif text-2xl font-extrabold tracking-wider text-slate-900">
+            <span className="font-sans text-2xl font-extrabold tracking-wider text-slate-900">
               Aesthetica<span className="text-orange-600">.</span>
             </span>
           </Link>

@@ -46,7 +46,7 @@ export default function BestProductsCarousel() {
         <section className="space-y-4">
             <div className="flex items-end justify-between px-4 sm:px-6">
                 <div className="space-y-2">
-                    <h2 className="text-3xl md:text-4xl font-serif text-gray-900 tracking-tight">
+                    <h2 className="text-3xl md:text-4xl font-sans text-gray-900 tracking-tight">
                         Our Featured Best
                     </h2>
                     <p className="text-gray-500 font-light text-lg">
@@ -107,7 +107,7 @@ export default function BestProductsCarousel() {
                                             EXCEPTIONAL WORK
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl md:text-3xl font-serif font-medium text-white tracking-tighter leading-tight drop-shadow-xl">
+                                    <h3 className="text-2xl md:text-3xl font-sans font-medium text-white tracking-tighter leading-tight drop-shadow-xl">
                                         {p.title}
                                     </h3>
                                     <p className="text-gray-300 text-sm md:text-lg line-clamp-2 max-w-xl leading-relaxed font-light drop-shadow-md">
