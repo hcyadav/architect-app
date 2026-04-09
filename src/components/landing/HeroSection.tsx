@@ -33,46 +33,46 @@ export function HeroSection({
 
           {/* Subtle vignette overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute inset-0 flex flex-col justify-end sm:justify-end p-4 sm:p-8 md:p-16 overflow-hidden">
+            <FadeIn className="max-w-3xl space-y-2 sm:space-y-4 md:space-y-8">
 
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16">
-            <FadeIn className="max-w-3xl space-y-8">
-              <div className="inline-flex items-center rounded-full border border-white/30 bg-black/10 px-4 py-1.5 backdrop-blur-md">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+              <div className="inline-flex items-center rounded-full border border-white/30 bg-black/20 px-2.5 py-1 sm:px-4 sm:py-1.5 backdrop-blur-md">
+                <span className="text-[7px] sm:text-[10px] font-semibold uppercase tracking-[0.15em] text-white">
                   Specialized in space creation
                 </span>
               </div>
 
-              <h1 className="font-sans text-2xl font-medium leading-[1.1] text-white  md:text-4xl lg:text-6xl xl:text-6xl mb-2">
+              <h1 className="font-sans text-base sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold leading-[1.15] text-white">
                 {title.includes("Lifetime") ? title : "Create spaces that last a lifetime."}
               </h1>
 
-              <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 sm:flex-row sm:items-center sm:justify-between md:justify-start">
-                <p className="max-w-md text-sm text-white/80 leading-relaxed md:text-md">
-                  {description}
-                </p>
-                <Link
-                  href={ctaHref}
-                  className={"group inline-flex items-center gap-3 w-full md:w-72 justify-center rounded-full bg-orange-600 py-3 px-3 sm:px-4 md:px-6 lg:px-8 text-sm font-bold text-white transition-all hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/20"}
+              <p className="max-w-md text-[11px] sm:text-sm md:text-base text-white/80 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                {description}
+              </p>
+
+              <Link
+                href={ctaHref}
+                className="group inline-flex items-center gap-2 w-fit rounded-full bg-orange-600 py-2 sm:py-3 px-4 sm:px-6 md:px-8 text-[10px] sm:text-sm font-bold text-white transition-all hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/20"
+              >
+                {ctaLabel}
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="transition-transform group-hover:translate-x-1"
                 >
-                  {ctaLabel}
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="transition-transform group-hover:translate-x-1"
-                  >
-                    <path
-                      d="M1 7H13M13 7L7.5 1.5M13 7L7.5 12.5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Link>
-              </div>
+                  <path
+                    d="M1 7H13M13 7L7.5 1.5M13 7L7.5 12.5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Link>
+
             </FadeIn>
           </div>
         </div>

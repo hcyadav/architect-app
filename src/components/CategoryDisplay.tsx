@@ -91,9 +91,9 @@ export default function CategoryDisplay({ category = "all" }: CategoryDisplayPro
   }, [category]);
 
   const getTitle = () => {
-    if (category === "residential") return "Residential & Products";
+    if (category === "residential") return "Home Furniture";
     if (category === "premium") return "Premium Collections";
-    if (category === "corporate") return "Corporate Projects";
+    if (category === "corporate") return "Corporate Solutions";
     return "Our Complete Collection";
   };
 
@@ -112,7 +112,7 @@ export default function CategoryDisplay({ category = "all" }: CategoryDisplayPro
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Explore</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-medium text-slate-900 tracking-tight font-sans leading-tight">
+            <h1 className="text-3xl md:text-5xl font-medium text-slate-700 tracking-tight font-sans leading-tight">
               {getTitle()}
             </h1>
             <p className="text-slate-500 font-light text-xl max-w-2xl leading-relaxed">

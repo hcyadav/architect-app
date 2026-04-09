@@ -24,7 +24,7 @@ export default async function PortfolioPage() {
                     <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Our Work</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-sans text-slate-900 leading-tight tracking-tight">
+                    <h1 className="text-4xl md:text-6xl font-sans text-slate-700 leading-tight tracking-tight">
                         Our Portfolio
                     </h1>
                     <p className="text-slate-500 text-xl font-light leading-relaxed">

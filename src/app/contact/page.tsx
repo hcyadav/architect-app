@@ -17,7 +17,7 @@ export default function ContactPage() {
                     <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Contact Us</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-sans text-slate-900 tracking-tight leading-tight">
+                    <h1 className="text-3xl md:text-5xl font-sans text-slate-700 tracking-tight leading-tight">
                         Get in <span className="text-orange-600">Touch</span>
                     </h1>
                     <p className="text-slate-500 font-light text-xl max-w-2xl mx-auto">

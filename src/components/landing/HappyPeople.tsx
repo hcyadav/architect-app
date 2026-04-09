@@ -65,7 +65,7 @@ export function HappyPeople({ testimonials }: HappyPeopleProps) {
                   Testimonials
                 </span>
               </div>
-              <h2 className="mt-4 font-sans text-4xl font-medium leading-tight text-slate-900 md:text-6xl">
+              <h2 className="mt-4 font-sans text-3xl font-medium leading-tight text-slate-700 md:text-6xl">
                 Hear from happy customers
               </h2>
             </FadeIn>

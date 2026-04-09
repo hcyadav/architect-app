@@ -28,7 +28,7 @@ export function SectionHeader({
           {label}
         </p>
       ) : null}
-      <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">{title}</h2>
+      <h2 className="text-3xl font-semibold tracking-tight md:text-5xl text-slate-700">{title}</h2>
       {description ? <p className="text-lg text-muted-foreground">{description}</p> : null}
     </div>
   );

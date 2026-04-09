@@ -134,7 +134,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">The Catalog</span>
             </div>
-            <h2 className="font-sans text-4xl font-medium tracking-tight text-slate-900 md:text-6xl">
+            <h2 className="font-sans text-3xl font-medium tracking-tight text-slate-700 md:text-5xl">
               Explore latest collection
             </h2>
           </div>

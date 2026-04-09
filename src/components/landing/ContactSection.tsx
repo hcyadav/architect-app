@@ -59,7 +59,7 @@ export function ContactSection() {
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">Contact Us</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-sans text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-4xl md:text-6xl font-sans text-slate-900 tracking-tight leading-tight">
               Get in <span className="text-orange-600">Touch</span>
             </h2>
             <p className="text-slate-500 font-light text-xl max-w-2xl mx-auto">
