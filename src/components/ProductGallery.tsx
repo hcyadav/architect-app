@@ -106,7 +106,7 @@ export default function ProductGallery({ mainImage, additionalImages = [], title
                                 setActiveImage(img);
                             }}
                             className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${activeImage === img
-                                ? "border-[#D4AF37] scale-105 shadow-md"
+                                ? "border-[#B4623A] scale-105 shadow-md"
                                 : "border-gray-50 hover:border-gray-200 grayscale-[0.2] hover:grayscale-0"
                                 }`}
                         >
