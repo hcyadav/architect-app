@@ -21,11 +21,10 @@ export default function ProductTabs({ tabs }: ProductTabsProps) {
           <button
             key={index}
             onClick={() => setActiveTab(index)}
-            className={`text-sm font-medium uppercase tracking-widest pb-4 border-b-2 transition-all whitespace-nowrap ${
-              activeTab === index
-                ? "border-[#B4623A] text-gray-900"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+            className={`text-sm font-medium uppercase tracking-widest pb-4 border-b-4 transition-all whitespace-nowrap ${activeTab === index
+              ? "border-[#B4623A] text-gray-900"
+              : "border-transparent text-gray-400 hover:text-gray-700"
+              }`}
           >
             {tab.label}
           </button>

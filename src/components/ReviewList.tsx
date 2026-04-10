@@ -44,7 +44,7 @@ export default function ReviewList({ reviews }: ReviewListProps) {
                 <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{review.user.name[0]}</span>
               )}
             </div>
-            
+
             <div className="flex-1 space-y-3 pb-8 border-b border-gray-50 group-last:border-none">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                 <div className="space-y-1">
@@ -62,8 +62,8 @@ export default function ReviewList({ reviews }: ReviewListProps) {
                   {formatDistanceToNow(new Date(review.createdAt))} ago
                 </span>
               </div>
-              
-              <p className="text-sm font-light leading-relaxed text-gray-600 whitespace-pre-line italic">
+
+              <p className="text-medium font-light leading-relaxed text-gray-800 whitespace-pre-line italic">
                 "{review.comment}"
               </p>
             </div>

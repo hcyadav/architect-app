@@ -25,9 +25,9 @@ export default function RelatedProducts({ products, title }: RelatedProductsProp
     <div className="mt-8 pt-10 border-t border-gray-100">
       <h3
         style={{
-          fontSize: "14px",
-          fontWeight: 600,
-          color: "#111827",
+          fontSize: "30px",
+          fontWeight: 500,
+          color: "#374151",
           marginBottom: "20px",
           letterSpacing: "-0.01em",
         }}

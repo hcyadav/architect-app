@@ -108,9 +108,11 @@ export default async function ProductDetails({
     {
       label: "Description",
       content: (
-        <div className="prose prose-sm max-w-none text-gray-500 font-light leading-relaxed whitespace-pre-line" style={{ fontSize: "14px", lineHeight: "1.8" }}>
+        <div className="prose prose-sm max-w-none text-gray-600 font-medium leading-relaxed whitespace-pre-line" style={{ fontSize: "14px", lineHeight: "1.7" }}>
           {product.description}
         </div>
+
+
       )
     },
     {
@@ -121,23 +123,23 @@ export default async function ProductDetails({
             <tbody className="divide-y divide-gray-100">
               {product.customFields?.map((f: any, i: number) => (
                 <tr key={i} className="hover:bg-white transition-colors">
-                  <td className="py-4 px-6 text-[11px] font-bold text-gray-400 uppercase tracking-[0.06em] w-1/3">
+                  <td className="py-4 px-6 text-[11px] font-bold text-gray-500 uppercase tracking-[0.06em] w-1/3">
                     {f.label}
                   </td>
-                  <td className="py-4 px-6 text-sm text-gray-600 font-light" style={{ fontSize: "14px" }}>
+                  <td className="py-4 px-6 text-sm text-gray-700 font-light" style={{ fontSize: "14px" }}>
                     {f.value}
                   </td>
                 </tr>
               ))}
               <tr className="hover:bg-white transition-colors">
-                <td className="py-4 px-6 text-[11px] font-bold text-gray-400 uppercase tracking-[0.06em]">
+                <td className="py-4 px-6 text-[11px] font-bold text-gray-500 uppercase tracking-[0.06em]">
                   Availability
                 </td>
                 <td className="py-4 px-6 text-sm text-gray-600 font-light">
                   {product.stock > 0 ? (
-                    <span className="text-green-600 font-medium">In Stock</span>
+                    <span className="text-green-700 font-medium">In Stock</span>
                   ) : (
-                    <span className="text-red-500 font-medium">Out of Stock</span>
+                    <span className="text-red-700 font-medium">Out of Stock</span>
                   )}
                 </td>
               </tr>
@@ -239,7 +241,7 @@ export default async function ProductDetails({
                   )}
                 </div>
                 <p style={{ fontSize: "12px", color: "#9ca3af" }}>
-                  Incl. GST · Delivery &amp; installation extra
+                  · Delivery &amp; installation extra
                 </p>
               </div>
 
@@ -321,7 +323,7 @@ export default async function ProductDetails({
           {/* ── Related Products ── */}
           <RelatedProducts
             products={relatedProducts as any}
-            title="Related products · free delivery on eligible orders"
+            title="Related Products · free delivery on eligible orders"
           />
 
           {/* ── Best Sellers ── */}
