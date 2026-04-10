@@ -53,7 +53,7 @@ export default async function ProductDetails({
     },
     take: 25,
     orderBy: { createdAt: "desc" },
-    select: { id: true, slug: true, title: true, price: true, mrp: true, imageUrl: true, category: true }
+    select: { id: true, slug: true, title: true, price: true, mrp: true, discountPercentage: true, imageUrl: true, category: true }
   });
 
   // Fetch Best Sellers (excluding current subCategory)
@@ -69,6 +69,8 @@ export default async function ProductDetails({
       slug: true,
       title: true,
       price: true,
+      mrp: true,
+      discountPercentage: true,
       imageUrl: true,
       category: true,
       subCategory: true

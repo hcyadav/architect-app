@@ -23,7 +23,7 @@ export default function ProductBundle({ currentProduct, bundleProducts }: Produc
   const totalPrice = allProducts.reduce((sum, p) => sum + (p.price || 0), 0);
 
   return (
-    <div className="mt-16 bg-gray-50/50 rounded-[2.5rem] p-8 md:p-12 border border-blue-50/50">
+    <div className="mt-8 bg-gray-50/50 rounded-[2.5rem] p-8 md:p-12 border border-blue-50/50">
       <div className="flex items-center gap-2 mb-8">
         <CheckCircle2 className="w-5 h-5 text-gray-900" />
         <h3 className="text-xl font-sans text-gray-900 tracking-tight">Frequently Bought Together</h3>
@@ -51,29 +51,29 @@ export default function ProductBundle({ currentProduct, bundleProducts }: Produc
         </div>
 
         <div className="w-full lg:w-72 bg-white rounded-3xl p-6 border border-gray-100 shadow-sm space-y-4">
-            <div className="space-y-1">
-                <p className="text-xs text-gray-400 uppercase font-bold tracking-widest">Total Bundle Price</p>
-                <p className="text-2xl font-bold text-gray-900">₹{totalPrice.toLocaleString()}</p>
-            </div>
-            <button
-                className="w-full py-4 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg shadow-gray-200"
-                onClick={() => {
-                   // In a real app, this would add all to cart
-                   alert("Bundle added to selection!");
-                }}
-            >
-                Select Bundle
-            </button>
-            <p className="text-[10px] text-gray-400 text-center leading-tight">Prices include GST. Delivery and installation extra.</p>
+          <div className="space-y-1">
+            <p className="text-xs text-gray-400 uppercase font-bold tracking-widest">Total Bundle Price</p>
+            <p className="text-2xl font-bold text-gray-900">₹{totalPrice.toLocaleString()}</p>
+          </div>
+          <button
+            className="w-full py-4 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg shadow-gray-200"
+            onClick={() => {
+              // In a real app, this would add all to cart
+              alert("Bundle added to selection!");
+            }}
+          >
+            Select Bundle
+          </button>
+          <p className="text-[10px] text-gray-400 text-center leading-tight">Prices include GST. Delivery and installation extra.</p>
         </div>
       </div>
 
       <div className="mt-8 space-y-2">
         {allProducts.map((p, i) => (
           <div key={p.id} className="flex items-center gap-2 text-xs text-gray-500">
-             <span className="font-bold text-gray-900">Item {i + 1}:</span>
-             <span className="truncate flex-1">{p.title}</span>
-             <span className="font-bold">₹{p.price.toLocaleString()}</span>
+            <span className="font-bold text-gray-900">Item {i + 1}:</span>
+            <span className="truncate flex-1">{p.title}</span>
+            <span className="font-bold">₹{p.price.toLocaleString()}</span>
           </div>
         ))}
       </div>

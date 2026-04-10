@@ -8,6 +8,8 @@ interface BestSellerProduct {
   slug?: string;
   title: string;
   price: number;
+  mrp?: number;
+  discountPercentage?: number;
   imageUrl: string;
   category: string;
   subCategory?: string;
@@ -22,7 +24,7 @@ export default function BestSellers({ products, title = "25 Best Seller Products
   if (products.length === 0) return null;
 
   return (
-    <div className="mt-16 pt-16 border-t border-gray-100">
+    <div className="mt-8 pt-16 border-t border-gray-100">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div className="space-y-2">
           <h3 className="text-3xl font-sans text-gray-900 tracking-tight">{title}</h3>
@@ -34,7 +36,7 @@ export default function BestSellers({ products, title = "25 Best Seller Products
         <p className="text-gray-400 text-sm font-light italic">Discover our most loved architectural masterpieces.</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {products.map((product) => (
           <Link
             key={product.id}
@@ -49,14 +51,22 @@ export default function BestSellers({ products, title = "25 Best Seller Products
               />
             </div>
             <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-900 group-hover:text-[#D4AF37] transition-colors leading-snug line-clamp-2 min-h-[2.5rem]">
+              <h4 className="text-sm font-medium text-gray-900 group-hover:text-[#D4AF37] transition-colors leading-snug line-clamp-2 min-h-10">
                 {product.title}
               </h4>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                 {product.subCategory || product.category}
               </p>
-              <div className="pt-1">
-                <span className="text-sm font-bold text-gray-900 italic">₹{product.price.toLocaleString()}</span>
+              <div className="pt-1 flex flex-wrap items-baseline gap-2">
+                <span className="text-sm font-bold text-gray-900 italic">₹{product.price.toLocaleString("en-IN")}</span>
+                {product.mrp && product.mrp > product.price && (
+                  <span className="text-[11px] text-gray-400 line-through">₹{product.mrp.toLocaleString("en-IN")}</span>
+                )}
+                {product.discountPercentage && (
+                  <span className="text-[10px] font-bold text-orange-600">
+                    ({product.discountPercentage}% off)
+                  </span>
+                )}
               </div>
             </div>
           </Link>

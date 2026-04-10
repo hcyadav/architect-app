@@ -40,29 +40,31 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
         </div>
 
-        {/* Price */}
-        <div className="mt-3 flex flex-wrap items-baseline gap-2">
-          <span className="font-sans text-base font-bold text-slate-900">
-            ₹{product.price ? Number(product.price).toLocaleString() : "470"}
-          </span>
-          {product.mrp && (
-            <span className="text-[10px] text-slate-400 line-through decoration-slate-500">
-              M.R.P: ₹{Number(product.mrp).toLocaleString()}
+        {/* Price & Button Container */}
+        <div className=" flex flex-col justify-end pt-3">
+          <div className="flex flex-wrap items-baseline gap-2">
+            <span className="font-sans text-base font-bold text-slate-900">
+              ₹{product.price ? Number(product.price).toLocaleString() : "470"}
             </span>
-          )}
-          {product.discountPercentage && (
-            <span className="text-[10px] font-bold text-orange-600">
-              ({product.discountPercentage}% off)
-            </span>
-          )}
-        </div>
+            {product.mrp && (
+              <span className="text-[10px] text-slate-400 line-through decoration-slate-500">
+                M.R.P: ₹{Number(product.mrp).toLocaleString()}
+              </span>
+            )}
+            {product.discountPercentage && (
+              <span className="text-[10px] font-bold text-orange-600">
+                ({product.discountPercentage}% off)
+              </span>
+            )}
+          </div>
 
-        <div className="mt-auto pt-4">
-          <Link href={`/products/${product.slug || product.id}`} className="w-full">
-            <Button className="w-full cursor-pointer">
-              See Details
-            </Button>
-          </Link>
+          <div className="mt-3">
+            <Link href={`/products/${product.slug || product.id}`} className="w-full block">
+              <Button className="w-full cursor-pointer">
+                See Details
+              </Button>
+            </Link>
+          </div>
         </div>
 
       </div>
