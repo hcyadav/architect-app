@@ -45,12 +45,12 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
   }
 
   return (
-    <div className="mt-16 pt-12 border-t border-gray-100 max-w-2xl mx-auto">
+    <div className="mt-16 pt-12 border-t border-gray-200  mx-auto">
       <div className="space-y-8">
         <div className="space-y-3 text-center">
-          <h3 className="text-3xl font-sans text-gray-900 leading-tight tracking-tight">Luxury Feedback</h3>
+          <h3 className="text-3xl font-sans text-gray-900 leading-tight tracking-tight">Share Your Experience</h3>
           <p className="text-sm text-gray-400 font-light leading-relaxed max-w-lg mx-auto">
-            Share your architectural perspective. Your insights help us maintain the highest standards of luxury and design.
+            Let us know what you think—your input helps us improve your shopping experience.
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export default function ReviewSystem({ productId, productImage }: ReviewSystemPr
                 </div>
 
                 {userReview.status === 'pending' && (
-                  <div className="flex items-center gap-2 pt-4 py-2 border-t border-gray-100 mt-4">
+                  <div className="flex items-center gap-2 pt-4 py-2 border-t border-gray-200 mt-4">
                     <ShieldAlert className="w-4 h-4 text-gray-400" />
                     <span className="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Await architectural moderation...</span>
                   </div>

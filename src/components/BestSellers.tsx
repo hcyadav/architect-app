@@ -24,16 +24,19 @@ export default function BestSellers({ products, title = "25 Best Seller Products
   if (products.length === 0) return null;
 
   return (
-    <div className="mt-8 pt-16 border-t border-gray-100">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-        <div className="space-y-2">
-          <h3 className="text-3xl font-sans text-gray-900 tracking-tight" style={{ color: "#374151" }}>{title}</h3>
-          <div className="flex items-center gap-2 text-green-600">
-            <Truck className="w-4 h-4" />
-            <span className="text-xs font-bold uppercase tracking-widest">Free delivery on eligible orders</span>
-          </div>
-        </div>
-        <p className="text-gray-400 text-sm font-light italic">Discover our most loved architectural masterpieces.</p>
+    <div className="mt-8 pt-8 border-t border-gray-200">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <h3 className="flex flex-wrap items-center gap-3 mb-1 animate-fade-slide-in">
+          <span className="text-2xl md:text-3xl sm:text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-500 bg-clip-text text-transparent">
+            {title}
+          </span>
+
+          <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-medium uppercase tracking-wider px-2.5 py-1 rounded-full border border-green-200 animate-badge-pop animate-pulse-ring">
+            <Truck className="w-3.5 h-3.5 animate-truck-slide shrink-0" />
+            No delivery charges on eligible items
+          </span>
+        </h3>
+        {/* <p className="text-gray-400 text-sm font-light italic">Discover our most loved architectural masterpieces.</p> */}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

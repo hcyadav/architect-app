@@ -45,7 +45,7 @@ export default function ReviewList({ reviews }: ReviewListProps) {
               )}
             </div>
 
-            <div className="flex-1 space-y-3 pb-8 border-b border-gray-50 group-last:border-none">
+            <div className="flex-1 space-y-3 pb-8 border-b border-gray-200 group-last:border-none">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                 <div className="space-y-1">
                   <h5 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em]">{review.user.name}</h5>

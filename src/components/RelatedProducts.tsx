@@ -1,5 +1,6 @@
 "use client";
 
+import { Truck } from "lucide-react";
 import Link from "next/link";
 
 interface RelatedProduct {
@@ -22,17 +23,16 @@ export default function RelatedProducts({ products, title }: RelatedProductsProp
   if (products.length === 0) return null;
 
   return (
-    <div className="mt-8 pt-10 border-t border-gray-100">
-      <h3
-        style={{
-          fontSize: "30px",
-          fontWeight: 500,
-          color: "#374151",
-          marginBottom: "20px",
-          letterSpacing: "-0.01em",
-        }}
-      >
-        {title}
+    <div className="mt-6 pt-10 border-t border-gray-200">
+      <h3 className="flex flex-wrap items-center gap-3 mb-8 animate-fade-slide-in">
+        <span className="text-2xl md:text-3xl sm:text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-500 bg-clip-text text-transparent">
+          {title}
+        </span>
+
+        <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-medium uppercase tracking-wider px-2.5 py-1 rounded-full border border-green-200 animate-badge-pop animate-pulse-ring">
+          <Truck className="w-3.5 h-3.5 animate-truck-slide shrink-0" />
+          No delivery charges on eligible items
+        </span>
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

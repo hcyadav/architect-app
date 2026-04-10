@@ -15,7 +15,7 @@ export default function ProductTabs({ tabs }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="mt-12 border-t border-gray-100">
+    <div className="mt-12 border-t border-gray-200">
       <div className="flex space-x-8 overflow-x-auto no-scrollbar py-6">
         {tabs.map((tab, index) => (
           <button

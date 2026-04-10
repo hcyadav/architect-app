@@ -70,7 +70,7 @@ export default function ProductBundle({ currentProduct, bundleProducts }: Produc
 
       <div className="mt-8 space-y-2">
         {allProducts.map((p, i) => (
-          <div key={p.id} className="flex items-center gap-2 text-sm text-gray-500">
+          <div key={p.id} className="flex items-center gap-2 text-sm text-gray-600">
             <span className="font-bold text-gray-900">Item {i + 1}:</span>
             <span className="truncate flex-1">{p.title}</span>
             <span className="font-bold">₹{p.price.toLocaleString()}</span>

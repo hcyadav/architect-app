@@ -108,19 +108,25 @@ export default async function ProductDetails({
     {
       label: "Description",
       content: (
-        <div className="prose prose-sm max-w-none text-gray-600 font-medium leading-relaxed whitespace-pre-line" style={{ fontSize: "14px", lineHeight: "1.7" }}>
-          {product.description}
-        </div>
-
-
+        <ul className="list-disc pl-5 space-y-3.5 text-[#111827] font-normal leading-relaxed marker:text-[#111827]" style={{ fontSize: "15px", lineHeight: "1.7" }}>
+          {product.description?.split('\n').filter((line: string) => line.trim().length > 0).map((line: string, i: number) => {
+            // Remove any existing bullet points or hyphens at the start of the line to avoid double bullets
+            const cleanLine = line.replace(/^[-*•]\s*/, '').trim();
+            return (
+              <li key={i} className="pl-1">
+                {cleanLine}
+              </li>
+            );
+          })}
+        </ul>
       )
     },
     {
       label: "Specifications",
       content: (
-        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50/30">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50/30">
           <table className="w-full text-left border-collapse">
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-200">
               {product.customFields?.map((f: any, i: number) => (
                 <tr key={i} className="hover:bg-white transition-colors">
                   <td className="py-4 px-6 text-[11px] font-bold text-gray-500 uppercase tracking-[0.06em] w-1/3">
@@ -323,7 +329,8 @@ export default async function ProductDetails({
           {/* ── Related Products ── */}
           <RelatedProducts
             products={relatedProducts as any}
-            title="Related Products · free delivery on eligible orders"
+            // title="Related Products · free delivery on eligible orders"
+            title="Related Products"
           />
 
           {/* ── Best Sellers ── */}
