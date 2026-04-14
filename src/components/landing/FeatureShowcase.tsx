@@ -120,7 +120,7 @@ export function FeatureShowcase() {
             environment
           </h2>
 
-          <div className="mt-12 flex flex-wrap justify-center gap-12 text-slate-400">
+          <div className="mt-10 flex flex-wrap justify-center gap-8 text-slate-400">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-orange-600" />
               <span className="text-sm font-medium uppercase tracking-widest text-slate-500">Premium Wood</span>

@@ -128,7 +128,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       {/* <ExperienceSection /> */}
 
       {/* Latest Collection */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-16 flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
           <div className="space-y-4">
             <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
