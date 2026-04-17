@@ -14,15 +14,15 @@
 
 // if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 
-import { PrismaClient } from "../generated/client_v7";
+import { PrismaClient } from "../generated/client_final";
 
 const globalForPrisma = globalThis as unknown as {
-  prismaV7: PrismaClient | undefined;
+  prismaFinal: PrismaClient | undefined;
 };
 
-const prisma = globalForPrisma.prismaV7 ?? new PrismaClient();
+const prisma = globalForPrisma.prismaFinal ?? new PrismaClient();
 export default prisma;
 
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prismaV7 = prisma;
+  globalForPrisma.prismaFinal = prisma;
 }

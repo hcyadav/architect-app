@@ -167,26 +167,33 @@ export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(valueFs);
     doc.setTextColor(30, 30, 30);
-    doc.text(quotation.notes || "-", MARGIN + refLabelW, cursorY);
+    
+    // Split text to fit within page width
+    const refLines = doc.splitTextToSize(quotation.notes || "-", MAX_W - refLabelW);
+    doc.text(refLines, MARGIN + refLabelW, cursorY);
 
-    cursorY += ROW_H;
+    cursorY += Math.max(refLines.length, 1) * ROW_H;
 
     /* ================= CUSTOM FIELDS ================= */
     if (quotation.customFields && quotation.customFields.length > 0) {
-      doc.setFontSize(labelFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      
       quotation.customFields.forEach((field) => {
+        doc.setFontSize(labelFs);
         doc.setFont("helvetica", "normal");
         doc.setTextColor(100, 100, 100);
         doc.text(`${field.label}:`, MARGIN, cursorY);
         
         const fieldLabelW = doc.getTextWidth(`${field.label}:`) + 2;
         doc.setFont("helvetica", "bold");
+        doc.setFontSize(valueFs);
         doc.setTextColor(30, 30, 30);
-        doc.text(field.value, MARGIN + fieldLabelW, cursorY);
-        cursorY += ROW_H;
+
+        // Calculate available width for the value
+        const availableW = MAX_W - fieldLabelW;
+        const fieldValueLines = doc.splitTextToSize(field.value || "-", availableW);
+        doc.text(fieldValueLines, MARGIN + fieldLabelW, cursorY);
+
+        // Advance cursor based on lines
+        cursorY += Math.max(fieldValueLines.length, 1) * ROW_H;
       });
     }
 
