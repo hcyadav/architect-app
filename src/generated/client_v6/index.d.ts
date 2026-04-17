@@ -5684,6 +5684,7 @@ export namespace Prisma {
     clientName?: boolean
     clientEmail?: boolean
     items?: boolean | QuotationItemDefaultArgs<ExtArgs>
+    customFields?: boolean | CustomFieldDefaultArgs<ExtArgs>
     totalAmount?: boolean
     notes?: boolean
     createdAt?: boolean
@@ -5702,7 +5703,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OfficialQuotationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientName" | "clientEmail" | "items" | "totalAmount" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["officialQuotation"]>
+  export type OfficialQuotationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientName" | "clientEmail" | "items" | "customFields" | "totalAmount" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["officialQuotation"]>
   export type OfficialQuotationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $OfficialQuotationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5719,6 +5720,7 @@ export namespace Prisma {
     }, ExtArgs["result"]["officialQuotation"]>
     composites: {
       items: Prisma.$QuotationItemPayload[]
+      customFields: Prisma.$CustomFieldPayload[]
     }
   }
 
@@ -13415,6 +13417,7 @@ export namespace Prisma {
     clientName?: StringFilter<"OfficialQuotation"> | string
     clientEmail?: StringNullableFilter<"OfficialQuotation"> | string | null
     items?: QuotationItemCompositeListFilter | QuotationItemObjectEqualityInput[]
+    customFields?: CustomFieldCompositeListFilter | CustomFieldObjectEqualityInput[]
     totalAmount?: FloatFilter<"OfficialQuotation"> | number
     notes?: StringNullableFilter<"OfficialQuotation"> | string | null
     createdAt?: DateTimeFilter<"OfficialQuotation"> | Date | string
@@ -13426,6 +13429,7 @@ export namespace Prisma {
     clientName?: SortOrder
     clientEmail?: SortOrder
     items?: QuotationItemOrderByCompositeAggregateInput
+    customFields?: CustomFieldOrderByCompositeAggregateInput
     totalAmount?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
@@ -13440,6 +13444,7 @@ export namespace Prisma {
     clientName?: StringFilter<"OfficialQuotation"> | string
     clientEmail?: StringNullableFilter<"OfficialQuotation"> | string | null
     items?: QuotationItemCompositeListFilter | QuotationItemObjectEqualityInput[]
+    customFields?: CustomFieldCompositeListFilter | CustomFieldObjectEqualityInput[]
     totalAmount?: FloatFilter<"OfficialQuotation"> | number
     notes?: StringNullableFilter<"OfficialQuotation"> | string | null
     createdAt?: DateTimeFilter<"OfficialQuotation"> | Date | string
@@ -14278,6 +14283,7 @@ export namespace Prisma {
     clientName: string
     clientEmail?: string | null
     items?: XOR<QuotationItemListCreateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListCreateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount: number
     notes?: string | null
     createdAt?: Date | string
@@ -14289,6 +14295,7 @@ export namespace Prisma {
     clientName: string
     clientEmail?: string | null
     items?: XOR<QuotationItemListCreateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListCreateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount: number
     notes?: string | null
     createdAt?: Date | string
@@ -14299,6 +14306,7 @@ export namespace Prisma {
     clientName?: StringFieldUpdateOperationsInput | string
     clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     items?: XOR<QuotationItemListUpdateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListUpdateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount?: FloatFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14309,6 +14317,7 @@ export namespace Prisma {
     clientName?: StringFieldUpdateOperationsInput | string
     clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     items?: XOR<QuotationItemListUpdateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListUpdateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount?: FloatFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14320,6 +14329,7 @@ export namespace Prisma {
     clientName: string
     clientEmail?: string | null
     items?: XOR<QuotationItemListCreateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListCreateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount: number
     notes?: string | null
     createdAt?: Date | string
@@ -14330,6 +14340,7 @@ export namespace Prisma {
     clientName?: StringFieldUpdateOperationsInput | string
     clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     items?: XOR<QuotationItemListUpdateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListUpdateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount?: FloatFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14340,6 +14351,7 @@ export namespace Prisma {
     clientName?: StringFieldUpdateOperationsInput | string
     clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     items?: XOR<QuotationItemListUpdateEnvelopeInput, QuotationItemCreateInput> | QuotationItemCreateInput[]
+    customFields?: XOR<CustomFieldListUpdateEnvelopeInput, CustomFieldCreateInput> | CustomFieldCreateInput[]
     totalAmount?: FloatFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

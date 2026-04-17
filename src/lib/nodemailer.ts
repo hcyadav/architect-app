@@ -53,7 +53,8 @@ export const sendCustomerQuotation = async (
   customerName: string, 
   items: any[], 
   totalAmount: number,
-  notes?: string
+  notes?: string,
+  customFields?: { label: string; value: string }[]
 ) => {
   const itemsHtml = items.map(item => `
     <tr>
@@ -63,6 +64,22 @@ export const sendCustomerQuotation = async (
       <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${item.amount.toLocaleString()}</td>
     </tr>
   `).join("");
+
+  const customFieldsHtml = customFields && customFields.length > 0 
+    ? `
+      <div style="margin-top: 20px; padding: 15px; background-color: #f0f4f8; border-radius: 8px;">
+        <p style="margin: 0 0 10px 0; font-weight: bold; color: #2c3e50;">Additional Details:</p>
+        <table style="width: 100%; font-size: 14px;">
+          ${customFields.map(cf => `
+            <tr>
+              <td style="padding: 4px 0; color: #7f8c8d; width: 40%; font-weight: 500;">${cf.label}:</td>
+              <td style="padding: 4px 0; color: #34495e;">${cf.value}</td>
+            </tr>
+          `).join("")}
+        </table>
+      </div>
+    `
+    : "";
 
   try {
     await transporter.sendMail({
@@ -94,6 +111,8 @@ export const sendCustomerQuotation = async (
               </tr>
             </tfoot>
           </table>
+
+          ${customFieldsHtml}
 
           ${notes ? `
           <div style="margin-top: 20px; padding: 15px; background-color: #fff9e6; border-radius: 8px;">

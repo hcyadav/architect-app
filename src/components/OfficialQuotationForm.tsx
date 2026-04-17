@@ -28,6 +28,7 @@ export default function OfficialQuotationForm({
   const [items, setItems] = useState<Item[]>([
     { description: "", rate: "", quantity: "", amount: 0 }
   ]);
+  const [customFields, setCustomFields] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
     if (prefillData) {
@@ -68,6 +69,20 @@ export default function OfficialQuotationForm({
     setItems(newItems);
   };
 
+  const addCustomField = () => {
+    setCustomFields([...customFields, { label: "", value: "" }]);
+  };
+
+  const removeCustomField = (index: number) => {
+    setCustomFields(customFields.filter((_, i) => i !== index));
+  };
+
+  const handleCustomFieldChange = (index: number, field: "label" | "value", value: string) => {
+    const newFields = [...customFields];
+    newFields[index][field] = value;
+    setCustomFields(newFields);
+  };
+
   const totalAmount = items.reduce((sum, item) => sum + item.amount, 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,6 +91,8 @@ export default function OfficialQuotationForm({
 
     const validItems = items.filter(i => i.description.trim() && i.rate && i.quantity);
     if (validItems.length === 0) return toast.error("Add at least one complete item with description, rate, and quantity");
+
+    const validCustomFields = customFields.filter(f => f.label.trim() && f.value.trim());
 
     setLoading(true);
 
@@ -89,6 +106,7 @@ export default function OfficialQuotationForm({
           quantity: parseFloat(i.quantity),
           amount: i.amount
         })),
+        customFields: validCustomFields,
         totalAmount,
         notes: notes.trim(),
       };
@@ -107,6 +125,7 @@ export default function OfficialQuotationForm({
         setClientEmail("");
         setNotes("");
         setItems([{ description: "", rate: "", quantity: "", amount: 0 }]);
+        setCustomFields([]);
         onCreated();
       }
     } catch (error: any) {
@@ -172,6 +191,46 @@ export default function OfficialQuotationForm({
               className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-lg font-light"
               placeholder="Ex. 50% Advance received"
             />
+          </div>
+        </div>
+
+        {/* Custom Fields Section */}
+        <div className="space-y-4 pb-8 border-b border-gray-50">
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">Special Terms / Custom Fields</h3>
+          <div className="space-y-3">
+            {customFields.map((field, index) => (
+              <div key={index} className="flex gap-4 items-center animate-in fade-in slide-in-from-left-2 transition-all">
+                <input
+                  type="text"
+                  placeholder="Key (e.g. Warranty)"
+                  value={field.label}
+                  onChange={(e) => handleCustomFieldChange(index, "label", e.target.value)}
+                  className="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  placeholder="Value (e.g. 2 Years)"
+                  value={field.value}
+                  onChange={(e) => handleCustomFieldChange(index, "value", e.target.value)}
+                  className="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeCustomField(index)}
+                  className="p-2 text-gray-300 hover:text-red-500 rounded-lg transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addCustomField}
+              className="flex items-center gap-2 text-xs font-medium text-[#D4AF37] hover:bg-[#D4AF37]/5 px-3 py-1.5 rounded-lg transition-all"
+            >
+              <Plus className="w-3 h-3" />
+              Add Key-Value Pair
+            </button>
           </div>
         </div>
 

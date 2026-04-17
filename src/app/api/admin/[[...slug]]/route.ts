@@ -159,9 +159,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug?: 
     }
 
     if (slug?.[0] === 'official-quotations') {
-      const { clientName, clientEmail, items, totalAmount, notes } = body;
-      const q = await prisma.officialQuotation.create({ data: { clientName, clientEmail, items, totalAmount, notes } });
-      if (clientEmail) await sendCustomerQuotation(clientEmail, clientName, items, totalAmount, notes);
+      const { clientName, clientEmail, items, customFields, totalAmount, notes } = body;
+      const q = await prisma.officialQuotation.create({ data: { clientName, clientEmail, items, customFields, totalAmount, notes } });
+      if (clientEmail) await sendCustomerQuotation(clientEmail, clientName, items, totalAmount, notes, customFields);
       return NextResponse.json(q, { status: 201 });
     }
 

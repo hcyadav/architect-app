@@ -24,6 +24,7 @@ export interface IOfficialQuotation {
   clientName: string;
   clientEmail?: string | null;
   items: IQuotationItem[];
+  customFields?: { label: string; value: string }[];
   totalAmount: number;
   notes?: string | null;
   createdAt?: string | Date;
@@ -168,7 +169,28 @@ export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
     doc.setTextColor(30, 30, 30);
     doc.text(quotation.notes || "-", MARGIN + refLabelW, cursorY);
 
-    cursorY += 6;
+    cursorY += ROW_H;
+
+    /* ================= CUSTOM FIELDS ================= */
+    if (quotation.customFields && quotation.customFields.length > 0) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100, 100, 100);
+      
+      quotation.customFields.forEach((field) => {
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${field.label}:`, MARGIN, cursorY);
+        
+        const fieldLabelW = doc.getTextWidth(`${field.label}:`) + 2;
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(30, 30, 30);
+        doc.text(field.value, MARGIN + fieldLabelW, cursorY);
+        cursorY += ROW_H;
+      });
+    }
+
+    cursorY += 2;
 
     /* ================= TABLE DIVIDER ================= */
 

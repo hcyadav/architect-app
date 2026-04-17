@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/client_v6"
+  output   = "../src/generated/client_v7"
 }
 
 datasource db {
@@ -100,14 +100,15 @@ type QuotationItem {
 }
 
 model OfficialQuotation {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  clientName  String
-  clientEmail String?
-  items       QuotationItem[]
-  totalAmount Float
-  notes       String?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id           String          @id @default(auto()) @map("_id") @db.ObjectId
+  clientName   String
+  clientEmail  String?
+  items        QuotationItem[]
+  customFields CustomField[]
+  totalAmount  Float
+  notes        String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 }
 
 enum EmployeeStatus {
