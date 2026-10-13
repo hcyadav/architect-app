@@ -288,20 +288,20 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 mb-10 mt-3">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 space-y-10 mb-10 mt-3">
       <Toaster position="top-right" />
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end justify-between">
         <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-sans text-gray-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-sans text-gray-900 tracking-tight">
             Manage Architecture
           </h1>
-          <p className="text-gray-500 font-light text-lg">
+          <p className="text-gray-500 font-light text-sm sm:text-base md:text-lg">
             Add new residential products, premium collections, or corporate projects.
           </p>
         </div>
         <Link
           href="/admin/quotations"
-          className="inline-flex items-center gap-2 px-5 py-3 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-black transition-all shadow-lg shadow-gray-200"
+          className="inline-flex items-center gap-2 px-5 py-3 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-black transition-all shadow-lg shadow-gray-200 self-start sm:self-auto"
         >
           <MessageSquare className="w-4 h-4" />
           View Enquiries
@@ -309,10 +309,10 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex space-x-1 bg-gray-100 rounded-2xl max-w-lg">
+      <div className="flex tab-bar bg-gray-100 rounded-2xl w-full sm:max-w-lg p-1">
         <button
           onClick={() => handleTabChange("residential")}
-          className={`flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "residential"
+          className={`flex-shrink-0 flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "residential"
             ? "bg-white text-gray-900 shadow-sm"
             : "text-gray-500 hover:text-gray-700"
             }`}
@@ -321,7 +321,7 @@ export default function AdminProductsPage() {
         </button>
         <button
           onClick={() => handleTabChange("premium")}
-          className={`flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "premium"
+          className={`flex-shrink-0 flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "premium"
             ? "bg-white text-gray-900 shadow-sm"
             : "text-gray-500 hover:text-gray-700"
             }`}
@@ -330,7 +330,7 @@ export default function AdminProductsPage() {
         </button>
         <button
           onClick={() => handleTabChange("corporate")}
-          className={`flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "corporate"
+          className={`flex-shrink-0 flex-1 py-3 text-sm font-medium rounded-xl transition-all ${activeTab === "corporate"
             ? "bg-white text-gray-900 shadow-sm"
             : "text-gray-500 hover:text-gray-700"
             }`}
@@ -686,10 +686,10 @@ export default function AdminProductsPage() {
             </div>
             <div className="space-y-3">
               {formData.customFields.map((f, i) => (
-                <div key={i} className="flex gap-4">
-                  <input type="text" value={f.label} onChange={(e) => updateCustomField(i, "label", e.target.value)} placeholder="Field Label (e.g. Color)" className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none" />
-                  <input type="text" value={f.value} onChange={(e) => updateCustomField(i, "value", e.target.value)} placeholder="Field Content (e.g. Blue)" className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none" />
-                  <button type="button" onClick={() => removeCustomField(i)} className="p-3 text-red-500 hover:bg-red-50 rounded-xl"><Trash2 className="w-4 h-4" /></button>
+                <div key={i} className="flex flex-col sm:flex-row gap-3">
+                  <input type="text" value={f.label} onChange={(e) => updateCustomField(i, "label", e.target.value)} placeholder="Field Label (e.g. Color)" className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none min-w-0" />
+                  <input type="text" value={f.value} onChange={(e) => updateCustomField(i, "value", e.target.value)} placeholder="Field Content (e.g. Blue)" className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none min-w-0" />
+                  <button type="button" onClick={() => removeCustomField(i)} className="p-3 text-red-500 hover:bg-red-50 rounded-xl self-start sm:self-auto"><Trash2 className="w-4 h-4" /></button>
                 </div>
               ))}
             </div>

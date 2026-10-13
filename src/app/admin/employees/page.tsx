@@ -167,22 +167,22 @@ export default function EmployeesPage() {
 
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-3xl font-sans text-gray-900">Employees</h1>
+                    <h1 className="text-2xl sm:text-3xl font-sans text-gray-900">Employees</h1>
                     <p className="text-gray-500 font-light">
                         Manage your staff and team members
                     </p>
                 </div>
 
                 {/* Toolbar */}
-                <div className="flex flex-col max-w-7xl  md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                     {/* Left - Add Employee */}
                     <Button
                         onClick={handleOpenAdd}
-                        className="h-12 bg-gray-900 hover:bg-black text-white rounded-2xl flex items-center gap-2 px-6 shadow-lg shadow-gray-200"
+                        className="h-12 bg-gray-900 hover:bg-black text-white rounded-2xl flex items-center gap-2 px-6 shadow-lg shadow-gray-200 self-start"
                     >
                         <UserPlus className="w-4 h-4" />
                         Add Employee
@@ -193,7 +193,7 @@ export default function EmployeesPage() {
 
                         {/* Status Filter */}
                         <Select value={statusFilter} onValueChange={(v) => v && setStatusFilter(v)}>
-                            <SelectTrigger className="w-30 h-12 rounded-2xl bg-white border-gray-100 shadow-sm focus:ring-[#D4AF37]">
+                            <SelectTrigger className="w-full sm:w-36 h-12 rounded-2xl bg-white border-gray-100 shadow-sm focus:ring-[#D4AF37]">
                                 <SelectValue placeholder="All Status" />
                             </SelectTrigger>
                             <SelectContent className="rounded-2xl border-gray-100">
@@ -204,7 +204,7 @@ export default function EmployeesPage() {
                         </Select>
 
                         {/* Search */}
-                        <div className="relative group min-w-[240px]">
+                        <div className="relative group min-w-0 sm:min-w-[240px]">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
                             <Input
                                 placeholder="Search by name..."
@@ -220,6 +220,7 @@ export default function EmployeesPage() {
             </div>
 
             <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.06)] overflow-hidden">
+              <div className="overflow-x-auto">
                 <Table>
                     <TableHeader className="bg-gray-50/50">
                         <TableRow className="hover:bg-transparent border-gray-100">
@@ -293,6 +294,7 @@ export default function EmployeesPage() {
                         )}
                     </TableBody>
                 </Table>
+              </div>
 
                 {/* Pagination Footer — inside card */}
                 {employees.length > 0 && (

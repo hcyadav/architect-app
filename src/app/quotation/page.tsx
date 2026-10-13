@@ -221,22 +221,22 @@ export default function QuotationDashboard() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-10 mb-20">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 space-y-8 mb-20">
       <Toaster position="top-right" />
 
       {/* Header */}
       <div className="pb-6 border-b border-gray-100 mt-2 lg:mt-0">
-        <h1 className="text-3xl md:text-4xl font-sans text-gray-900 mb-2 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-sans text-gray-900 mb-2 tracking-tight">
           Quotation & Billing
         </h1>
-        <p className="text-gray-500 font-light text-lg">
+        <p className="text-gray-500 font-light text-sm sm:text-base md:text-lg">
           Generate official proposals, manage client inquiries, and process approved bills with sequential numbering.
         </p>
       </div>
 
       {/* Primary Tabs Bar: [ Quotation ] and [ Billing ] */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex space-x-1.5 p-1.5 bg-gray-100 rounded-2xl max-w-md w-full">
+      <div className="flex flex-col gap-3">
+        <div className="flex p-1.5 bg-gray-100 rounded-2xl w-full sm:max-w-md">
           <button
             id="tab-quotation"
             onClick={() => setMainTab("quotation")}
@@ -265,10 +265,10 @@ export default function QuotationDashboard() {
 
         {/* Quotation Sub-Tabs (when in quotation tab) */}
         {mainTab === "quotation" && (
-          <div className="flex space-x-1 p-1 bg-gray-100/70 rounded-xl max-w-sm">
+          <div className="flex w-full overflow-x-auto tab-bar p-1 bg-gray-100/70 rounded-xl">
             <button
               onClick={() => setQuoteTab("official")}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-shrink-0 px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 quoteTab === "official"
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
@@ -279,7 +279,7 @@ export default function QuotationDashboard() {
             </button>
             <button
               onClick={() => setQuoteTab("requests")}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-shrink-0 px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 quoteTab === "requests"
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
