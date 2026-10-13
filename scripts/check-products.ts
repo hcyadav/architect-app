@@ -1,5 +1,5 @@
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../src/generated/client_final';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -15,7 +15,7 @@ async function main() {
   });
   
   console.log(`Found ${products.length} corporate products.`);
-  products.forEach(p => {
+  products.forEach((p: typeof products[number]) => {
     console.log(`- ID: ${p.id}, Title: ${p.title}, SubCategory: "${p.subCategory}"`);
   });
 
@@ -24,7 +24,7 @@ async function main() {
     distinct: ['subCategory'],
     select: { subCategory: true }
   });
-  console.log('Distinct subcategories for corporate:', subCats.map(s => s.subCategory));
+  console.log('Distinct subcategories for corporate:', subCats.map((s: typeof subCats[number]) => s.subCategory));
 }
 
 main()
