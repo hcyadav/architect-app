@@ -1,0 +1,107 @@
+# TASK: Add a Billing Tab to the Quotation Module
+
+## 1. Objective
+Add a new **Billing** tab to the existing Quotation module. The Billing tab should replicate the existing Quotation tab's UI, layout, styling, and relevant functionality while implementing billing-specific status management, edit restrictions, and billing number generation.
+
+## 2. UI and Design Requirements
+- Add a new **Billing** tab alongside the existing Quotation tab within the same module.
+- Replicate the existing Quotation tab's design, including:
+  - Page layout and spacing
+  - Tables, columns, and data presentation
+  - Search, filters, sorting, and pagination, wherever applicable
+  - Add, view, and edit forms
+  - Buttons, icons, dialogs, validation, and notifications
+- Reuse existing components, hooks, utilities, and API patterns wherever possible.
+- Maintain the current application's design system, colors, typography, and responsive behavior.
+- Do not redesign or break the existing Quotation functionality.
+
+## 3. Billing Number
+- Display the **Billing Number** at the top-right corner of the Billing form/detail page.
+- Generate billing numbers using a consistent, sequential numbering format that matches the application's existing document-numbering conventions.
+- The billing number must be assigned or finalized **only when the billing status changes to `Approved`**.
+- For all other statuses, including `Initiated` and `Inprogress`, do not increment the approved billing number sequence.
+- Do not allocate a new approved billing number when a bill is created, edited, saved, or moved between non-approved statuses.
+- Once assigned, the billing number must remain unchanged for that bill.
+- Handle concurrent approvals safely so that two bills approved simultaneously cannot receive duplicate billing numbers.
+- Display an appropriate placeholder, such as `Pending Approval`, before the billing number is assigned.
+
+## 4. Billing Status Workflow
+Add a status field to each billing record with the following initial value and behavior:
+
+| Status | Description | Editing allowed? | Billing number |
+|---|---|---|---|
+| `Initiated` | Default status when a bill is created | Yes | Not assigned |
+| `Inprogress` | Bill is being processed | Yes | Not assigned |
+| `Approved` | Bill is approved and finalized | No | Assigned sequentially |
+
+### Status Rules
+- Every newly created bill must have the status `Initiated` by default.
+- Users should be able to update billing details while the status is `Initiated` or `Inprogress`.
+- Users must not be able to edit billing details once the status becomes `Approved`.
+- When a bill transitions to `Approved`:
+  1. Validate the billing record and any required fields.
+  2. Generate and assign the next billing number.
+  3. Persist the approved status and billing number atomically.
+  4. Lock the bill against further edits.
+- Prevent users from modifying an approved bill through both the UI and backend APIs.
+- Do not allow changing an approved bill back to `Initiated` or `Inprogress` through ordinary edit operations.
+- If reopening an approved bill is required in the future, it should be implemented as a separate, explicitly authorized workflow rather than bypassing the locking rules.
+
+## 5. Backend and Database Requirements
+- Inspect the existing Quotation module's frontend, backend APIs, database schema, and numbering logic before implementing changes.
+- Reuse existing architecture and naming conventions.
+- Add a separate Billing entity/table if needed. Do not mix billing records with quotation records unless the current architecture explicitly supports a shared document model.
+- Add the required fields, such as:
+  - `id`
+  - `billing_number` — nullable until approval, unique when assigned
+  - `status` — defaults to `Initiated`
+  - Existing billing form fields copied or adapted from the Quotation module
+  - `created_at`
+  - `updated_at`
+- Add appropriate database constraints and indexes.
+- Use a database transaction when approving a bill so the status and billing number are saved together.
+- Use a concurrency-safe sequence or equivalent database mechanism to prevent duplicate numbers.
+- Enforce edit restrictions and valid status transitions on the server, not only in the frontend.
+- Follow existing authentication, authorization, error-handling, and validation patterns.
+
+## 6. Frontend Behavior
+- Reuse the Quotation form and list components where practical, adapting them for Billing.
+- Show the current billing status clearly in the list and detail view.
+- Provide appropriate status controls based on the existing application's UI patterns.
+- Disable or hide Edit, Save, and other modifying actions when a bill is `Approved`.
+- Make approved billing details read-only.
+- Display the generated billing number at the top-right after approval.
+- Show a clear message if a user attempts to edit an approved bill through a stale page or another interface.
+- Refresh the displayed status and billing number after successful approval.
+
+## 7. Testing Requirements
+Test the following scenarios:
+
+1. Creating a bill sets its status to `Initiated`.
+2. Creating a bill does not increment the billing number sequence.
+3. Editing an `Initiated` bill works correctly.
+4. Changing the status to `Inprogress` allows further editing without allocating a number.
+5. Saving or editing an `Inprogress` bill does not increment the sequence.
+6. Approving a bill assigns the next sequential billing number.
+7. Approving another bill assigns the next number without duplicates.
+8. Simultaneously approving multiple bills does not generate duplicate billing numbers.
+9. An approved bill cannot be edited from the UI.
+10. An approved bill cannot be modified by directly calling its update API.
+11. An approved bill cannot be reverted to another status through ordinary update APIs.
+12. Failed approval does not leave a bill partially approved or consume a number unnecessarily.
+13. Existing Quotation functionality remains unchanged.
+14. Search, filters, pagination, validation, and responsive behavior work in Billing.
+
+## 8. Implementation Instructions
+- First inspect the existing project structure and understand the complete Quotation flow.
+- Identify reusable components, APIs, database models, and existing document-numbering logic.
+- Implement Billing consistently with the current project architecture.
+- Make all necessary frontend, backend, and database changes.
+- Avoid unnecessary refactoring or unrelated UI changes.
+- Do not use mock data or hardcoded billing numbers.
+- Do not remove or alter existing Quotation records or functionality.
+- Run the relevant lint checks, build, and available tests after implementation.
+- Fix any issues introduced by these changes.
+
+## Expected Result
+The Quotation module will have two tabs: **Quotation** and **Billing**. Billing will use the same design as Quotation, support the `Initiated → Inprogress → Approved` workflow, allow editing until approval, lock approved bills, and assign a unique sequential billing number only when a bill is successfully approved.

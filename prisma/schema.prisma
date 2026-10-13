@@ -99,16 +99,50 @@ type QuotationItem {
   amount      Float
 }
 
+enum OfficialQuotationStatus {
+  Ready
+  Inprogress
+  Published
+}
+
 model OfficialQuotation {
-  id           String          @id @default(auto()) @map("_id") @db.ObjectId
+  id           String                  @id @default(auto()) @map("_id") @db.ObjectId
   clientName   String
   clientEmail  String?
   items        QuotationItem[]
   customFields CustomField[]
   totalAmount  Float
   notes        String?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  status       OfficialQuotationStatus @default(Ready)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+}
+
+enum BillingStatus {
+  Initiated
+  Inprogress
+  Approved
+}
+
+model Billing {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  billingNumber String?         @unique
+  status        BillingStatus   @default(Initiated)
+  clientName    String
+  clientEmail   String?
+  clientAddress String?
+  items         QuotationItem[]
+  customFields  CustomField[]
+  totalAmount   Float
+  notes         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model BillingSequence {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String @unique
+  seq   Int    @default(0)
 }
 
 enum EmployeeStatus {

@@ -167,8 +167,28 @@ exports.Prisma.OfficialQuotationScalarFieldEnum = {
   clientEmail: 'clientEmail',
   totalAmount: 'totalAmount',
   notes: 'notes',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BillingScalarFieldEnum = {
+  id: 'id',
+  billingNumber: 'billingNumber',
+  status: 'status',
+  clientName: 'clientName',
+  clientEmail: 'clientEmail',
+  clientAddress: 'clientAddress',
+  totalAmount: 'totalAmount',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BillingSequenceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  seq: 'seq'
 };
 
 exports.Prisma.EmployeeScalarFieldEnum = {
@@ -274,6 +294,18 @@ exports.QuotationStatus = exports.$Enums.QuotationStatus = {
   accepted: 'accepted'
 };
 
+exports.OfficialQuotationStatus = exports.$Enums.OfficialQuotationStatus = {
+  Ready: 'Ready',
+  Inprogress: 'Inprogress',
+  Published: 'Published'
+};
+
+exports.BillingStatus = exports.$Enums.BillingStatus = {
+  Initiated: 'Initiated',
+  Inprogress: 'Inprogress',
+  Approved: 'Approved'
+};
+
 exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
   active: 'active',
   inactive: 'inactive'
@@ -302,6 +334,8 @@ exports.Prisma.ModelName = {
   Product: 'Product',
   Quotation: 'Quotation',
   OfficialQuotation: 'OfficialQuotation',
+  Billing: 'Billing',
+  BillingSequence: 'BillingSequence',
   Employee: 'Employee',
   Attendance: 'Attendance',
   Portfolio: 'Portfolio',
