@@ -29,11 +29,10 @@ import {
 } from "@/lib/pdfGenerator";
 
 export default function QuotationDashboard() {
-  // Top Level Tab: "quotation" | "billing"
-  const [mainTab, setMainTab] = useState<"quotation" | "billing">("quotation");
-
-  // Quotation Sub-Tab: "requests" (client inquiries) | "official" (official quotes)
-  const [quoteTab, setQuoteTab] = useState<"requests" | "official">("official");
+  // Single top-level tab: "inquiries" | "quotation" | "billing"
+  const [activeTab, setActiveTab] = useState<
+    "inquiries" | "quotation" | "billing"
+  >("quotation");
 
   // Quotation Data States
   const [requests, setRequests] = useState<any[]>([]);
@@ -122,28 +121,28 @@ export default function QuotationDashboard() {
     }
   }, [billPage, billStatusFilter, billSearch]);
 
-  // Load Quotations on Tab or Page Change
+  // Load Inquiries on Tab or Page Change
   useEffect(() => {
-    const initQuote = async () => {
+    if (activeTab === "inquiries") {
       setQuoteLoading(true);
-      if (quoteTab === "requests") {
-        await fetchRequests();
-      } else {
-        await fetchOfficialQuotes();
-      }
-      setQuoteLoading(false);
-    };
-    if (mainTab === "quotation") {
-      initQuote();
+      fetchRequests().finally(() => setQuoteLoading(false));
     }
-  }, [mainTab, quoteTab, reqPage, offPage]);
+  }, [activeTab, reqPage]);
+
+  // Load Official Quotes on Tab or Page Change
+  useEffect(() => {
+    if (activeTab === "quotation") {
+      setQuoteLoading(true);
+      fetchOfficialQuotes().finally(() => setQuoteLoading(false));
+    }
+  }, [activeTab, offPage]);
 
   // Load Bills on Tab or Filters Change
   useEffect(() => {
-    if (mainTab === "billing") {
+    if (activeTab === "billing") {
       fetchBills();
     }
-  }, [mainTab, fetchBills]);
+  }, [activeTab, fetchBills]);
 
   // Initial load of counts
   useEffect(() => {
@@ -227,12 +226,34 @@ export default function QuotationDashboard() {
         : "Derived from Quotation",
     });
     setSelectedBillForEdit(null);
-    setMainTab("billing");
+    setActiveTab("billing");
     window.scrollTo({ top: 0, behavior: "smooth" });
     toast.success(
       `Loaded details from "${q.clientName}" into new Billing document`,
     );
   };
+
+  // Tab definitions for the single horizontal row
+  const tabs = [
+    {
+      id: "inquiries" as const,
+      label: "Client Inquiries",
+      count: reqTotal,
+      icon: Inbox,
+    },
+    {
+      id: "quotation" as const,
+      label: "Quotation",
+      count: offTotal,
+      icon: FileText,
+    },
+    {
+      id: "billing" as const,
+      label: "Billing",
+      count: billCounts.all || billTotal,
+      icon: Receipt,
+    },
+  ];
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 space-y-8 mb-20">
@@ -249,66 +270,38 @@ export default function QuotationDashboard() {
         </p>
       </div>
 
-      {/* Primary Tabs Bar: [ Quotation ] and [ Billing ] */}
-      <div className="flex flex-col gap-3">
-        <div className="flex p-1.5 bg-gray-100 rounded-2xl w-full sm:max-w-md">
-          <button
-            id="tab-quotation"
-            onClick={() => setMainTab("quotation")}
-            className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 ${
-              mainTab === "quotation"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            Quotation
-          </button>
-          <button
-            id="tab-billing"
-            onClick={() => setMainTab("billing")}
-            className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 ${
-              mainTab === "billing"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            <Receipt className="w-4 h-4 text-orange-600" />
-            Billing ({billCounts.all || billTotal})
-          </button>
-        </div>
-
-        {/* Quotation Sub-Tabs (when in quotation tab) */}
-        {mainTab === "quotation" && (
-          <div className="flex w-full overflow-x-auto tab-bar p-1 bg-gray-100/70 rounded-xl">
+      {/* ===== Single Top-Level Tab Row: Client Inquiries | Quotation | Billing ===== */}
+      <div className="flex p-1.5 bg-gray-100 rounded-2xl w-full sm:max-w-2xl overflow-x-auto">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
             <button
-              onClick={() => setQuoteTab("official")}
-              className={`flex-shrink-0 px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                quoteTab === "official"
+              key={tab.id}
+              id={`tab-${tab.id}`}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 min-w-0 py-3 px-2 text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 whitespace-nowrap ${
+                isActive
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              <FileCheck className="w-3.5 h-3.5" />
-              Official Quotes ({offTotal})
+              <Icon
+                className={`w-4 h-4 flex-shrink-0 ${isActive && tab.id === "billing" ? "text-orange-600" : ""}`}
+              />
+              <span className="truncate">
+                {tab.label}
+                {tab.count > 0 && (
+                  <span className="ml-1 text-xs opacity-70">({tab.count})</span>
+                )}
+              </span>
             </button>
-            <button
-              onClick={() => setQuoteTab("requests")}
-              className={`flex-shrink-0 px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                quoteTab === "requests"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              <Inbox className="w-3.5 h-3.5" />
-              Client Inquiries ({reqTotal})
-            </button>
-          </div>
-        )}
+          );
+        })}
       </div>
 
-      {/* -------------------- BILLING TAB VIEW -------------------- */}
-      {mainTab === "billing" ? (
+      {/* ==================== BILLING TAB VIEW ==================== */}
+      {activeTab === "billing" && (
         <div className="space-y-10 animate-in fade-in duration-200">
           {/* Billing Form (Create, View, or Edit) */}
           <BillingForm
@@ -352,15 +345,16 @@ export default function QuotationDashboard() {
             onDeleteBill={handleDeleteBill}
           />
         </div>
-      ) : (
-        /* -------------------- QUOTATION TAB VIEW -------------------- */
+      )}
+
+      {/* ==================== CLIENT INQUIRIES TAB VIEW ==================== */}
+      {activeTab === "inquiries" && (
         <div className="space-y-8 animate-in fade-in duration-200">
           {quoteLoading ? (
             <div className="py-24 text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
             </div>
-          ) : quoteTab === "requests" ? (
-            /* Client Inquiries List */
+          ) : (
             <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100 overflow-hidden">
               {requests.length === 0 ? (
                 <div className="py-24 text-center text-gray-400 font-light">
@@ -389,7 +383,7 @@ export default function QuotationDashboard() {
                             </div>
                           </div>
                           <div className="p-5 bg-[#FDFBF7] rounded-2xl border border-[#EEEEEE] italic text-gray-700 font-light">
-                            "{q.message}"
+                            &quot;{q.message}&quot;
                           </div>
                           <div className="flex items-center gap-4 text-xs font-medium uppercase tracking-widest">
                             <span className="px-3 py-1 bg-white border border-orange-100 text-orange-500 rounded-full shadow-sm">
@@ -408,7 +402,7 @@ export default function QuotationDashboard() {
                                 name: q.userId?.name || "",
                                 email: q.userId?.email || "",
                               });
-                              setQuoteTab("official");
+                              setActiveTab("quotation");
                             }}
                             className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-all"
                           >
@@ -421,7 +415,7 @@ export default function QuotationDashboard() {
                                 email: q.email || q.userId?.email || "",
                                 notes: `Client Inquiry: ${q.message}`,
                               });
-                              setMainTab("billing");
+                              setActiveTab("billing");
                               toast.success(
                                 "Loaded client details into Billing document",
                               );
@@ -470,8 +464,18 @@ export default function QuotationDashboard() {
                 </div>
               )}
             </div>
+          )}
+        </div>
+      )}
+
+      {/* ==================== QUOTATION TAB VIEW ==================== */}
+      {activeTab === "quotation" && (
+        <div className="space-y-8 animate-in fade-in duration-200">
+          {quoteLoading ? (
+            <div className="py-24 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
+            </div>
           ) : (
-            /* Official Quotations View */
             <div className="space-y-8">
               <OfficialQuotationForm
                 onCreatedOrUpdated={() => {
@@ -497,7 +501,9 @@ export default function QuotationDashboard() {
                         <tr className="bg-gray-50/50 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                           <th className="px-8 py-4">Client</th>
                           <th className="px-8 py-4">Project / Product</th>
-                          <th className="px-8 py-4 text-right">Quote Amount</th>
+                          <th className="px-8 py-4 text-right">
+                            Quote Amount
+                          </th>
                           <th className="px-8 py-4 text-center">Status</th>
                           <th className="px-8 py-4 text-center">Date</th>
                           <th className="px-8 py-4 text-right">Action</th>
@@ -765,7 +771,7 @@ export default function QuotationDashboard() {
                   Original Inquiry
                 </label>
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 italic text-gray-600 font-light text-sm">
-                  "{selectedQuote.message}"
+                  &quot;{selectedQuote.message}&quot;
                 </div>
               </div>
 
