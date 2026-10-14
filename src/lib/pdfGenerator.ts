@@ -5,7 +5,7 @@ import autoTable from "jspdf-autotable";
 import toast from "react-hot-toast";
 
 /**
- * Interface representing a single item in a quotation,
+ * Interface representing a single item in a quotation or billing,
  * matching the Prisma 'QuotationItem' type.
  */
 export interface IQuotationItem {
@@ -23,6 +23,8 @@ export interface IOfficialQuotation {
   id?: string;
   clientName: string;
   clientEmail?: string | null;
+  clientAddress?: string | null;
+  address?: string | null;
   items: IQuotationItem[];
   customFields?: { label: string; value: string }[];
   totalAmount: number;
@@ -31,317 +33,6 @@ export interface IOfficialQuotation {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
-
-/**
- * Generates and downloads a professional PDF quotation.
- * Updated to support Prisma-based data structures.
- */
-export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
-  try {
-    const doc = new jsPDF();
-
-    const PAGE_W = 210;
-    const MARGIN = 20;
-    const CENTER = PAGE_W / 2;
-    const RIGHT = PAGE_W - MARGIN;
-    const MAX_W = RIGHT - MARGIN; // 170mm usable width
-
-    let cursorY = 16;
-
-    /* ================= BRAND NAME ================= */
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(24);
-    doc.setTextColor(112, 70, 46);
-    doc.text("MUNNA DECORS", CENTER, cursorY, { align: "center" });
-    cursorY += 7;
-
-    /* ================= TAGLINE LINE 1 ================= */
-
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(8.5);
-    doc.setTextColor(100, 100, 100);
-
-    const line1 = doc.splitTextToSize(
-      "We specialize in custom wooden and steel furniture design and manufacturing.",
-      MAX_W,
-    );
-    doc.text(line1, CENTER, cursorY, { align: "center" });
-    cursorY += line1.length * 4.5;
-
-    /* ================= TAGLINE LINE 2 ================= */
-
-    const line2 = doc.splitTextToSize(
-      "Our services cover everything from furniture polishing and plumbing to painting and complete civil work — delivering reliable, high-quality solutions for both residential and commercial spaces.",
-      MAX_W,
-    );
-    doc.text(line2, CENTER, cursorY, { align: "center" });
-    cursorY += line2.length * 4.5 + 4;
-
-    /* ================= HEADER DIVIDER ================= */
-
-    doc.setDrawColor(112, 70, 46);
-    doc.setLineWidth(0.8);
-    doc.line(MARGIN, cursorY, RIGHT, cursorY);
-    cursorY += 1.5;
-    doc.setLineWidth(0.2);
-    doc.setDrawColor(200, 180, 160);
-    doc.line(MARGIN, cursorY, RIGHT, cursorY);
-    cursorY += 5;
-
-    /* ================= ADDRESS ================= */
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8.5);
-    doc.setTextColor(80, 80, 80);
-
-    const addressText = doc.splitTextToSize(
-      "Office Address: Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)",
-      MAX_W,
-    );
-    doc.text(addressText, CENTER, cursorY, { align: "center" });
-    cursorY += addressText.length * 4.5 + 4;
-
-    /* ================= SECTION DIVIDER ================= */
-
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.3);
-    doc.line(MARGIN, cursorY, RIGHT, cursorY);
-    cursorY += 8;
-
-    /* ================= CLIENT INFO ================= */
-
-    const labelFs = 9.5;
-    const valueFs = 9.5;
-    const ROW_H = 8;
-
-    // Row 1: Client Name | Date (fixed right column so they never collide)
-    const dateColX = 130;
-    const clientNameMaxW = dateColX - MARGIN - 40; // safe width before date column
-
-    // -- Client Name label
-    doc.setFontSize(labelFs);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Client Name:", MARGIN, cursorY);
-
-    const clientLabelW = doc.getTextWidth("Client Name:") + 2;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(valueFs);
-    doc.setTextColor(30, 30, 30);
-
-    const clientNameLines = doc.splitTextToSize(
-      quotation.clientName || "N/A",
-      clientNameMaxW,
-    );
-    doc.text(clientNameLines, MARGIN + clientLabelW, cursorY);
-
-    // -- Date label + value
-    const dateValue = quotation.createdAt
-      ? new Date(quotation.createdAt)
-      : new Date();
-    const dateStr = dateValue.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-
-    doc.setFontSize(labelFs);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Date:", dateColX, cursorY);
-
-    const dateLabelW = doc.getTextWidth("Date:") + 2;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(valueFs);
-    doc.setTextColor(30, 30, 30);
-    doc.text(dateStr, dateColX + dateLabelW, cursorY);
-
-    // Advance by however many lines client name wrapped to
-    cursorY += Math.max(clientNameLines.length, 1) * ROW_H;
-
-    // Row 2: Ref No (Using notes as Ref No if available)
-    doc.setFontSize(labelFs);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Ref No:", MARGIN, cursorY);
-
-    const refLabelW = doc.getTextWidth("Ref No:") + 2;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(valueFs);
-    doc.setTextColor(30, 30, 30);
-
-    // Split text to fit within page width
-    const refLines = doc.splitTextToSize(
-      quotation.notes || "-",
-      MAX_W - refLabelW,
-    );
-    doc.text(refLines, MARGIN + refLabelW, cursorY);
-
-    cursorY += Math.max(refLines.length, 1) * ROW_H;
-
-    /* ================= CUSTOM FIELDS ================= */
-    if (quotation.customFields && quotation.customFields.length > 0) {
-      quotation.customFields.forEach((field) => {
-        doc.setFontSize(labelFs);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(100, 100, 100);
-        doc.text(`${field.label}:`, MARGIN, cursorY);
-
-        const fieldLabelW = doc.getTextWidth(`${field.label}:`) + 2;
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(valueFs);
-        doc.setTextColor(30, 30, 30);
-
-        // Calculate available width for the value
-        const availableW = MAX_W - fieldLabelW;
-        const fieldValueLines = doc.splitTextToSize(
-          field.value || "-",
-          availableW,
-        );
-        doc.text(fieldValueLines, MARGIN + fieldLabelW, cursorY);
-
-        // Advance cursor based on lines
-        cursorY += Math.max(fieldValueLines.length, 1) * ROW_H;
-      });
-    }
-
-    cursorY += 2;
-
-    /* ================= TABLE DIVIDER ================= */
-
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.3);
-    doc.line(MARGIN, cursorY, RIGHT, cursorY);
-    cursorY += 6;
-
-    /* ================= TABLE ================= */
-
-    const items = quotation.items || [];
-
-    const tableRows = items.map((item, index) => [
-      index + 1,
-      item.description || "N/A",
-      `${item.rate || 0} × ${item.quantity || 0}`,
-      `Rs. ${(item.amount || 0).toLocaleString()}/-`,
-    ]);
-
-    autoTable(doc, {
-      startY: cursorY,
-      head: [["Sr.", "Description", "Rate × Qty", "Amount"]],
-      body: tableRows,
-      foot: [
-        [
-          {
-            content: "",
-            colSpan: 2,
-            styles: { lineWidth: 0, fillColor: [255, 255, 255] },
-          },
-          {
-            content: "Total Amount",
-            styles: {
-              fontStyle: "bold",
-              halign: "right",
-              fillColor: [240, 240, 240],
-            },
-          },
-          {
-            content: `Rs. ${(quotation.totalAmount || 0).toLocaleString()}/-`,
-            styles: {
-              fontStyle: "bold",
-              halign: "right",
-              fillColor: [240, 240, 240],
-            },
-          },
-        ],
-      ],
-      theme: "grid",
-
-      headStyles: {
-        fillColor: [112, 70, 46],
-        textColor: 255,
-        fontStyle: "bold",
-        fontSize: 9.5,
-        lineWidth: 0,
-        halign: "center",
-        valign: "middle",
-        cellPadding: { top: 5, bottom: 5, left: 4, right: 4 },
-      },
-
-      footStyles: {
-        fillColor: [240, 240, 240],
-        textColor: 30,
-        fontStyle: "bold",
-        fontSize: 9.5,
-        lineWidth: 0.4,
-        lineColor: [180, 180, 180],
-      },
-
-      alternateRowStyles: {
-        fillColor: [252, 248, 245],
-      },
-
-      styles: {
-        fontSize: 9,
-        cellPadding: { top: 5, bottom: 5, left: 4, right: 4 },
-        lineWidth: 0.3,
-        lineColor: [200, 200, 200],
-        valign: "middle",
-        textColor: [40, 40, 40],
-      },
-
-      columnStyles: {
-        0: { cellWidth: 14, halign: "center", fontStyle: "bold" },
-        1: { cellWidth: "auto" },
-        2: { cellWidth: 40, halign: "center" },
-        3: { cellWidth: 38, halign: "right" },
-      },
-    });
-
-    /* ================= FOOTER ================= */
-
-    // @ts-ignore
-    const lastY = doc.lastAutoTable.finalY;
-    const footerY = lastY + 16;
-
-    // Thank you note
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(100, 100, 100);
-    doc.text(
-      "Thank you for choosing Munna Decors. We look forward to serving you!",
-      MARGIN,
-      footerY,
-    );
-
-    // Signature block
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9.5);
-    doc.setTextColor(30, 30, 30);
-    doc.text("For MUNNA DECORS", RIGHT, footerY, { align: "right" });
-
-    doc.setDrawColor(120, 120, 120);
-    doc.setLineWidth(0.3);
-    doc.line(RIGHT - 50, footerY + 14, RIGHT, footerY + 14);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Authorized Signature", RIGHT, footerY + 19, { align: "right" });
-
-    // Bottom border
-    doc.setDrawColor(112, 70, 46);
-    doc.setLineWidth(0.8);
-    doc.line(MARGIN, 285, RIGHT, 285);
-
-    /* ================= SAVE ================= */
-
-    doc.save(`Quotation-${quotation.clientName || "Export"}.pdf`);
-  } catch (error) {
-    console.error("PDF Generation Error:", error);
-    toast.error("Failed to generate PDF.");
-  }
-};
 
 /**
  * Interface representing a Billing record,
@@ -364,546 +55,391 @@ export interface IBilling {
 }
 
 /**
- * Generates and downloads a professional PDF bill/invoice.
+ * Application Home Page Theme Color Palette
+ * Harmonized with Aesthetica's warm architectural theme:
+ * - Burnt Terracotta / Orange-600 accents (#ea580c)
+ * - Deep Charcoal / Midnight Slate-900 typography (#0f172a)
+ * - Clean Slate-50 off-white card backgrounds (#f8fafc)
+ * - Crisp Slate-200 subtle borders (#e2e8f0)
  */
-// export const downloadBillingPDF = (billing: IBilling) => {
-//   try {
-//     const doc = new jsPDF();
+const THEME = {
+  // Brand Warm Accents (from Home Page buttons & badges)
+  accent: [234, 88, 12] as [number, number, number], // orange-600 (#ea580c)
+  accentDark: [194, 65, 12] as [number, number, number], // orange-700 (#c2410c)
+  accentSoft: [255, 247, 237] as [number, number, number], // orange-50 (#fff7ed)
+  accentBorder: [254, 215, 170] as [number, number, number], // orange-200 (#fed7aa)
 
-//     const PAGE_W = 210;
-//     const MARGIN = 20;
-//     const CENTER = PAGE_W / 2;
-//     const RIGHT = PAGE_W - MARGIN;
-//     const MAX_W = RIGHT - MARGIN;
+  // Typography & Dark Neutrals (from Home Page dark charcoal text)
+  slateDark: [15, 23, 42] as [number, number, number], // slate-900 (#0f172a)
+  slateBody: [30, 41, 59] as [number, number, number], // slate-800 (#1e293b)
+  slateMuted: [100, 116, 139] as [number, number, number], // slate-500 (#64748b)
+  slateLight: [148, 163, 184] as [number, number, number], // slate-400 (#94a3b8)
 
-//     let cursorY = 16;
+  // Backgrounds & Clean Borders
+  cardBg: [248, 250, 252] as [number, number, number], // slate-50 (#f8fafc)
+  borderLight: [226, 232, 240] as [number, number, number], // slate-200 (#e2e8f0)
+  borderMuted: [203, 213, 225] as [number, number, number], // slate-300 (#cbd5e1)
+  white: [255, 255, 255] as [number, number, number],
 
-//     /* ================= BRAND NAME ================= */
-//     doc.setFont("helvetica", "bold");
-//     doc.setFontSize(24);
-//     doc.setTextColor(112, 70, 46);
-//     doc.text("MUNNA DECORS", CENTER, cursorY, { align: "center" });
-//     cursorY += 6;
+  // Status Highlights
+  emerald: [21, 128, 61] as [number, number, number], // emerald-700
+  emeraldBg: [240, 253, 244] as [number, number, number], // emerald-50
+  emeraldBorder: [187, 247, 208] as [number, number, number], // emerald-200
+  amber: [180, 83, 9] as [number, number, number], // amber-700
+  amberBg: [254, 243, 199] as [number, number, number], // amber-50
+  amberBorder: [253, 230, 138] as [number, number, number], // amber-200
+};
 
-//     /* ================= DOCUMENT TYPE ================= */
-//     doc.setFont("helvetica", "bold");
-//     doc.setFontSize(11);
-//     doc.setTextColor(40, 40, 40);
-//     doc.text("TAX INVOICE / BILL", CENTER, cursorY, { align: "center" });
-//     cursorY += 6;
-
-//     /* ================= TAGLINE ================= */
-//     doc.setFont("helvetica", "italic");
-//     doc.setFontSize(8.5);
-//     doc.setTextColor(100, 100, 100);
-//     const line1 = doc.splitTextToSize(
-//       "Custom wooden & steel furniture design, polishing, civil & interior works.",
-//       MAX_W,
-//     );
-//     doc.text(line1, CENTER, cursorY, { align: "center" });
-//     cursorY += line1.length * 4.5 + 1;
-
-//     /* ================= OFFICE ADDRESS (HEADER) ================= */
-//     doc.setFont("helvetica", "normal");
-//     doc.setFontSize(8);
-//     doc.setTextColor(120, 120, 120);
-//     const headerAddrText = doc.splitTextToSize(
-//       "Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)",
-//       MAX_W,
-//     );
-//     doc.text(headerAddrText, CENTER, cursorY, { align: "center" });
-//     cursorY += headerAddrText.length * 4 + 2;
-
-//     /* ================= HEADER DIVIDER ================= */
-//     doc.setDrawColor(112, 70, 46);
-//     doc.setLineWidth(0.8);
-//     doc.line(MARGIN, cursorY, RIGHT, cursorY);
-//     cursorY += 1.5;
-//     doc.setLineWidth(0.2);
-//     doc.setDrawColor(200, 180, 160);
-//     doc.line(MARGIN, cursorY, RIGHT, cursorY);
-//     cursorY += 6;
-
-//     /* ================= BILL META & CLIENT INFO ================= */
-//     const labelFs = 9;
-//     const valueFs = 9.5;
-//     const ROW_H = 7;
-//     const LEFT_VAL_X = MARGIN + 22;
-//     const LEFT_MAX_W = 95; // max width for left-column values (stops before right column)
-
-//     const bNum =
-//       billing.billingNumber || billing.billing_number || "PENDING APPROVAL";
-
-//     // Date — top-right on first row
-//     const dateValue = billing.createdAt
-//       ? new Date(billing.createdAt)
-//       : new Date();
-//     const dateStr = dateValue.toLocaleDateString("en-IN", {
-//       day: "2-digit",
-//       month: "short",
-//       year: "numeric",
-//     });
-//     doc.setFontSize(labelFs);
-//     doc.setFont("helvetica", "normal");
-//     doc.setTextColor(100, 100, 100);
-//     doc.text("Date:", 128, cursorY);
-//     doc.setFontSize(valueFs);
-//     doc.setFont("helvetica", "bold");
-//     doc.setTextColor(30, 30, 30);
-//     doc.text(dateStr, 143, cursorY);
-
-//     // Row 1: Billed To
-//     doc.setFontSize(labelFs);
-//     doc.setFont("helvetica", "normal");
-//     doc.setTextColor(100, 100, 100);
-//     doc.text("Billed To:", MARGIN, cursorY);
-//     doc.setFontSize(valueFs);
-//     doc.setFont("helvetica", "bold");
-//     doc.setTextColor(30, 30, 30);
-//     const clientNameLines = doc.splitTextToSize(
-//       billing.clientName || "N/A",
-//       LEFT_MAX_W,
-//     );
-//     doc.text(clientNameLines, LEFT_VAL_X, cursorY);
-//     cursorY += Math.max(clientNameLines.length, 1) * 4.5 + 1;
-
-//     // Row 2: Bill Number
-//     doc.setFontSize(labelFs);
-//     doc.setFont("helvetica", "normal");
-//     doc.setTextColor(100, 100, 100);
-//     doc.text("Bill No:", MARGIN, cursorY);
-//     doc.setFontSize(valueFs);
-//     doc.setFont("helvetica", "bold");
-//     doc.setTextColor(
-//       billing.status === "Approved" ? 112 : 180,
-//       billing.status === "Approved" ? 70 : 100,
-//       billing.status === "Approved" ? 46 : 30,
-//     );
-//     const bNumLines = doc.splitTextToSize(bNum, LEFT_MAX_W);
-//     doc.text(bNumLines, LEFT_VAL_X, cursorY);
-//     cursorY += Math.max(bNumLines.length, 1) * 4.5 + 1;
-
-//     // Row 3: Address
-//     doc.setFontSize(labelFs);
-//     doc.setFont("helvetica", "normal");
-//     doc.setTextColor(100, 100, 100);
-//     doc.text("Address:", MARGIN, cursorY);
-//     doc.setFontSize(valueFs);
-//     doc.setFont("helvetica", "normal");
-//     doc.setTextColor(40, 40, 40);
-//     const officeAddrLines = doc.splitTextToSize(
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-//       LEFT_MAX_W,
-//     );
-//     doc.text(officeAddrLines, LEFT_VAL_X, cursorY);
-//     cursorY += officeAddrLines.length * 4.5 + 1;
-
-//     // Row 4: Email (optional)
-//     if (billing.clientEmail) {
-//       doc.setFontSize(labelFs);
-//       doc.setFont("helvetica", "normal");
-//       doc.setTextColor(100, 100, 100);
-//       doc.text("Email:", MARGIN, cursorY);
-//       doc.setFontSize(valueFs);
-//       doc.setFont("helvetica", "normal");
-//       doc.setTextColor(40, 40, 40);
-//       const emailLines = doc.splitTextToSize(billing.clientEmail, LEFT_MAX_W);
-//       doc.text(emailLines, LEFT_VAL_X, cursorY);
-//       cursorY += Math.max(emailLines.length, 1) * 4.5 + 1;
-//     }
-
-//     // Notes (optional)
-//     if (billing.notes) {
-//       doc.setFontSize(labelFs);
-//       doc.setFont("helvetica", "normal");
-//       doc.setTextColor(100, 100, 100);
-//       doc.text("Notes:", MARGIN, cursorY);
-//       doc.setFontSize(valueFs);
-//       doc.setFont("helvetica", "normal");
-//       doc.setTextColor(40, 40, 40);
-//       const notesLines = doc.splitTextToSize(billing.notes, MAX_W - 22);
-//       doc.text(notesLines, LEFT_VAL_X, cursorY);
-//       cursorY += notesLines.length * 4.5;
-//     }
-
-//     cursorY += ROW_H + 2;
-
-//     /* ================= CUSTOM FIELDS ================= */
-//     if (billing.customFields && billing.customFields.length > 0) {
-//       billing.customFields.forEach((field) => {
-//         doc.setFontSize(labelFs);
-//         doc.setFont("helvetica", "normal");
-//         doc.setTextColor(100, 100, 100);
-//         doc.text(`${field.label}:`, MARGIN, cursorY);
-
-//         const labelW = doc.getTextWidth(`${field.label}:`) + 2;
-//         doc.setFontSize(valueFs);
-//         doc.setFont("helvetica", "bold");
-//         doc.setTextColor(30, 30, 30);
-//         doc.text(field.value || "-", MARGIN + labelW, cursorY);
-//         cursorY += ROW_H;
-//       });
-//     }
-
-//     /* ================= TABLE ================= */
-//     cursorY += 2;
-//     const items = billing.items || [];
-//     const tableRows = items.map((item, index) => [
-//       index + 1,
-//       item.description || "N/A",
-//       `${item.rate || 0} × ${item.quantity || 0}`,
-//       `Rs. ${(item.amount || 0).toLocaleString()}/-`,
-//     ]);
-
-//     autoTable(doc, {
-//       startY: cursorY,
-//       head: [["Sr.", "Item Description", "Rate × Qty", "Amount"]],
-//       body: tableRows,
-//       foot: [
-//         [
-//           {
-//             content: "",
-//             colSpan: 2,
-//             styles: { lineWidth: 0, fillColor: [255, 255, 255] },
-//           },
-//           {
-//             content: "Grand Total",
-//             styles: {
-//               fontStyle: "bold",
-//               halign: "right",
-//               fillColor: [240, 240, 240],
-//             },
-//           },
-//           {
-//             content: `Rs. ${(billing.totalAmount || 0).toLocaleString()}/-`,
-//             styles: {
-//               fontStyle: "bold",
-//               halign: "right",
-//               fillColor: [240, 240, 240],
-//             },
-//           },
-//         ],
-//       ],
-//       theme: "grid",
-//       headStyles: {
-//         fillColor: [112, 70, 46],
-//         textColor: 255,
-//         fontStyle: "bold",
-//         fontSize: 9.5,
-//         lineWidth: 0,
-//         halign: "center",
-//         valign: "middle",
-//         cellPadding: { top: 5, bottom: 5, left: 4, right: 4 },
-//       },
-//       footStyles: {
-//         fillColor: [240, 240, 240],
-//         textColor: 30,
-//         fontStyle: "bold",
-//         fontSize: 9.5,
-//         lineWidth: 0.4,
-//         lineColor: [180, 180, 180],
-//       },
-//       alternateRowStyles: {
-//         fillColor: [252, 248, 245],
-//       },
-//       styles: {
-//         fontSize: 9,
-//         cellPadding: { top: 5, bottom: 5, left: 4, right: 4 },
-//         lineWidth: 0.3,
-//         lineColor: [200, 200, 200],
-//         valign: "middle",
-//         textColor: [40, 40, 40],
-//       },
-//       columnStyles: {
-//         0: { cellWidth: 14, halign: "center", fontStyle: "bold" },
-//         1: { cellWidth: "auto" },
-//         2: { cellWidth: 40, halign: "center" },
-//         3: { cellWidth: 38, halign: "right" },
-//       },
-//     });
-
-//     // @ts-ignore
-//     const lastY = doc.lastAutoTable.finalY;
-//     const footerY = lastY + 16;
-
-//     // Footer note
-//     doc.setFontSize(9);
-//     doc.setFont("helvetica", "italic");
-//     doc.setTextColor(100, 100, 100);
-//     doc.text(
-//       "Thank you for your business! Please retain this document for your records.",
-//       MARGIN,
-//       footerY,
-//     );
-
-//     // Signature
-//     doc.setFont("helvetica", "bold");
-//     doc.setFontSize(9.5);
-//     doc.setTextColor(30, 30, 30);
-//     doc.text("For MUNNA DECORS", RIGHT, footerY, { align: "right" });
-
-//     doc.setDrawColor(120, 120, 120);
-//     doc.setLineWidth(0.3);
-//     doc.line(RIGHT - 50, footerY + 14, RIGHT, footerY + 14);
-
-//     doc.setFont("helvetica", "normal");
-//     doc.setFontSize(8.5);
-//     doc.setTextColor(100, 100, 100);
-//     doc.text("Authorized Signatory", RIGHT, footerY + 19, { align: "right" });
-
-//     // Bottom border
-//     doc.setDrawColor(112, 70, 46);
-//     doc.setLineWidth(0.8);
-//     doc.line(MARGIN, 285, RIGHT, 285);
-
-//     const safeFilename = (
-//       bNum !== "PENDING APPROVAL"
-//         ? bNum
-//         : `Draft-${billing.clientName || "Bill"}`
-//     ).replace(/[^a-zA-Z0-9_-]/g, "_");
-//     doc.save(`${safeFilename}.pdf`);
-//   } catch (error) {
-//     console.error("PDF Generation Error:", error);
-//     toast.error("Failed to generate PDF.");
-//   }
-// };
-
-export const downloadBillingPDF = (billing: IBilling) => {
+/**
+ * Generates and downloads a professional PDF quotation,
+ * styled to match the Aesthetica application home page theme.
+ */
+export const downloadQuotationPDF = (quotation: IOfficialQuotation) => {
   try {
     const doc = new jsPDF();
 
     const PAGE_W = 210;
-    const MARGIN = 20;
+    const MARGIN = 18;
     const CENTER = PAGE_W / 2;
     const RIGHT = PAGE_W - MARGIN;
-    const MAX_W = RIGHT - MARGIN;
+    const MAX_W = RIGHT - MARGIN; // 174mm usable width
 
-    let cursorY = 16;
+    // Top Brand Accent Stripe
+    doc.setFillColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+    doc.rect(0, 0, PAGE_W, 3.5, "F");
 
-    /* ================= BRAND NAME ================= */
+    let cursorY = 15;
+
+    /* ================= BRAND NAME & BADGE ================= */
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(24);
-    doc.setTextColor(112, 70, 46);
+    doc.setFontSize(22);
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
+    );
     doc.text("MUNNA DECORS", CENTER, cursorY, { align: "center" });
-    cursorY += 6;
+    cursorY += 5.5;
 
-    /* ================= DOCUMENT TYPE ================= */
+    // Document Type Pill
+    const pillText = "OFFICIAL ESTIMATE / QUOTATION";
+    doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.setTextColor(40, 40, 40);
-    doc.text("BILL / INVOICE", CENTER, cursorY, {
-      align: "center",
-    });
-    cursorY += 6;
+    const pillW = doc.getTextWidth(pillText) + 12;
+    const pillH = 5.5;
+    const pillX = CENTER - pillW / 2;
+    const pillY = cursorY - 1;
 
-    /* ================= TAGLINE ================= */
+    doc.setFillColor(
+      THEME.accentSoft[0],
+      THEME.accentSoft[1],
+      THEME.accentSoft[2],
+    );
+    doc.setDrawColor(
+      THEME.accentBorder[0],
+      THEME.accentBorder[1],
+      THEME.accentBorder[2],
+    );
+    doc.setLineWidth(0.3);
+    doc.roundedRect(pillX, pillY, pillW, pillH, 1.5, 1.5, "FD");
+
+    doc.setTextColor(
+      THEME.accentDark[0],
+      THEME.accentDark[1],
+      THEME.accentDark[2],
+    );
+    doc.text(pillText, CENTER, cursorY + 2.7, { align: "center" });
+    cursorY += 7.5;
+
+    /* ================= TAGLINES ================= */
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(8.5);
-    doc.setTextColor(100, 100, 100);
+    doc.setFontSize(8);
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
 
     const line1 = doc.splitTextToSize(
-      "Custom wooden & steel furniture design, polishing, civil & interior works.",
+      "We specialize in custom wooden and steel furniture design and manufacturing.",
       MAX_W,
     );
-
     doc.text(line1, CENTER, cursorY, { align: "center" });
-    cursorY += line1.length * 4.5 + 1;
+    cursorY += line1.length * 4;
 
-    /* ================= OFFICE ADDRESS (HEADER) ================= */
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(120, 120, 120);
-
-    const headerAddrText = doc.splitTextToSize(
-      "Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)",
+    const line2 = doc.splitTextToSize(
+      "Our services cover everything from furniture polishing and civil work to interior transformations.",
       MAX_W,
     );
+    doc.text(line2, CENTER, cursorY, { align: "center" });
+    cursorY += line2.length * 4 + 2;
 
-    doc.text(headerAddrText, CENTER, cursorY, {
-      align: "center",
-    });
+    /* ================= OFFICE ADDRESS ================= */
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(
+      THEME.slateLight[0],
+      THEME.slateLight[1],
+      THEME.slateLight[2],
+    );
 
-    cursorY += headerAddrText.length * 4 + 2;
+    const addressText = doc.splitTextToSize(
+      "Office: Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)",
+      MAX_W,
+    );
+    doc.text(addressText, CENTER, cursorY, { align: "center" });
+    cursorY += addressText.length * 3.8 + 2;
 
     /* ================= HEADER DIVIDER ================= */
-    doc.setDrawColor(112, 70, 46);
-    doc.setLineWidth(0.8);
+    doc.setDrawColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+    doc.setLineWidth(0.7);
     doc.line(MARGIN, cursorY, RIGHT, cursorY);
 
-    cursorY += 1.5;
-
+    cursorY += 1.2;
     doc.setLineWidth(0.2);
-    doc.setDrawColor(200, 180, 160);
+    doc.setDrawColor(
+      THEME.borderLight[0],
+      THEME.borderLight[1],
+      THEME.borderLight[2],
+    );
     doc.line(MARGIN, cursorY, RIGHT, cursorY);
+    cursorY += 5;
 
-    cursorY += 6;
+    /* ================= CLIENT INFO CARD ================= */
+    const labelFs = 8.5;
+    const valueFs = 9;
+    const dateColX = 130;
+    const cardPaddingX = MARGIN + 4;
+    const cardValX = cardPaddingX + 22;
+    const clientNameMaxW = dateColX - cardValX - 4;
+    const fullValMaxW = RIGHT - cardValX - 4;
 
-    /* ================= BILL META & CLIENT INFO ================= */
-    const labelFs = 9;
-    const valueFs = 9.5;
-    const ROW_H = 7;
-    const LEFT_VAL_X = MARGIN + 22;
-    const LEFT_MAX_W = 95;
-
-    const bNum =
-      billing.billingNumber || billing.billing_number || "PENDING APPROVAL";
-
-    /* ================= DATE (TOP RIGHT) ================= */
-    const dateValue = billing.createdAt
-      ? new Date(billing.createdAt)
+    const dateValue = quotation.createdAt
+      ? new Date(quotation.createdAt)
       : new Date();
-
     const dateStr = dateValue.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
 
-    doc.setFontSize(labelFs);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Date:", 128, cursorY);
+    const clientAddress =
+      quotation.clientAddress?.trim() ||
+      (quotation as any).address?.trim() ||
+      quotation.customFields
+        ?.find((f) => f.label?.trim().toLowerCase() === "address")
+        ?.value?.trim();
 
-    doc.setFontSize(valueFs);
+    const clientEmail = quotation.clientEmail?.trim();
+
+    // Set rendering font BEFORE splitTextToSize so wrapping matches actual output
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(30, 30, 30);
-    doc.text(dateStr, 143, cursorY);
-
-    /* ================= CLIENT NAME ================= */
-    doc.setFontSize(labelFs);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Billed To:", MARGIN, cursorY);
-
     doc.setFontSize(valueFs);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(30, 30, 30);
 
     const clientNameLines = doc.splitTextToSize(
-      billing.clientName || "N/A",
-      LEFT_MAX_W,
+      quotation.clientName || "Valued Client",
+      clientNameMaxW,
+    );
+    const addressLines = clientAddress
+      ? doc.splitTextToSize(clientAddress, fullValMaxW)
+      : null;
+    const emailLines = clientEmail
+      ? doc.splitTextToSize(clientEmail, fullValMaxW)
+      : null;
+    const refLines = quotation.notes
+      ? doc.splitTextToSize(quotation.notes, fullValMaxW)
+      : null;
+
+    const otherCustomFields = (quotation.customFields || []).filter(
+      (field) =>
+        !clientAddress || field.label?.trim().toLowerCase() !== "address",
     );
 
-    doc.text(clientNameLines, LEFT_VAL_X, cursorY);
+    // Precalculate card height
+    let cardContentH = 8; // base top/bottom padding
+    cardContentH += Math.max(clientNameLines.length, 1) * 4.8;
+    if (addressLines)
+      cardContentH += Math.max(addressLines.length, 1) * 4.5 + 1;
+    if (emailLines) cardContentH += Math.max(emailLines.length, 1) * 4.2 + 1;
+    if (refLines) cardContentH += refLines.length * 4.4 + 1;
+    if (otherCustomFields.length > 0) {
+      otherCustomFields.forEach((f) => {
+        const fLines = doc.splitTextToSize(String(f.value || "-"), fullValMaxW);
+        cardContentH += Math.max(fLines.length, 1) * 4.5 + 1;
+      });
+    }
+    const cardHeight = Math.max(cardContentH, 22);
 
-    cursorY += Math.max(clientNameLines.length, 1) * 4.5 + 1;
+    // Draw Card Background
+    doc.setFillColor(THEME.cardBg[0], THEME.cardBg[1], THEME.cardBg[2]);
+    doc.setDrawColor(
+      THEME.borderLight[0],
+      THEME.borderLight[1],
+      THEME.borderLight[2],
+    );
+    doc.setLineWidth(0.3);
+    doc.roundedRect(MARGIN, cursorY, MAX_W, cardHeight, 2, 2, "FD");
 
-    /* ================= BILL NUMBER ================= */
+    // Render contents inside card
+    let cardCursorY = cursorY + 5.5;
+
+    // Row 1: Client Name & Date
     doc.setFontSize(labelFs);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Bill No:", MARGIN, cursorY);
-
-    doc.setFontSize(valueFs);
-    doc.setFont("helvetica", "bold");
-
     doc.setTextColor(
-      billing.status === "Approved" ? 112 : 180,
-      billing.status === "Approved" ? 70 : 100,
-      billing.status === "Approved" ? 46 : 30,
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
     );
+    doc.text("Client Name:", cardPaddingX, cardCursorY);
 
-    const bNumLines = doc.splitTextToSize(bNum, LEFT_MAX_W);
-    doc.text(bNumLines, LEFT_VAL_X, cursorY);
-
-    cursorY += Math.max(bNumLines.length, 1) * 4.5 + 1;
-
-    /* ================= CLIENT ADDRESS ================= */
-    const clientAddress =
-      billing.clientAddress?.trim() ||
-      billing.customFields?.find((f) => f.label?.trim().toLowerCase() === "address")?.value?.trim();
-
-    if (clientAddress) {
-      doc.setFontSize(labelFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text("Address:", MARGIN, cursorY);
-
-      doc.setFontSize(valueFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(40, 40, 40);
-
-      const clientAddressLines = doc.splitTextToSize(clientAddress, LEFT_MAX_W);
-      doc.text(clientAddressLines, LEFT_VAL_X, cursorY);
-
-      cursorY += (clientAddressLines.length - 1) * 3.85 + 5.5;
-    }
-
-    /* ================= CLIENT EMAIL ================= */
-    if (billing.clientEmail) {
-      doc.setFontSize(labelFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text("Email:", MARGIN, cursorY);
-
-      doc.setFontSize(valueFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(40, 40, 40);
-
-      const emailLines = doc.splitTextToSize(billing.clientEmail, LEFT_MAX_W);
-
-      doc.text(emailLines, LEFT_VAL_X, cursorY);
-
-      cursorY += Math.max(emailLines.length, 1) * 4.5 + 1;
-    }
-
-    /* ================= NOTES ================= */
-    if (billing.notes) {
-      doc.setFontSize(labelFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text("Notes:", MARGIN, cursorY);
-
-      doc.setFontSize(valueFs);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(40, 40, 40);
-
-      const notesLines = doc.splitTextToSize(billing.notes, MAX_W - 22);
-
-      doc.text(notesLines, LEFT_VAL_X, cursorY);
-
-      cursorY += notesLines.length * 4.5;
-    }
-
-    // cursorY += ROW_H + 2;
-
-    /* ================= CUSTOM FIELDS ================= */
-    const otherCustomFields = (billing.customFields || []).filter(
-      (field) => !clientAddress || field.label?.trim().toLowerCase() !== "address"
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(valueFs);
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
     );
+    doc.text(clientNameLines, cardValX, cardCursorY);
 
-    if (otherCustomFields.length) {
+    // Date (Right Side of Card)
+    doc.setFontSize(labelFs);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text("Date:", dateColX, cardCursorY);
+
+    const dateLabelW = doc.getTextWidth("Date:") + 2;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(valueFs);
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
+    );
+    doc.text(dateStr, dateColX + dateLabelW, cardCursorY);
+
+    cardCursorY += Math.max(clientNameLines.length, 1) * 4.8 + 1;
+
+    // Row 2: Address (Starts at EXACT same cardValX point as Client Name)
+    if (addressLines) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+      doc.text("Address:", cardPaddingX, cardCursorY);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(valueFs);
+      doc.setTextColor(
+        THEME.slateDark[0],
+        THEME.slateDark[1],
+        THEME.slateDark[2],
+      );
+      doc.text(addressLines, cardValX, cardCursorY);
+
+      cardCursorY += Math.max(addressLines.length, 1) * 4.5 + 1;
+    }
+
+    // Row 3: Email (if present)
+    if (emailLines) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+      doc.text("Email:", cardPaddingX, cardCursorY);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(
+        THEME.slateBody[0],
+        THEME.slateBody[1],
+        THEME.slateBody[2],
+      );
+      doc.text(emailLines, cardValX, cardCursorY);
+
+      cardCursorY += Math.max(emailLines.length, 1) * 4.2 + 1;
+    }
+
+    // Ref No / Notes
+    if (refLines) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+      doc.text("Ref Notes:", cardPaddingX, cardCursorY);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(valueFs);
+      doc.setTextColor(
+        THEME.slateBody[0],
+        THEME.slateBody[1],
+        THEME.slateBody[2],
+      );
+      doc.text(refLines, cardValX, cardCursorY);
+
+      cardCursorY += refLines.length * 4.4 + 1;
+    }
+
+    // Other Custom Fields
+    if (otherCustomFields.length > 0) {
       otherCustomFields.forEach((field) => {
+        const fieldLabel = `${field.label}:`;
+
+        // Render label
         doc.setFontSize(labelFs);
         doc.setFont("helvetica", "normal");
-        doc.setTextColor(100, 100, 100);
+        doc.setTextColor(
+          THEME.slateMuted[0],
+          THEME.slateMuted[1],
+          THEME.slateMuted[2],
+        );
 
-        const labelText = `${field.label}:`;
-        doc.text(labelText, MARGIN, cursorY);
+        doc.text(fieldLabel, cardPaddingX, cardCursorY);
 
-        const customValX = Math.max(LEFT_VAL_X, MARGIN + doc.getTextWidth(labelText) + 2);
-        const customMaxW = RIGHT - customValX;
+        const customValX = Math.max(
+          cardValX,
+          cardPaddingX + doc.getTextWidth(fieldLabel) + 2,
+        );
+        const availableWidth = RIGHT - customValX - 4;
 
-        doc.setFontSize(valueFs);
+        // Wrap long field values
         doc.setFont("helvetica", "bold");
-        doc.setTextColor(30, 30, 30);
+        doc.setFontSize(valueFs);
+        doc.setTextColor(
+          THEME.slateDark[0],
+          THEME.slateDark[1],
+          THEME.slateDark[2],
+        );
 
         const fieldValueLines = doc.splitTextToSize(
           String(field.value || "-"),
-          customMaxW,
+          Math.max(availableWidth, 10),
         );
 
-        doc.text(fieldValueLines, customValX, cursorY);
+        doc.text(fieldValueLines, customValX, cardCursorY);
 
-        cursorY += Math.max(fieldValueLines.length, 1) * ROW_H;
+        // Move down according to the number of wrapped lines
+        cardCursorY += Math.max(fieldValueLines.length, 1) * 4.5 + 1;
       });
     }
 
+    cursorY += cardHeight + 5;
+
     /* ================= TABLE ================= */
-    cursorY += 2;
-
-    const items = billing.items || [];
-
+    const items = quotation.items || [];
     const tableRows = items.map((item, index) => [
       index + 1,
       item.description || "N/A",
@@ -913,11 +449,601 @@ export const downloadBillingPDF = (billing: IBilling) => {
 
     autoTable(doc, {
       startY: cursorY,
-
-      head: [["Sr.", "Item Description", "Rate × Qty", "Amount"]],
-
+      head: [["Sr.", "Description", "Rate × Qty", "Amount"]],
       body: tableRows,
+      foot: [
+        [
+          {
+            content: "",
+            colSpan: 2,
+            styles: { lineWidth: 0, fillColor: [255, 255, 255] },
+          },
+          {
+            content: "Grand Total",
+            styles: {
+              fontStyle: "bold",
+              halign: "right",
+              fillColor: THEME.accentSoft,
+              textColor: THEME.slateDark,
+              fontSize: 9.5,
+              lineWidth: 0.3,
+              lineColor: THEME.accentBorder,
+            },
+          },
+          {
+            content: `Rs. ${(quotation.totalAmount || 0).toLocaleString("en-IN")}/-`,
+            styles: {
+              fontStyle: "bold",
+              halign: "right",
+              fillColor: THEME.accentSoft,
+              textColor: THEME.accentDark,
+              fontSize: 10,
+              lineWidth: 0.3,
+              lineColor: THEME.accentBorder,
+            },
+          },
+        ],
+      ],
+      theme: "grid",
+      headStyles: {
+        fillColor: THEME.slateDark,
+        textColor: 255,
+        fontStyle: "bold",
+        fontSize: 9,
+        lineWidth: 0,
+        halign: "center",
+        valign: "middle",
+        cellPadding: { top: 4.5, bottom: 4.5, left: 4, right: 4 },
+      },
+      footStyles: {
+        fillColor: THEME.accentSoft,
+        textColor: THEME.slateDark,
+        fontStyle: "bold",
+        fontSize: 9.5,
+        lineWidth: 0.3,
+        lineColor: THEME.accentBorder,
+      },
+      alternateRowStyles: {
+        fillColor: THEME.cardBg,
+      },
+      styles: {
+        fontSize: 8.5,
+        cellPadding: { top: 4.5, bottom: 4.5, left: 4, right: 4 },
+        lineWidth: 0.3,
+        lineColor: THEME.borderLight,
+        valign: "middle",
+        textColor: THEME.slateBody,
+      },
+      columnStyles: {
+        0: {
+          cellWidth: 14,
+          halign: "center",
+          fontStyle: "bold",
+          textColor: THEME.slateMuted,
+        },
+        1: { cellWidth: "auto" },
+        2: { cellWidth: 38, halign: "center" },
+        3: {
+          cellWidth: 40,
+          halign: "right",
+          fontStyle: "bold",
+          textColor: THEME.slateDark,
+        },
+      },
+    });
 
+    /* ================= FOOTER ================= */
+    // @ts-ignore
+    const lastY = doc.lastAutoTable.finalY;
+    let footerY = lastY + 14;
+
+    if (footerY > 260) {
+      doc.addPage();
+      doc.setFillColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+      doc.rect(0, 0, PAGE_W, 3.5, "F");
+      footerY = 24;
+    }
+
+    doc.setFontSize(8.5);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text(
+      "Thank you for choosing Munna Decors. We look forward to creating your dream space!",
+      MARGIN,
+      footerY,
+    );
+
+    // Signature block
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
+    );
+    doc.text("For MUNNA DECORS", RIGHT, footerY, { align: "right" });
+
+    doc.setDrawColor(
+      THEME.borderMuted[0],
+      THEME.borderMuted[1],
+      THEME.borderMuted[2],
+    );
+    doc.setLineWidth(0.3);
+    doc.line(RIGHT - 50, footerY + 13, RIGHT, footerY + 13);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text("Authorized Signature", RIGHT, footerY + 18, { align: "right" });
+
+    // Bottom page accent border
+    doc.setDrawColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+    doc.setLineWidth(0.8);
+    doc.line(MARGIN, 283, RIGHT, 283);
+
+    doc.setFontSize(7.5);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(
+      THEME.slateLight[0],
+      THEME.slateLight[1],
+      THEME.slateLight[2],
+    );
+    doc.text(
+      "Aesthetica & Munna Decors • Bespoke Interior & Architectural Living",
+      CENTER,
+      288,
+      { align: "center" },
+    );
+
+    /* ================= SAVE ================= */
+    doc.save(`Quotation-${quotation.clientName || "Export"}.pdf`);
+  } catch (error) {
+    console.error("PDF Generation Error:", error);
+    toast.error("Failed to generate PDF.");
+  }
+};
+
+/**
+ * Generates and downloads an executive PDF bill/invoice,
+ * styled to match the Aesthetica application home page theme.
+ */
+export const downloadBillingPDF = (billing: IBilling) => {
+  try {
+    const doc = new jsPDF();
+
+    const PAGE_W = 210;
+    const MARGIN = 18;
+    const CENTER = PAGE_W / 2;
+    const RIGHT = PAGE_W - MARGIN;
+    const MAX_W = RIGHT - MARGIN; // 174mm usable width
+
+    // Top Brand Accent Stripe
+    doc.setFillColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+    doc.rect(0, 0, PAGE_W, 3.5, "F");
+
+    let cursorY = 15;
+
+    /* ================= BRAND NAME & BADGE ================= */
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.setTextColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+    doc.text("MUNNA DECORS", CENTER, cursorY, { align: "center" });
+    cursorY += 5.5;
+
+    // Document Type Pill
+    const pillText = "BILL / INVOICE";
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    const pillW = doc.getTextWidth(pillText) + 12;
+    const pillH = 5.5;
+    const pillX = CENTER - pillW / 2;
+    const pillY = cursorY - 1;
+
+    doc.setFillColor(
+      THEME.accentSoft[0],
+      THEME.accentSoft[1],
+      THEME.accentSoft[2],
+    );
+    doc.setDrawColor(
+      THEME.accentBorder[0],
+      THEME.accentBorder[1],
+      THEME.accentBorder[2],
+    );
+    doc.setLineWidth(0.3);
+    doc.roundedRect(pillX, pillY, pillW, pillH, 1.5, 1.5, "FD");
+
+    doc.setTextColor(
+      THEME.accentDark[0],
+      THEME.accentDark[1],
+      THEME.accentDark[2],
+    );
+    doc.text(pillText, CENTER, cursorY + 2.7, { align: "center" });
+    cursorY += 7.5;
+
+    /* ================= TAGLINE ================= */
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+
+    const line1 = doc.splitTextToSize(
+      "We specialize in custom wooden and steel furniture design and manufacturing.",
+      MAX_W,
+    );
+    doc.text(line1, CENTER, cursorY, { align: "center" });
+    cursorY += line1.length * 4;
+
+    const line2 = doc.splitTextToSize(
+      "Our services cover everything from furniture polishing and civil work to interior transformations.",
+      MAX_W,
+    );
+    doc.text(line2, CENTER, cursorY, { align: "center" });
+    cursorY += line2.length * 4 + 2;
+    // doc.setFont("helvetica", "italic");
+    // doc.setFontSize(8);
+    // doc.setTextColor(
+    //   THEME.slateMuted[0],
+    //   THEME.slateMuted[1],
+    //   THEME.slateMuted[2],
+    // );
+
+    // const line1 = doc.splitTextToSize(
+    //   "Custom Wooden & Steel Furniture Manufacturing, Furniture Polishing, Civil Works, and Interior Design Services.",
+    //   MAX_W,
+    // );
+    // doc.text(line1, CENTER, cursorY, { align: "center" });
+    // cursorY += line1.length * 4 + 1.5;
+
+    /* ================= OFFICE ADDRESS (HEADER) ================= */
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(
+      THEME.slateLight[0],
+      THEME.slateLight[1],
+      THEME.slateLight[2],
+    );
+
+    const headerAddrText = doc.splitTextToSize(
+      "Office: Gala No.6, Shantidham Apartment, Lokmanya Nagar, Pada No.2, Opp. Marathi School, Thane (W)",
+      MAX_W,
+    );
+    doc.text(headerAddrText, CENTER, cursorY, { align: "center" });
+    cursorY += headerAddrText.length * 3.8 + 2;
+
+    /* ================= HEADER DIVIDER ================= */
+    doc.setDrawColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+    doc.setLineWidth(0.7);
+    doc.line(MARGIN, cursorY, RIGHT, cursorY);
+
+    cursorY += 1.2;
+    doc.setLineWidth(0.2);
+    doc.setDrawColor(
+      THEME.borderLight[0],
+      THEME.borderLight[1],
+      THEME.borderLight[2],
+    );
+    doc.line(MARGIN, cursorY, RIGHT, cursorY);
+    cursorY += 5;
+
+    /* ================= BILL META & CLIENT CARD ================= */
+    const labelFs = 8.5;
+    const valueFs = 9;
+    const LEFT_VAL_X = MARGIN + 26;
+    const LEFT_MAX_W = 92;
+
+    const bNum =
+      billing.billingNumber || billing.billing_number || "PENDING APPROVAL";
+    const isApproved = billing.status === "Approved";
+
+    const dateValue = billing.createdAt
+      ? new Date(billing.createdAt)
+      : new Date();
+    const dateStr = dateValue.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+    const clientAddress =
+      billing.clientAddress?.trim() ||
+      billing.customFields
+        ?.find((f) => f.label?.trim().toLowerCase() === "address")
+        ?.value?.trim();
+
+    const clientNameLines = doc.splitTextToSize(
+      billing.clientName || "Valued Client",
+      LEFT_MAX_W,
+    );
+    const bNumLines = doc.splitTextToSize(bNum, LEFT_MAX_W);
+    const addressLines = clientAddress
+      ? doc.splitTextToSize(clientAddress, LEFT_MAX_W)
+      : null;
+    const emailLines = billing.clientEmail
+      ? doc.splitTextToSize(billing.clientEmail, LEFT_MAX_W)
+      : null;
+    const notesLines = billing.notes
+      ? doc.splitTextToSize(billing.notes, MAX_W - 30)
+      : null;
+
+    const otherCustomFields = (billing.customFields || []).filter(
+      (field) =>
+        !clientAddress || field.label?.trim().toLowerCase() !== "address",
+    );
+
+    // Precalculate card height to render a clean background container
+    let cardContentH = 8;
+    cardContentH += Math.max(clientNameLines.length, 1) * 4.6 + 1;
+    cardContentH += Math.max(bNumLines.length, 1) * 4.6 + 1;
+    if (addressLines)
+      cardContentH += Math.max(addressLines.length, 1) * 4.2 + 1;
+    if (emailLines) cardContentH += Math.max(emailLines.length, 1) * 4.2 + 1;
+    if (notesLines) cardContentH += notesLines.length * 4.2 + 1;
+    if (otherCustomFields.length)
+      cardContentH += otherCustomFields.length * 4.8;
+
+    const cardHeight = Math.max(cardContentH, 26);
+
+    // Render Card Container
+    doc.setFillColor(THEME.cardBg[0], THEME.cardBg[1], THEME.cardBg[2]);
+    doc.setDrawColor(
+      THEME.borderLight[0],
+      THEME.borderLight[1],
+      THEME.borderLight[2],
+    );
+    doc.setLineWidth(0.3);
+    doc.roundedRect(MARGIN, cursorY, MAX_W, cardHeight, 2, 2, "FD");
+
+    let cardCursorY = cursorY + 5.5;
+    const cardPaddingX = MARGIN + 4;
+    const cardValX = cardPaddingX + 22;
+
+    /* ---- DATE & STATUS (TOP RIGHT OF CARD) ---- */
+    const rightColX = 136;
+    doc.setFontSize(labelFs);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text("Date:", rightColX, cardCursorY);
+
+    doc.setFontSize(valueFs);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
+    );
+    doc.text(dateStr, rightColX + 12, cardCursorY);
+
+    // Status Pill on top right
+    // const statusText = isApproved
+    //   ? "APPROVED"
+    //   : billing.status === "Inprogress"
+    //     ? "IN PROGRESS"
+    //     : "INITIATED";
+
+    // doc.setFontSize(7.5);
+    // doc.setFont("helvetica", "bold");
+    // const stW = doc.getTextWidth(statusText) + 8;
+    // const stH = 5;
+    // const stX = RIGHT - 4 - stW;
+    // const stY = cardCursorY - 3.8;
+
+    // if (isApproved) {
+    //   doc.setFillColor(
+    //     THEME.emeraldBg[0],
+    //     THEME.emeraldBg[1],
+    //     THEME.emeraldBg[2],
+    //   );
+    //   doc.setDrawColor(
+    //     THEME.emeraldBorder[0],
+    //     THEME.emeraldBorder[1],
+    //     THEME.emeraldBorder[2],
+    //   );
+    //   doc.roundedRect(stX, stY, stW, stH, 1.2, 1.2, "FD");
+    //   doc.setTextColor(THEME.emerald[0], THEME.emerald[1], THEME.emerald[2]);
+    // } else if (billing.status === "Inprogress") {
+    //   doc.setFillColor(THEME.amberBg[0], THEME.amberBg[1], THEME.amberBg[2]);
+    //   doc.setDrawColor(
+    //     THEME.amberBorder[0],
+    //     THEME.amberBorder[1],
+    //     THEME.amberBorder[2],
+    //   );
+    //   doc.roundedRect(stX, stY, stW, stH, 1.2, 1.2, "FD");
+    //   doc.setTextColor(THEME.amber[0], THEME.amber[1], THEME.amber[2]);
+    // } else {
+    //   doc.setFillColor(THEME.cardBg[0], THEME.cardBg[1], THEME.cardBg[2]);
+    //   doc.setDrawColor(
+    //     THEME.borderLight[0],
+    //     THEME.borderLight[1],
+    //     THEME.borderLight[2],
+    //   );
+    //   doc.roundedRect(stX, stY, stW, stH, 1.2, 1.2, "FD");
+    //   doc.setTextColor(
+    //     THEME.slateMuted[0],
+    //     THEME.slateMuted[1],
+    //     THEME.slateMuted[2],
+    //   );
+    // }
+    // doc.text(statusText, stX + 4, cardCursorY - 0.2);
+
+    /* ---- CLIENT NAME ---- */
+    doc.setFontSize(labelFs);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text("Billed To:", cardPaddingX, cardCursorY);
+
+    doc.setFontSize(valueFs);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
+    );
+    doc.text(clientNameLines, cardValX, cardCursorY);
+
+    cardCursorY += Math.max(clientNameLines.length, 1) * 4.6 + 1;
+
+    /* ---- BILL NUMBER ---- */
+    doc.setFontSize(labelFs);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text("Bill No:", cardPaddingX, cardCursorY);
+
+    doc.setFontSize(valueFs);
+    doc.setFont("helvetica", "bold");
+    if (isApproved) {
+      doc.setTextColor(
+        THEME.accentDark[0],
+        THEME.accentDark[1],
+        THEME.accentDark[2],
+      );
+    } else {
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+    }
+    doc.text(bNumLines, cardValX, cardCursorY);
+
+    cardCursorY += Math.max(bNumLines.length, 1) * 4.6 + 1;
+
+    /* ---- ADDRESS ---- */
+    if (addressLines) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+      doc.text("Address:", cardPaddingX, cardCursorY);
+
+      doc.setFontSize(8.5);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateBody[0],
+        THEME.slateBody[1],
+        THEME.slateBody[2],
+      );
+      doc.text(addressLines, cardValX, cardCursorY);
+
+      cardCursorY += Math.max(addressLines.length, 1) * 4.2 + 1;
+    }
+
+    /* ---- EMAIL ---- */
+    if (emailLines) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+      doc.text("Email:", cardPaddingX, cardCursorY);
+
+      doc.setFontSize(8.5);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateBody[0],
+        THEME.slateBody[1],
+        THEME.slateBody[2],
+      );
+      doc.text(emailLines, cardValX, cardCursorY);
+
+      cardCursorY += Math.max(emailLines.length, 1) * 4.2 + 1;
+    }
+
+    /* ---- NOTES ---- */
+    if (notesLines) {
+      doc.setFontSize(labelFs);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateMuted[0],
+        THEME.slateMuted[1],
+        THEME.slateMuted[2],
+      );
+      doc.text("Notes:", cardPaddingX, cardCursorY);
+
+      doc.setFontSize(8.5);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(
+        THEME.slateBody[0],
+        THEME.slateBody[1],
+        THEME.slateBody[2],
+      );
+      doc.text(notesLines, cardValX, cardCursorY);
+
+      cardCursorY += notesLines.length * 4.2 + 1;
+    }
+
+    /* ---- OTHER CUSTOM FIELDS ---- */
+    if (otherCustomFields.length) {
+      otherCustomFields.forEach((field) => {
+        doc.setFontSize(labelFs);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(
+          THEME.slateMuted[0],
+          THEME.slateMuted[1],
+          THEME.slateMuted[2],
+        );
+        const fLabel = `${field.label}:`;
+        doc.text(fLabel, cardPaddingX, cardCursorY);
+
+        const customValX = Math.max(
+          cardValX,
+          cardPaddingX + doc.getTextWidth(fLabel) + 2,
+        );
+        doc.setFontSize(valueFs);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(
+          THEME.slateDark[0],
+          THEME.slateDark[1],
+          THEME.slateDark[2],
+        );
+        doc.text(String(field.value || "-"), customValX, cardCursorY);
+
+        cardCursorY += 4.8;
+      });
+    }
+
+    cursorY += cardHeight + 5;
+
+    /* ================= TABLE ================= */
+    const items = billing.items || [];
+    const tableRows = items.map((item, index) => [
+      index + 1,
+      item.description || "N/A",
+      `${item.rate || 0} × ${item.quantity || 0}`,
+      `Rs. ${(item.amount || 0).toLocaleString("en-IN")}/-`,
+    ]);
+
+    autoTable(doc, {
+      startY: cursorY,
+      head: [["Sr.", "Item Description", "Rate × Qty", "Amount"]],
+      body: tableRows,
       foot: [
         [
           {
@@ -933,7 +1059,11 @@ export const downloadBillingPDF = (billing: IBilling) => {
             styles: {
               fontStyle: "bold",
               halign: "right",
-              fillColor: [240, 240, 240],
+              fillColor: THEME.accentSoft,
+              textColor: THEME.slateDark,
+              fontSize: 9.5,
+              lineWidth: 0.3,
+              lineColor: THEME.accentBorder,
             },
           },
           {
@@ -941,73 +1071,74 @@ export const downloadBillingPDF = (billing: IBilling) => {
             styles: {
               fontStyle: "bold",
               halign: "right",
-              fillColor: [240, 240, 240],
+              fillColor: THEME.accentSoft,
+              textColor: THEME.accentDark,
+              fontSize: 10,
+              lineWidth: 0.3,
+              lineColor: THEME.accentBorder,
             },
           },
         ],
       ],
-
       theme: "grid",
-
       headStyles: {
-        fillColor: [112, 70, 46],
+        fillColor: THEME.accent,
         textColor: 255,
         fontStyle: "bold",
-        fontSize: 9.5,
+        fontSize: 9,
         lineWidth: 0,
         halign: "center",
         valign: "middle",
         cellPadding: {
-          top: 5,
-          bottom: 5,
+          top: 4.5,
+          bottom: 4.5,
           left: 4,
           right: 4,
         },
       },
-
       footStyles: {
-        fillColor: [240, 240, 240],
-        textColor: 30,
+        fillColor: THEME.accentSoft,
+        textColor: THEME.slateDark,
         fontStyle: "bold",
         fontSize: 9.5,
-        lineWidth: 0.4,
-        lineColor: [180, 180, 180],
+        lineWidth: 0.3,
+        lineColor: THEME.accentBorder,
       },
-
       alternateRowStyles: {
-        fillColor: [252, 248, 245],
+        fillColor: THEME.cardBg,
       },
-
       styles: {
-        fontSize: 9,
+        fontSize: 8.5,
         cellPadding: {
-          top: 5,
-          bottom: 5,
+          top: 4.5,
+          bottom: 4.5,
           left: 4,
           right: 4,
         },
         lineWidth: 0.3,
-        lineColor: [200, 200, 200],
+        lineColor: THEME.borderLight,
         valign: "middle",
-        textColor: [40, 40, 40],
+        textColor: THEME.slateBody,
       },
-
       columnStyles: {
         0: {
           cellWidth: 14,
           halign: "center",
           fontStyle: "bold",
+          textColor: THEME.slateMuted,
         },
         1: {
           cellWidth: "auto",
         },
         2: {
-          cellWidth: 40,
+          cellWidth: 38,
           halign: "center",
         },
         3: {
-          cellWidth: 38,
+          cellWidth: 40,
           halign: "right",
+          fontStyle: "bold",
+          textColor: THEME.slateDark,
         },
       },
     });
@@ -1015,48 +1146,81 @@ export const downloadBillingPDF = (billing: IBilling) => {
     /* ================= FOOTER ================= */
     // @ts-ignore
     const lastY = doc.lastAutoTable.finalY;
-    const footerY = lastY + 16;
+    let footerY = lastY + 14;
 
-    doc.setFontSize(9);
+    if (footerY > 260) {
+      doc.addPage();
+      doc.setFillColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
+      doc.rect(0, 0, PAGE_W, 3.5, "F");
+      footerY = 24;
+    }
+
+    doc.setFontSize(8.5);
     doc.setFont("helvetica", "italic");
-    doc.setTextColor(100, 100, 100);
-
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
     doc.text(
-      "Thank you for your business! Please retain this document for your records.",
+      "Thank you for your business! Please retain this bill for your official records.",
       MARGIN,
       footerY,
     );
 
     /* ================= SIGNATURE ================= */
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(9.5);
-    doc.setTextColor(30, 30, 30);
-
+    doc.setFontSize(9);
+    doc.setTextColor(
+      THEME.slateDark[0],
+      THEME.slateDark[1],
+      THEME.slateDark[2],
+    );
     doc.text("For MUNNA DECORS", RIGHT, footerY, {
       align: "right",
     });
 
-    doc.setDrawColor(120, 120, 120);
+    doc.setDrawColor(
+      THEME.borderMuted[0],
+      THEME.borderMuted[1],
+      THEME.borderMuted[2],
+    );
     doc.setLineWidth(0.3);
-
-    doc.line(RIGHT - 50, footerY + 14, RIGHT, footerY + 14);
+    doc.line(RIGHT - 50, footerY + 13, RIGHT, footerY + 13);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(8.5);
-    doc.setTextColor(100, 100, 100);
+    doc.setFontSize(8);
+    doc.setTextColor(
+      THEME.slateMuted[0],
+      THEME.slateMuted[1],
+      THEME.slateMuted[2],
+    );
+    doc.text("Authorized Signatory", RIGHT, footerY + 18, { align: "right" });
 
-    doc.text("Authorized Signatory", RIGHT, footerY + 19, { align: "right" });
-
-    /* ================= BOTTOM BORDER ================= */
-    doc.setDrawColor(112, 70, 46);
+    /* ================= BOTTOM BORDER & TAGLINE ================= */
+    doc.setDrawColor(THEME.accent[0], THEME.accent[1], THEME.accent[2]);
     doc.setLineWidth(0.8);
-    doc.line(MARGIN, 285, RIGHT, 285);
+    doc.line(MARGIN, 283, RIGHT, 283);
+
+    doc.setFontSize(7.5);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(
+      THEME.slateLight[0],
+      THEME.slateLight[1],
+      THEME.slateLight[2],
+    );
+    doc.text(
+      "Aesthetica & Munna Decors • Bespoke Interior & Architectural Living",
+      CENTER,
+      288,
+      { align: "center" },
+    );
 
     /* ================= SAVE PDF ================= */
     const safeFilename = (
       bNum !== "PENDING APPROVAL"
         ? bNum
-        : `Draft-${billing.clientName || "Bill"}`
+        : `Invoice-${billing.clientName || "Bill"}`
     ).replace(/[^a-zA-Z0-9_-]/g, "_");
 
     doc.save(`${safeFilename}.pdf`);

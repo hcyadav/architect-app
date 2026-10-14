@@ -262,7 +262,7 @@ export default function BillingForm({
       {/* Top Header Row with Title on Left, Billing Number & Status on Top-Right */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-6 border-b border-gray-50">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-[#D4AF37]/10 rounded-2xl text-[#D4AF37]">
+          <div className="p-3 bg-orange-50 rounded-2xl text-orange-600">
             <Receipt className="w-6 h-6" />
           </div>
           <div>
@@ -312,7 +312,7 @@ export default function BillingForm({
           <div
             className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${
               billingNumber
-                ? "bg-[#D4AF37]/10 border-[#D4AF37]/30 text-gray-900"
+                ? "bg-orange-50/80 border-orange-200 text-gray-900"
                 : "bg-gray-50 border-gray-200 text-gray-400"
             }`}
           >
@@ -321,7 +321,7 @@ export default function BillingForm({
             </span>
             <span
               className={`font-mono text-sm font-bold tracking-wider ${
-                billingNumber ? "text-[#D4AF37]" : "text-gray-400 font-normal italic"
+                billingNumber ? "text-orange-600" : "text-gray-400 font-normal italic"
               }`}
             >
               {billingNumber || "Pending Approval"}
@@ -393,7 +393,7 @@ export default function BillingForm({
                 className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                   isApproved
                     ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                    : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                    : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
                 }`}
                 placeholder="Ex. Rajesh Sharma"
               />
@@ -411,7 +411,7 @@ export default function BillingForm({
                 className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                   isApproved
                     ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                    : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                    : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
                 }`}
                 placeholder="Ex. rajesh@example.com"
               />
@@ -429,7 +429,7 @@ export default function BillingForm({
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-base font-light"
+                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white outline-none transition-all text-base font-light"
                 >
                   <option value="Initiated">Initiated (Default Draft)</option>
                   <option value="Inprogress">Inprogress (Under Processing)</option>
@@ -449,7 +449,7 @@ export default function BillingForm({
                 className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                   isApproved
                     ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                    : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                    : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
                 }`}
                 placeholder="Ex. 123 MG Road, Mumbai, Maharashtra"
               />
@@ -469,7 +469,7 @@ export default function BillingForm({
               className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                 isApproved
                   ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                  : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                  : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
               }`}
               placeholder="Ex. Milestone 1 - Architectural drawing and timber woodwork completed"
             />
@@ -485,7 +485,7 @@ export default function BillingForm({
                 <button
                   type="button"
                   onClick={addCustomField}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-[#D4AF37] hover:bg-[#D4AF37]/5 px-3 py-1.5 rounded-xl transition-all"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-orange-600 hover:bg-orange-50 px-3 py-1.5 rounded-xl transition-all"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Add Specification
@@ -503,7 +503,7 @@ export default function BillingForm({
                       placeholder="Property (e.g. GSTIN, Payment Mode)"
                       value={field.label}
                       onChange={(e) => handleCustomFieldChange(index, "label", e.target.value)}
-                      className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-sm font-light"
+                      className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-sm font-light"
                     />
                     <input
                       type="text"
@@ -511,7 +511,7 @@ export default function BillingForm({
                       placeholder="Value (e.g. 27AAAAA0000A1Z5, Net Banking)"
                       value={field.value}
                       onChange={(e) => handleCustomFieldChange(index, "value", e.target.value)}
-                      className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-sm font-light"
+                      className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-sm font-light"
                     />
                     {!isApproved && (
                       <button
@@ -557,7 +557,7 @@ export default function BillingForm({
                       className={`w-full px-5 py-3 bg-white border border-gray-100 rounded-2xl outline-none text-sm font-light resize-none ${
                         isApproved
                           ? "cursor-not-allowed bg-gray-50/50"
-                          : "focus:ring-2 focus:ring-[#D4AF37]"
+                          : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600"
                       }`}
                       placeholder="Description of item or service (e.g. Teak Wood Dining Table)"
                     />
@@ -579,7 +579,7 @@ export default function BillingForm({
                         className={`w-full px-4 py-3 bg-white border border-gray-100 rounded-2xl outline-none text-sm font-light ${
                           isApproved
                             ? "cursor-not-allowed bg-gray-50/50"
-                            : "focus:ring-2 focus:ring-[#D4AF37]"
+                            : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600"
                         }`}
                         placeholder="Rate"
                       />
@@ -599,7 +599,7 @@ export default function BillingForm({
                         className={`w-full px-4 py-3 bg-white border border-gray-100 rounded-2xl outline-none text-sm font-light text-center ${
                           isApproved
                             ? "cursor-not-allowed bg-gray-50/50"
-                            : "focus:ring-2 focus:ring-[#D4AF37]"
+                            : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600"
                         }`}
                         placeholder="1"
                       />
@@ -611,7 +611,7 @@ export default function BillingForm({
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 block">
                         Subtotal
                       </label>
-                      <span className="text-lg font-sans text-[#D4AF37]">
+                      <span className="text-lg font-sans text-orange-600 font-semibold">
                         ₹{item.amount.toLocaleString()}
                       </span>
                     </div>
@@ -640,7 +640,7 @@ export default function BillingForm({
               <button
                 type="button"
                 onClick={addItem}
-                className="flex items-center gap-2 text-xs font-semibold text-[#D4AF37] hover:bg-[#D4AF37]/5 px-4 py-2.5 rounded-xl transition-all"
+                className="flex items-center gap-2 text-xs font-semibold text-orange-600 hover:bg-orange-50 px-4 py-2.5 rounded-xl transition-all"
               >
                 <Plus className="w-4 h-4" />
                 Add Item Row
@@ -651,11 +651,11 @@ export default function BillingForm({
 
         {/* Footer Actions Row */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-gray-50 gap-6">
-          <div className="bg-[#D4AF37]/5 px-6 py-4 rounded-2xl border border-[#D4AF37]/10 flex items-center gap-4 w-full md:w-auto">
+          <div className="bg-orange-50/80 px-6 py-4 rounded-2xl border border-orange-200/60 flex items-center gap-4 w-full md:w-auto">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               Total Valuation
             </span>
-            <span className="text-2xl font-sans text-[#D4AF37]">
+            <span className="text-2xl font-sans text-orange-600 font-bold">
               ₹{totalAmount.toLocaleString()}
             </span>
           </div>
@@ -670,7 +670,7 @@ export default function BillingForm({
                     onClick={() => downloadBillingPDF(selectedBill)}
                     className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 rounded-2xl text-sm font-semibold hover:bg-gray-50 transition-all flex items-center gap-2 shadow-sm"
                   >
-                    <Download className="w-4 h-4 text-[#D4AF37]" />
+                    <Download className="w-4 h-4 text-orange-600" />
                     Download Invoice PDF
                   </button>
                 )}
@@ -708,7 +708,7 @@ export default function BillingForm({
                     type="button"
                     disabled={loading || approving}
                     onClick={() => setShowApproveConfirm(true)}
-                    className="px-8 py-3.5 bg-[#D4AF37] text-white rounded-2xl font-semibold hover:bg-[#c49f2e] transition-all shadow-xl shadow-[#D4AF37]/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="px-8 py-3.5 bg-orange-600 text-white rounded-2xl font-semibold hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     <FileCheck2 className="w-4 h-4" />
                     Approve & Assign Number
@@ -746,7 +746,7 @@ export default function BillingForm({
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Total Valuation:</span>
-                <span className="font-semibold text-[#D4AF37]">₹{totalAmount.toLocaleString()}</span>
+                <span className="font-semibold text-orange-600">₹{totalAmount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Action:</span>
@@ -767,7 +767,7 @@ export default function BillingForm({
                 type="button"
                 disabled={approving}
                 onClick={handleApprove}
-                className="px-6 py-2.5 bg-[#D4AF37] text-white rounded-xl text-sm font-semibold hover:bg-[#c49f2e] transition-all shadow-md flex items-center gap-2"
+                className="px-6 py-2.5 bg-orange-600 text-white rounded-xl text-sm font-semibold hover:bg-orange-700 transition-all shadow-md flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 {approving ? "Approving..." : "Confirm Approval"}

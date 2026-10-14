@@ -226,8 +226,8 @@ export default function OfficialQuotationForm({
       {/* Header Row */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-[#D4AF37]/10 rounded-xl">
-            <Calculator className="w-6 h-6 text-[#D4AF37]" />
+          <div className="p-2.5 bg-orange-50 rounded-xl">
+            <Calculator className="w-6 h-6 text-orange-600" />
           </div>
           <div>
             <div className="flex items-center gap-3">
@@ -329,7 +329,7 @@ export default function OfficialQuotationForm({
                 className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                   isPublished
                     ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                    : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                    : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
                 }`}
                 placeholder="Ex. Mr. Rajesh Kumar"
               />
@@ -347,7 +347,7 @@ export default function OfficialQuotationForm({
                 className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                   isPublished
                     ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                    : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                    : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
                 }`}
                 placeholder="Ex. rajesh@example.com"
               />
@@ -369,7 +369,7 @@ export default function OfficialQuotationForm({
                   onChange={(e) =>
                     handleStatusChange(e.target.value as "Ready" | "Inprogress" | "Published")
                   }
-                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] focus:bg-white outline-none transition-all text-base font-light"
+                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white outline-none transition-all text-base font-light"
                 >
                   <option value="Ready">Ready (Default Editable)</option>
                   <option value="Inprogress">Inprogress (Work in Progress)</option>
@@ -392,7 +392,7 @@ export default function OfficialQuotationForm({
               className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none transition-all text-base font-light ${
                 isPublished
                   ? "bg-gray-50/80 cursor-not-allowed text-gray-700"
-                  : "focus:ring-2 focus:ring-[#D4AF37] focus:bg-white"
+                  : "focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white"
               }`}
               placeholder="Ex. 50% advance on order confirmation, validity 15 days"
             />
@@ -415,7 +415,7 @@ export default function OfficialQuotationForm({
                     placeholder="Key (e.g. Warranty)"
                     value={field.label}
                     onChange={(e) => handleCustomFieldChange(index, "label", e.target.value)}
-                    className="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-sm disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-sm disabled:cursor-not-allowed"
                   />
                   <input
                     type="text"
@@ -423,7 +423,7 @@ export default function OfficialQuotationForm({
                     placeholder="Value (e.g. 2 Years)"
                     value={field.value}
                     onChange={(e) => handleCustomFieldChange(index, "value", e.target.value)}
-                    className="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-sm disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-sm disabled:cursor-not-allowed"
                   />
                   {!isPublished && (
                     <button
@@ -440,7 +440,7 @@ export default function OfficialQuotationForm({
                 <button
                   type="button"
                   onClick={addCustomField}
-                  className="flex items-center gap-2 text-xs font-medium text-[#D4AF37] hover:bg-[#D4AF37]/5 px-3 py-1.5 rounded-lg transition-all"
+                  className="flex items-center gap-2 text-xs font-medium text-orange-600 font-semibold hover:bg-orange-50 px-3 py-1.5 rounded-lg transition-all"
                 >
                   <Plus className="w-3 h-3" />
                   Add Key-Value Pair
@@ -475,7 +475,7 @@ export default function OfficialQuotationForm({
                       onChange={(e) => handleItemChange(index, "description", e.target.value)}
                       required
                       rows={3}
-                      className="w-full px-5 py-3.5 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-base disabled:bg-gray-50 disabled:cursor-not-allowed"
+                      className="w-full px-5 py-3.5 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-base disabled:bg-gray-50 disabled:cursor-not-allowed"
                       placeholder="Item description (e.g. Office Chair)"
                     />
                   </div>
@@ -491,7 +491,7 @@ export default function OfficialQuotationForm({
                         placeholder="Rate"
                         value={item.rate}
                         onChange={(e) => handleItemChange(index, "rate", e.target.value)}
-                        className="w-full px-5 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-base disabled:bg-gray-50 disabled:cursor-not-allowed"
+                        className="w-full px-5 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-base disabled:bg-gray-50 disabled:cursor-not-allowed"
                       />
                     </div>
                     <div>
@@ -505,7 +505,7 @@ export default function OfficialQuotationForm({
                         placeholder="Qty"
                         value={item.quantity}
                         onChange={(e) => handleItemChange(index, "quantity", e.target.value)}
-                        className="w-full px-5 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#D4AF37] outline-none text-base text-center disabled:bg-gray-50 disabled:cursor-not-allowed"
+                        className="w-full px-5 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-base text-center disabled:bg-gray-50 disabled:cursor-not-allowed"
                       />
                     </div>
                   </div>
@@ -514,7 +514,7 @@ export default function OfficialQuotationForm({
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 block">
                         Subtotal
                       </label>
-                      <span className="text-lg font-sans text-[#D4AF37]">
+                      <span className="text-lg font-sans text-orange-600 font-semibold">
                         ₹{item.amount.toLocaleString()}
                       </span>
                     </div>
@@ -540,7 +540,7 @@ export default function OfficialQuotationForm({
               <button
                 type="button"
                 onClick={addItem}
-                className="flex items-center gap-2 text-sm font-medium text-[#D4AF37] hover:bg-[#D4AF37]/5 px-4 py-2 rounded-xl transition-all"
+                className="flex items-center gap-2 text-sm font-medium text-orange-600 font-semibold hover:bg-orange-50 px-4 py-2 rounded-xl transition-all"
               >
                 <Plus className="w-4 h-4" />
                 Add Another Item
@@ -551,11 +551,11 @@ export default function OfficialQuotationForm({
 
         {/* Total & Action Row */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-gray-50 gap-6">
-          <div className="bg-[#D4AF37]/5 px-6 py-4 rounded-2xl border border-[#D4AF37]/10 flex items-center gap-4">
+          <div className="bg-orange-50/80 px-6 py-4 rounded-2xl border border-orange-200/60 flex items-center gap-4">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               Total Valuation
             </span>
-            <span className="text-2xl font-sans text-[#D4AF37]">
+            <span className="text-2xl font-sans text-orange-600 font-semibold">
               ₹{totalAmount.toLocaleString()}
             </span>
           </div>
