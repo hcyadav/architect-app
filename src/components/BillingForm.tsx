@@ -16,7 +16,8 @@ import {
   FileCheck2,
   Send,
   AlertTriangle,
-  RotateCcw
+  RotateCcw,
+  IndianRupee,
 } from "lucide-react";
 import { downloadBillingPDF, IBilling } from "@/lib/pdfGenerator";
 
@@ -52,16 +53,22 @@ export default function BillingForm({
   const [clientEmail, setClientEmail] = useState("");
   const [clientAddress, setClientAddress] = useState("");
   const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState<"Initiated" | "Inprogress" | "Approved">("Initiated");
+  const [status, setStatus] = useState<"Initiated" | "Inprogress" | "Approved">(
+    "Initiated",
+  );
   const [items, setItems] = useState<Item[]>([
     { description: "", rate: "", quantity: "1", amount: 0 },
   ]);
-  const [customFields, setCustomFields] = useState<{ label: string; value: string }[]>([]);
+  const [customFields, setCustomFields] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   // Active bill tracking
   const isEditing = Boolean(selectedBill?.id);
-  const isApproved = (selectedBill?.status === "Approved") || (status === "Approved");
-  const billingNumber = selectedBill?.billingNumber || selectedBill?.billing_number || null;
+  const isApproved =
+    selectedBill?.status === "Approved" || status === "Approved";
+  const billingNumber =
+    selectedBill?.billingNumber || selectedBill?.billing_number || null;
 
   // Populate from selectedBill
   useEffect(() => {
@@ -70,15 +77,17 @@ export default function BillingForm({
       setClientEmail(selectedBill.clientEmail || "");
       const resolvedAddress =
         selectedBill.clientAddress ||
-        selectedBill.customFields?.find((f) => f.label?.trim().toLowerCase() === "address")?.value ||
+        selectedBill.customFields?.find(
+          (f) => f.label?.trim().toLowerCase() === "address",
+        )?.value ||
         "";
       setClientAddress(resolvedAddress);
       setNotes(selectedBill.notes || "");
       setStatus(selectedBill.status || "Initiated");
       setCustomFields(
         (selectedBill.customFields || []).filter(
-          (f) => f.label?.trim().toLowerCase() !== "address"
-        )
+          (f) => f.label?.trim().toLowerCase() !== "address",
+        ),
       );
 
       if (selectedBill.items && selectedBill.items.length > 0) {
@@ -88,7 +97,7 @@ export default function BillingForm({
             rate: String(i.rate),
             quantity: String(i.quantity),
             amount: i.amount,
-          }))
+          })),
         );
       } else {
         setItems([{ description: "", rate: "", quantity: "1", amount: 0 }]);
@@ -105,7 +114,7 @@ export default function BillingForm({
             rate: String(i.rate),
             quantity: String(i.quantity),
             amount: Number(i.rate) * Number(i.quantity),
-          }))
+          })),
         );
       }
     } else {
@@ -123,7 +132,11 @@ export default function BillingForm({
     setCustomFields([]);
   };
 
-  const handleItemChange = (index: number, field: keyof Item, value: string) => {
+  const handleItemChange = (
+    index: number,
+    field: keyof Item,
+    value: string,
+  ) => {
     if (isApproved) return;
     const newItems = [...items];
     const item = { ...newItems[index] };
@@ -146,7 +159,10 @@ export default function BillingForm({
 
   const addItem = () => {
     if (isApproved) return;
-    setItems([...items, { description: "", rate: "", quantity: "1", amount: 0 }]);
+    setItems([
+      ...items,
+      { description: "", rate: "", quantity: "1", amount: 0 },
+    ]);
   };
 
   const removeItem = (index: number) => {
@@ -164,7 +180,11 @@ export default function BillingForm({
     setCustomFields(customFields.filter((_, i) => i !== index));
   };
 
-  const handleCustomFieldChange = (index: number, field: "label" | "value", value: string) => {
+  const handleCustomFieldChange = (
+    index: number,
+    field: "label" | "value",
+    value: string,
+  ) => {
     if (isApproved) return;
     const newFields = [...customFields];
     newFields[index][field] = value;
@@ -186,10 +206,15 @@ export default function BillingForm({
     }
 
     const validItems = items.filter(
-      (i) => i.description.trim() && parseFloat(i.rate) >= 0 && parseFloat(i.quantity) > 0
+      (i) =>
+        i.description.trim() &&
+        parseFloat(i.rate) >= 0 &&
+        parseFloat(i.quantity) > 0,
     );
     if (validItems.length === 0) {
-      return toast.error("Add at least one complete item with description, rate, and quantity");
+      return toast.error(
+        "Add at least one complete item with description, rate, and quantity",
+      );
     }
 
     setLoading(true);
@@ -205,7 +230,9 @@ export default function BillingForm({
           quantity: parseFloat(i.quantity),
           amount: i.amount,
         })),
-        customFields: customFields.filter((f) => f.label.trim() && f.value.trim()),
+        customFields: customFields.filter(
+          (f) => f.label.trim() && f.value.trim(),
+        ),
         totalAmount,
         notes: notes.trim() || null,
         status: isEditing ? status : "Initiated",
@@ -222,7 +249,8 @@ export default function BillingForm({
 
       onCreatedOrUpdated();
     } catch (error: any) {
-      const message = error.response?.data?.error || error.message || "Failed to save bill";
+      const message =
+        error.response?.data?.error || error.message || "Failed to save bill";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -245,12 +273,13 @@ export default function BillingForm({
     try {
       const res = await axios.post(`/api/billing/${selectedBill.id}/approve`);
       toast.success(
-        `Bill Approved! Assigned sequential number: ${res.data.billingNumber || res.data.billing_number}`
+        `Bill Approved! Assigned sequential number: ${res.data.billingNumber || res.data.billing_number}`,
       );
       setShowApproveConfirm(false);
       onCreatedOrUpdated();
     } catch (error: any) {
-      const message = error.response?.data?.error || error.message || "Approval failed";
+      const message =
+        error.response?.data?.error || error.message || "Approval failed";
       toast.error(message);
     } finally {
       setApproving(false);
@@ -263,7 +292,7 @@ export default function BillingForm({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-6 border-b border-gray-50">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-orange-50 rounded-2xl text-orange-600">
-            <Receipt className="w-6 h-6" />
+            {/* <IndianRupee className="w-6 h-6" /> */}
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -280,8 +309,8 @@ export default function BillingForm({
               {isApproved
                 ? "Finalized and locked against modification"
                 : isEditing
-                ? "Edit details or proceed to approve bill"
-                : "Initiate new bill. Assigned sequential number upon approval."}
+                  ? "Edit details or proceed to approve bill"
+                  : "Initiate new bill. Assigned sequential number upon approval."}
             </p>
           </div>
         </div>
@@ -294,8 +323,8 @@ export default function BillingForm({
               status === "Approved"
                 ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
                 : status === "Inprogress"
-                ? "bg-amber-50 text-amber-700 border border-amber-200/60"
-                : "bg-blue-50 text-blue-700 border border-blue-200/60"
+                  ? "bg-amber-50 text-amber-700 border border-amber-200/60"
+                  : "bg-blue-50 text-blue-700 border border-blue-200/60"
             }`}
           >
             {status === "Approved" ? (
@@ -321,7 +350,9 @@ export default function BillingForm({
             </span>
             <span
               className={`font-mono text-sm font-bold tracking-wider ${
-                billingNumber ? "text-orange-600" : "text-gray-400 font-normal italic"
+                billingNumber
+                  ? "text-orange-600"
+                  : "text-gray-400 font-normal italic"
               }`}
             >
               {billingNumber || "Pending Approval"}
@@ -357,8 +388,9 @@ export default function BillingForm({
                 This bill is Approved and Locked
               </p>
               <p className="text-xs text-emerald-700/80 font-light">
-                Billing number <strong className="font-semibold">{billingNumber}</strong> has been
-                finalized. Details are preserved and read-only.
+                Billing number{" "}
+                <strong className="font-semibold">{billingNumber}</strong> has
+                been finalized. Details are preserved and read-only.
               </p>
             </div>
           </div>
@@ -377,7 +409,10 @@ export default function BillingForm({
 
       {/* Form Fields */}
       <form onSubmit={handleSubmit} className="space-y-8">
-        <fieldset disabled={isApproved} className="space-y-8 disabled:opacity-85">
+        <fieldset
+          disabled={isApproved}
+          className="space-y-8 disabled:opacity-85"
+        >
           {/* Client Details Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-gray-50">
             <div className="space-y-2">
@@ -432,7 +467,9 @@ export default function BillingForm({
                   className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 focus:bg-white outline-none transition-all text-base font-light"
                 >
                   <option value="Initiated">Initiated (Default Draft)</option>
-                  <option value="Inprogress">Inprogress (Under Processing)</option>
+                  <option value="Inprogress">
+                    Inprogress (Under Processing)
+                  </option>
                 </select>
               )}
             </div>
@@ -502,7 +539,9 @@ export default function BillingForm({
                       readOnly={isApproved}
                       placeholder="Property (e.g. GSTIN, Payment Mode)"
                       value={field.label}
-                      onChange={(e) => handleCustomFieldChange(index, "label", e.target.value)}
+                      onChange={(e) =>
+                        handleCustomFieldChange(index, "label", e.target.value)
+                      }
                       className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-sm font-light"
                     />
                     <input
@@ -510,7 +549,9 @@ export default function BillingForm({
                       readOnly={isApproved}
                       placeholder="Value (e.g. 27AAAAA0000A1Z5, Net Banking)"
                       value={field.value}
-                      onChange={(e) => handleCustomFieldChange(index, "value", e.target.value)}
+                      onChange={(e) =>
+                        handleCustomFieldChange(index, "value", e.target.value)
+                      }
                       className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-orange-600/20 focus:border-orange-600 outline-none text-sm font-light"
                     />
                     {!isApproved && (
@@ -553,7 +594,9 @@ export default function BillingForm({
                       rows={2}
                       required
                       value={item.description}
-                      onChange={(e) => handleItemChange(index, "description", e.target.value)}
+                      onChange={(e) =>
+                        handleItemChange(index, "description", e.target.value)
+                      }
                       className={`w-full px-5 py-3 bg-white border border-gray-100 rounded-2xl outline-none text-sm font-light resize-none ${
                         isApproved
                           ? "cursor-not-allowed bg-gray-50/50"
@@ -575,7 +618,9 @@ export default function BillingForm({
                         required
                         readOnly={isApproved}
                         value={item.rate}
-                        onChange={(e) => handleItemChange(index, "rate", e.target.value)}
+                        onChange={(e) =>
+                          handleItemChange(index, "rate", e.target.value)
+                        }
                         className={`w-full px-4 py-3 bg-white border border-gray-100 rounded-2xl outline-none text-sm font-light ${
                           isApproved
                             ? "cursor-not-allowed bg-gray-50/50"
@@ -595,7 +640,9 @@ export default function BillingForm({
                         required
                         readOnly={isApproved}
                         value={item.quantity}
-                        onChange={(e) => handleItemChange(index, "quantity", e.target.value)}
+                        onChange={(e) =>
+                          handleItemChange(index, "quantity", e.target.value)
+                        }
                         className={`w-full px-4 py-3 bg-white border border-gray-100 rounded-2xl outline-none text-sm font-light text-center ${
                           isApproved
                             ? "cursor-not-allowed bg-gray-50/50"
@@ -698,8 +745,8 @@ export default function BillingForm({
                   {loading
                     ? "Saving..."
                     : isEditing
-                    ? "Update Bill Details"
-                    : "Save Bill (Initiated)"}
+                      ? "Update Bill Details"
+                      : "Save Bill (Initiated)"}
                 </button>
 
                 {/* Approve Button (Enabled if bill already exists or upon confirmation) */}
@@ -733,8 +780,8 @@ export default function BillingForm({
                   Approve and Finalize Bill?
                 </h3>
                 <p className="text-xs text-gray-500 font-light leading-relaxed">
-                  Approving will assign the next sequential billing number and permanently lock
-                  this bill against future modifications.
+                  Approving will assign the next sequential billing number and
+                  permanently lock this bill against future modifications.
                 </p>
               </div>
             </div>
@@ -742,15 +789,21 @@ export default function BillingForm({
             <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 text-xs space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-400">Client:</span>
-                <span className="font-semibold text-gray-900">{clientName}</span>
+                <span className="font-semibold text-gray-900">
+                  {clientName}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Total Valuation:</span>
-                <span className="font-semibold text-orange-600">₹{totalAmount.toLocaleString()}</span>
+                <span className="font-semibold text-orange-600">
+                  ₹{totalAmount.toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Action:</span>
-                <span className="font-semibold text-emerald-600">Assign Next Billing Number</span>
+                <span className="font-semibold text-emerald-600">
+                  Assign Next Billing Number
+                </span>
               </div>
             </div>
 

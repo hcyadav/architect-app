@@ -27,6 +27,7 @@ import {
   IBilling,
   IOfficialQuotation,
 } from "@/lib/pdfGenerator";
+import { IndianRupee } from "lucide-react";
 
 export default function QuotationDashboard() {
   // Single top-level tab: "inquiries" | "quotation" | "billing"
@@ -251,7 +252,7 @@ export default function QuotationDashboard() {
       id: "billing" as const,
       label: "Billing",
       count: billCounts.all || billTotal,
-      icon: Receipt,
+      icon: IndianRupee,
     },
   ];
 
@@ -501,9 +502,7 @@ export default function QuotationDashboard() {
                         <tr className="bg-gray-50/50 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                           <th className="px-8 py-4">Client</th>
                           <th className="px-8 py-4">Project / Product</th>
-                          <th className="px-8 py-4 text-right">
-                            Quote Amount
-                          </th>
+                          <th className="px-8 py-4 text-right">Quote Amount</th>
                           <th className="px-8 py-4 text-center">Status</th>
                           <th className="px-8 py-4 text-center">Date</th>
                           <th className="px-8 py-4 text-right">Action</th>
