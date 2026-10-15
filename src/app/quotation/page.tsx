@@ -601,8 +601,8 @@ export default function QuotationDashboard() {
                                   className="px-3 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-orange-50 hover:text-orange-600 rounded-xl transition-all flex items-center gap-1.5"
                                   title="Create Bill from this Quote"
                                 >
-                                  <Receipt className="w-3.5 h-3.5" />
-                                  {/* To Bill */}
+                                  {/* <Receipt className="w-3.5 h-3.5" /> */}
+                                  Bill
                                 </button>
                                 <button
                                   onClick={() => downloadQuotationPDF(q)}
